@@ -813,7 +813,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		for (int i = 0; i < op.paramList().size(); i++)
 			println("* @param " + op.paramList().varDecl(i).name() + " the " + op.paramList().varDecl(i).name() + " to set");
 		println("**********************************************************************/");
-		print("public " + (op.hasResultType() ? JavaTypes.javaType(op.resultType()) : "void") + " ");
+		print("public " + (op.hasResultType() ? JavaTypes.getJavaInterfaceType(op.resultType()) : "void") + " ");
 		print(op.name() + "(");
 		VarDecl decl = null;
 		for (int i = 0; i < op.paramList().size(); i++)
