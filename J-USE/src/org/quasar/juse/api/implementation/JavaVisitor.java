@@ -1,6 +1,7 @@
 package org.quasar.juse.api.implementation;
 
 import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MOperation;
 import org.tzi.use.uml.ocl.type.EnumType;
 
@@ -53,5 +54,7 @@ public abstract class JavaVisitor extends FileUtilities implements IJavaVisitor
 
 	@Override
 	public abstract void printToString(MClass theClass);
-
+	
+	@Override
+	public abstract void printInvariants(MClass theClass);
 }

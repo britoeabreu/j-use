@@ -23,17 +23,17 @@ public final class MainExample_CodeGeneration
 	private final static String	BUSINESSLAYER_NAME	= "businessLayer";
 	private final static String	PRESENTATIONLAYER_NAME	= "presentationLayer";
 	
-	private final static String	MODEL_DIRECTORY = "D:/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
-	private final static String	MODEL_FILE = "CopaPaises_20120416.use";
-	private final static String	SOIL_FILE = "euro2012.soil";
-	private final static String	CMD_FILE = "euro2012_data.cmd";
-	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
+//	private final static String	MODEL_DIRECTORY = "D:/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
+//	private final static String	MODEL_FILE = "CopaPaises_20120416.use";
+//	private final static String	SOIL_FILE = "euro2012.soil";
+//	private final static String	CMD_FILE = "euro2012_data.cmd";
+//	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
 	
-//	private final static String	MODEL_DIRECTORY		= "D:/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
-//	private final static String	MODEL_FILE = "RoyalAndLoyal_model.use";
-//	private final static String	SOIL_FILE = "RoyalAndLoyal_objects.cmd";
-//	private final static String	CMD_FILE = "RoyalAndLoyal_data.cmd";
-//	private final static String	TARGET_PACKAGE = "org.quasar.royal";
+	private final static String	MODEL_DIRECTORY		= "D:/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
+	private final static String	MODEL_FILE = "RoyalAndLoyal_model.use";
+	private final static String	SOIL_FILE = "RoyalAndLoyal_objects.cmd";
+	private final static String	CMD_FILE = "RoyalAndLoyal_data.cmd";
+	private final static String	TARGET_PACKAGE = "org.quasar.royal";
 	
 //	private final static String	MODEL_DIRECTORY		= "C:/Program Files (x86)/use-3.0.2/examples/soil/projectworld";
 //	private final static String	MODEL_FILE = "ProjectWorld_old.use";

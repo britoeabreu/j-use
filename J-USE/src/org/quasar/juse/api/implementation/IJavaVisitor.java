@@ -101,4 +101,10 @@ public interface IJavaVisitor
 	 *            The class whose object serializer is to be generated
 	 ***********************************************************/
 	public void printToString(MClass theClass);
+	
+	/***********************************************************
+	* @param theClass
+	 *            The class whose invariants are to be generated
+	***********************************************************/
+	public void printInvariants(MClass theClass);
 }

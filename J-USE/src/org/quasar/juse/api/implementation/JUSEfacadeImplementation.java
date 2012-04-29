@@ -460,6 +460,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 
 				visitor.printToString(cls);
 
+				visitor.printInvariants(cls);
+				
 				visitor.decIndent();
 				visitor.println("}");
 

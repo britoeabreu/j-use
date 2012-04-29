@@ -33,13 +33,12 @@ import org.tzi.use.util.StringUtil;
 
 public class JavaBusinessVisitor extends JavaVisitor
 {
-	private MModel	model;
-	private String	author;
-	private String	basePackageName;
-	private String	businessLayerName;
-	private ModelUtilities util;
-	
-	
+	private MModel			model;
+	private String			author;
+	private String			basePackageName;
+	private String			businessLayerName;
+	private ModelUtilities	util;
+
 	/***********************************************************
 	 * @param model
 	 *            The corresponding to the compiled specification
@@ -59,8 +58,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		this.util = new ModelUtilities(model);
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printFileHeader(java.lang.String)
 	 */
 	@Override
@@ -78,8 +78,10 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("package " + basePackageName + "." + businessLayerName + ";");
 		println();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printEnumType(org.tzi.use.uml.ocl.type.EnumType)
 	 */
 	@Override
@@ -96,7 +98,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("}");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printAttributes(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -111,7 +115,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printClassHeader(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -154,7 +160,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printAllInstances(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -182,7 +190,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printDefaultConstructors(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -203,7 +213,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printParameterizedConstructors(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -263,10 +275,13 @@ public class JavaBusinessVisitor extends JavaVisitor
 	}
 
 	/***********************************************************
-	* @param theClass The class where the arribute belongs to
-	* @param currentAttribute The current attribute
-	* @param tag {"getter" | "setter"}
-	***********************************************************/
+	 * @param theClass
+	 *            The class where the arribute belongs to
+	 * @param currentAttribute
+	 *            The current attribute
+	 * @param tag
+	 *            {"getter" | "setter"}
+	 ***********************************************************/
 	public void printHeaderBasicGettersSetters(MClass theClass, AttributeInfo currentAttribute, String tag)
 	{
 		println("/**********************************************************************");
@@ -298,7 +313,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printBasicGettersSetters(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -333,7 +350,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printNavigators(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -401,8 +420,11 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.quasar.use.api.implementation.IJavaVisitor#printMEMBER2ASSOCIATIVE(org.quasar.use.api.implementation.AssociationInfo)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.quasar.use.api.implementation.IJavaVisitor#printMEMBER2ASSOCIATIVE(org.quasar.use.api.implementation.AssociationInfo)
 	 */
 	@Override
 	public void printMEMBER2ASSOCIATIVE(AssociationInfo aInfo)
@@ -484,7 +506,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printMEMBER2MEMBER(org.quasar.use.api.implementation.AssociationInfo)
 	 */
 	@Override
@@ -579,7 +603,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printONE2ONE(org.quasar.use.api.implementation.AssociationInfo)
 	 */
 	@Override
@@ -639,7 +665,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printONE2MANY(org.quasar.use.api.implementation.AssociationInfo)
 	 */
 	@Override
@@ -703,8 +731,11 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.quasar.use.api.implementation.IJavaVisitor#printNavigatorMANY2MANY(org.quasar.use.api.implementation.AssociationInfo)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.quasar.use.api.implementation.IJavaVisitor#printNavigatorMANY2MANY(org.quasar.use.api.implementation.AssociationInfo)
 	 */
 	@Override
 	public void printMANY2MANY(AssociationInfo aInfo)
@@ -767,7 +798,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printSoilOperation(org.tzi.use.uml.mm.MOperation)
 	 */
 	@Override
@@ -811,9 +844,43 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
+
+		if (!op.preConditions().isEmpty())
+		{
+			printlnc("PRE-CONDITIONS (TODO)");
+			println("/*");
+			for (MPrePostCondition pre : op.preConditions())
+			{
+				println("pre " + pre.name());
+				incIndent();
+				println(pre.expression().toString());
+				decIndent();
+				println();
+			}
+			println("*/");
+			println();
+		}
+
+		if (!op.postConditions().isEmpty())
+		{
+			printlnc("POST-CONDITIONS (TODO)");
+			println("/*");
+			for (MPrePostCondition post : op.postConditions())
+			{
+				println("post " + post.name());
+				incIndent();
+				println(post.expression().toString());
+				decIndent();
+				println();
+			}
+			println("*/");
+			println();
+		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.use.api.implementation.IJavaVisitor#printToString(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -841,5 +908,30 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.implementation.JavaVisitor#printInvariants(org.tzi.use.uml.mm.MClass)
+	 */
+	@Override
+	public void printInvariants(MClass theClass)
+	{
+		if (!model.classInvariants(theClass).isEmpty())
+		{
+			printlnc("-------------------------------------------------------------------------------");
+			printlnc("INVARIANTS (TODO)");
+			println("/*");
+			for (MClassInvariant inv : model.classInvariants(theClass))
+			{
+				println("inv " + inv.name());
+				incIndent();
+				println(inv.bodyExpression().toString());
+				decIndent();
+				println();
+			}
+			println("*/");
+		}
 	}
 }

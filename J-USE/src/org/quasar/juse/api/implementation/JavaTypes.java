@@ -29,8 +29,10 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String getJavaInterfaceType(Type oclType)
 	{
-		if (oclType.isOrderedSet()) return "SortedSet<" + javaType(oclType) + ">";
-		if (oclType.isSet()) return "Set<" + javaType(oclType) + ">";
+		if (oclType.isOrderedSet())	return "SortedSet<" + javaType(oclType) + ">";
+		if (oclType.isSet())					return "Set<" 			+ javaType(oclType) + ">";
+		if (oclType.isSequence())		return "Queue<"		+ javaType(oclType) + ">";
+		if (oclType.isBag())				return "List<"			+ javaType(oclType) + ">";
 		return javaType(oclType);
 	}
 
@@ -39,8 +41,10 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String getJavaImplementationType(Type oclType)
 	{
-		if (oclType.isOrderedSet()) return "TreeSet<" + javaType(oclType) + ">";
-		if (oclType.isSet()) return "HashSet<" + javaType(oclType) + ">";
+		if (oclType.isOrderedSet())	return "TreeSet<"			+ javaType(oclType) + ">";
+		if (oclType.isSet())					return "HashSet<"		+ javaType(oclType) + ">";
+		if (oclType.isSequence())		return "ArrayDeque<"	+ javaType(oclType) + ">";
+		if (oclType.isBag())				return "ArrayList<"		+ javaType(oclType) + ">";
 		return javaType(oclType);
 	}
 
@@ -72,25 +76,25 @@ public abstract class JavaTypes
 		if (oclType.isVoidType())
 			return "void";
 		if (oclType.isDate())
-			return "Date";		
+			return "Date";
+		if (oclType.isSet())
+			return oclType.toString().substring(4, oclType.toString().length()-1);	
 		if (oclType.isOrderedSet())
 			return oclType.toString().substring(11, oclType.toString().length()-1);
-		if (oclType.isSet())
+		if (oclType.isBag())
 			return oclType.toString().substring(4, oclType.toString().length()-1);
+		if (oclType.isSequence())
+			return oclType.toString().substring(9, oclType.toString().length()-1);
 //		if (oclType.isCollection(true))
 //		return "Set<Object>";
 //	if (oclType.isTrueCollection())
 //		return "TrueCollection";
 //	if (oclType.isTrueSet())
 //		return "TrueSet";
-//	if (oclType.isSequence())
-//		return "Sequence";
 //	if (oclType.isTrueSequence())
 //		return "TrueSequence";
 //	if (oclType.isTrueOrderedSet())
 //		return "Number";
-//	if (oclType.isBag())
-//		return "Bag";
 //	if (oclType.isTrueBag())
 //		return "TrueBag";
 //	if (oclType.isInstantiableCollection())
