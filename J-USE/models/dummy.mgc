@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="org.quasar.juse.api.JUSE_ProgramingFacade" x="756" y="122">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
-    </Class>
-    <Class name="org.quasar.juse.api.MainExample_Programming" x="838" y="440">
+    <Class name="org.tzi.use.uml.mm.Annotatable" x="285" y="22">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -18,10 +8,8 @@
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"
             accessors-accepted="true" constructors-accepted="true"/>
-        <Communication destinationClassName="org.quasar.juse.api.JUSE_ProgramingFacade"/>
-        <Communication destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
     </Class>
-    <Class name="org.quasar.juse.api.JUSE_CodeGeneratorFacade" x="109" y="221">
+    <Class name="org.tzi.use.uml.mm.MPrePostCondition" x="746" y="315">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -29,9 +17,32 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MModelElementImpl"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElementImpl"/>
     </Class>
-    <Class name="org.quasar.juse.api.MainExample_CodeGeneration" x="30" y="427">
+    <Class name="org.tzi.use.uml.mm.MClassInvariant" x="737" y="22">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MModelElementImpl"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElementImpl"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MModelElementImpl.MutableInteger"
+        x="75" y="402">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MModelElement" x="34" y="150">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -39,10 +50,9 @@
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"
             accessors-accepted="true" constructors-accepted="true"/>
-        <Communication destinationClassName="org.quasar.juse.api.JUSE_CodeGeneratorFacade"/>
-        <Communication destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.Annotatable"/>
     </Class>
-    <Class name="org.quasar.juse.api.JUSE_BasicFacade" x="385" y="3">
+    <Class name="org.tzi.use.uml.mm.MModelElementImpl" x="284" y="230">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -50,18 +60,9 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class
-        name="org.quasar.juse.api.implementation.JUSEfacadeImplementation"
-        x="312" y="381">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.quasar.juse.api.JUSE_ProgramingFacade"/>
-        <Extension destinationClassName="org.quasar.juse.api.JUSE_CodeGeneratorFacade"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MModelElementImpl.MutableInteger"
+            endpointName="fNameMap" kind="Simple"/>
     </Class>
 </ClassDiagram>

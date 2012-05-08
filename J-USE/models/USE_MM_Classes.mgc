@@ -4,22 +4,22 @@
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
             endpointName="fPreConditions" kind="Simple">
             <Point x="718" y="212"/>
         </Association>
+        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
+            endpointName="fClass" kind="Simple"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
             endpointName="fPostConditions" kind="Simple">
             <Point x="942" y="218"/>
         </Association>
-        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fClass" kind="Simple"/>
     </Class>
     <Class name="org.tzi.use.uml.mm.MGeneralization" x="162" y="229">
         <AttributesDisplayFilter public-accepted="true"
@@ -160,10 +160,10 @@
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MOperation"
             endpointName="fOp" kind="Simple"/>

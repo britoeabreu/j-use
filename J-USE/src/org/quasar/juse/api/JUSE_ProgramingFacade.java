@@ -19,7 +19,7 @@
 
 package org.quasar.juse.api;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +28,10 @@ import org.tzi.use.uml.mm.MAssociation;
 import org.tzi.use.uml.mm.MAssociationClass;
 import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MElementAnnotation;
+import org.tzi.use.uml.mm.MModelElement;
+import org.tzi.use.uml.mm.MPrePostCondition;
 import org.tzi.use.uml.ocl.value.Value;
 import org.tzi.use.uml.sys.MLink;
 import org.tzi.use.uml.sys.MLinkObject;
@@ -135,11 +138,36 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	***********************************************************/
 	public MAttribute attributeByName(MObject theObject, String attributeName);
 	
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public Collection<MClass> allClasses();
+		
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public Collection<MClassInvariant> allInvariants();
+	
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public Collection<MPrePostCondition> allPreConditions();
+	
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public Collection<MPrePostCondition> allPostConditions();
 
-//	public void check(MObject theObject, String attributeName);
+	/***********************************************************
+	* @param element
+	* @return
+	***********************************************************/
+	public Map<String, MElementAnnotation> annotations (MModelElement element);
 	
-	public Set<MClass> allClasses();
-	
-	public Map<String, MElementAnnotation> allAnnotations(MClass theClass);
-	
+
+	/***********************************************************
+	* @param anInvariant
+	* @return
+	***********************************************************/
+	public boolean check(MClassInvariant anInvariant);
 }

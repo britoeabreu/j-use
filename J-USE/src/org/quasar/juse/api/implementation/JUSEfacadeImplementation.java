@@ -29,7 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,12 +43,17 @@ import org.tzi.use.uml.mm.MAssociation;
 import org.tzi.use.uml.mm.MAssociationClass;
 import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MElementAnnotation;
 import org.tzi.use.uml.mm.MModel;
+import org.tzi.use.uml.mm.MModelElement;
 import org.tzi.use.uml.mm.MOperation;
+import org.tzi.use.uml.mm.MPrePostCondition;
 import org.tzi.use.uml.mm.ModelFactory;
+import org.tzi.use.uml.ocl.expr.EvalContext;
 import org.tzi.use.uml.ocl.type.EnumType;
 import org.tzi.use.uml.ocl.value.Value;
+import org.tzi.use.uml.ocl.value.BooleanValue;
 import org.tzi.use.uml.sys.MLink;
 import org.tzi.use.uml.sys.MLinkObject;
 import org.tzi.use.uml.sys.MObject;
@@ -60,10 +66,9 @@ import org.tzi.use.util.Log;
 import org.tzi.use.util.USEWriter;
 
 /***********************************************************
-* @author fba
-* 25 de Abr de 2012
-*
-***********************************************************/
+ * @author fba 25 de Abr de 2012
+ * 
+ ***********************************************************/
 public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_CodeGeneratorFacade
 {
 	private Session	session	= new Session();
@@ -74,9 +79,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#initialize(java.lang.String[], java.lang.String, java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_BasicFacade#initialize(java.lang.String[], java.lang.String, java.lang.String)
 	 */
-	@Override
 	public JUSE_BasicFacade initialize(String[] args, String useBaseDirectory, String modelDirectory)
 	{
 		// set System.out to the OldUSEWriter to protocol the output.
@@ -84,16 +88,16 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		// set System.err to the OldUSEWriter to protocol the output.
 		System.setErr(USEWriter.getInstance().getErr());
 
-		String[] initialArgs = { "-H=" + useBaseDirectory};
+		String[] initialArgs = { "-H=" + useBaseDirectory };
 
-		// Command line arguments or in Eclipse "Run As/Run Configurations/Arguments" are appended with 
+		// Command line arguments or in Eclipse "Run As/Run Configurations/Arguments" are appended with
 		// the initialArgs (USE instalation directory)
 
-			String[] args2 = new String[args.length+1];
-			for (int i=0; i<args.length; i++)
-				args2[i] = args[i];
-			args2[args.length] = initialArgs[0];
-			
+		String[] args2 = new String[args.length + 1];
+		for (int i = 0; i < args.length; i++)
+			args2[i] = args[i];
+		args2[args.length] = initialArgs[0];
+
 		// read and set global options, setup application properties
 		Options.processArgs(args2);
 
@@ -115,16 +119,15 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		// compile spec if filename given as command line argument
 		if (Options.specFilename != null)
 			compileSpecification(Options.specFilename);
-		
+
 		return this;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#compileSpecification(java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_BasicFacade#compileSpecification(java.lang.String)
 	 */
-	@Override
 	public MSystem compileSpecification(String specificationFilename)
 	{
 		// compile spec if filename given as argument
@@ -197,9 +200,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#readSOIL(java.lang.String, boolean)
+	 * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, boolean)
 	 */
-	@Override
 	public void readSOIL(String modelInstancesFilename, boolean quiet)
 	{
 		if (model == null)
@@ -250,9 +252,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#dumpState(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 * @see org.quasar.juse.api.JUSE_BasicFacade#dumpState(java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
-	@Override
 	public void dumpState(String author, String javaWorkspace, String cmdFile, boolean verbose)
 	{
 		if (model == null)
@@ -363,9 +364,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#command(java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_BasicFacade#command(java.lang.String)
 	 */
-	@Override
 	public void command(String commandLine)
 	{
 		shell.processLineSafely(commandLine);
@@ -374,9 +374,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#createShell()
+	 * @see org.quasar.juse.api.JUSE_BasicFacade#createShell()
 	 */
-	@Override
 	public void createShell()
 	{
 		Thread t = new Thread(shell);
@@ -396,10 +395,9 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#javaGeneration(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_CodeGeneratorFacade#javaGeneration(java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
-	@Override
 	public void javaGeneration(String author, String javaWorkspace, String basePackageName, String businessLayerName,
 					String presentationLayerName)
 	{
@@ -461,7 +459,7 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 				visitor.printToString(cls);
 
 				visitor.printInvariants(cls);
-				
+
 				visitor.decIndent();
 				visitor.println("}");
 
@@ -480,9 +478,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#createObject(java.lang.String, java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createObject(java.lang.String, org.tzi.use.uml.mm.MClass)
 	 */
-	@Override
 	public MObject createObject(String objectId, MClass theClass)
 	{
 		assert theClass != null;
@@ -502,22 +499,21 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#deleteObject(org.tzi.use.uml.sys.MObject)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#deleteObject(org.tzi.use.uml.sys.MObject)
 	 */
-	@Override
 	public DeleteObjectResult deleteObject(MObject theObject)
 	{
 		assert theObject != null;
 
 		return system.state().deleteObject(theObject);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#createLinkObject(java.lang.String, java.lang.String, java.util.List)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createLinkObject(java.lang.String, org.tzi.use.uml.mm.MAssociationClass,
+	 * java.util.List)
 	 */
-	@Override
 	public MLinkObject createLinkObject(String objectId, MAssociationClass theAssociativeClass, List<MObject> members)
 	{
 		assert theAssociativeClass != null;
@@ -536,49 +532,51 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.quasar.use.api.USEfacade#deleteLinkObject(org.tzi.use.uml.sys.MLinkObject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#deleteLinkObject(org.tzi.use.uml.sys.MLinkObject)
 	 */
-	@Override
 	public DeleteObjectResult deleteLinkObject(MLinkObject theLinkObject)
 	{
 		assert theLinkObject != null;
 
 		return system.state().deleteObject(theLinkObject);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#setObjectAttribute(java.lang.String, java.lang.String, org.tzi.use.uml.ocl.value.Value)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#setObjectAttribute(org.tzi.use.uml.sys.MObject,
+	 * org.tzi.use.uml.mm.MAttribute, org.tzi.use.uml.ocl.value.Value)
 	 */
-	@Override
 	public void setObjectAttribute(MObject theObject, MAttribute theAttribute, Value attributeValue)
 	{
 		assert theObject != null;
 		assert theAttribute != null;
 
-			theObject.state(system.state()).setAttributeValue(theAttribute, attributeValue);
+		theObject.state(system.state()).setAttributeValue(theAttribute, attributeValue);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.quasar.use.api.USEfacade#getObjectAttribute(org.tzi.use.uml.sys.MObject, org.tzi.use.uml.mm.MAttribute)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#getObjectAttribute(org.tzi.use.uml.sys.MObject,
+	 * org.tzi.use.uml.mm.MAttribute)
 	 */
-	@Override
 	public Value getObjectAttribute(MObject theObject, MAttribute theAttribute)
 	{
 		assert theObject != null;
 		assert theAttribute != null;
-		
+
 		return theObject.state(system.state()).attributeValue(theAttribute);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#createLink(java.lang.String, java.util.List)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createLink(org.tzi.use.uml.mm.MAssociation, java.util.List)
 	 */
-	@Override
 	public MLink createLink(MAssociation theAssociation, List<MObject> members)
 	{
 		assert theAssociation != null;
@@ -600,9 +598,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#deleteLink(java.lang.String, java.util.List)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#deleteLink(org.tzi.use.uml.mm.MAssociation, java.util.List)
 	 */
-	@Override
 	public DeleteObjectResult deleteLink(MAssociation theAssociation, List<MObject> members)
 	{
 		assert theAssociation != null;
@@ -624,9 +621,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#objectByName(java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#objectByName(java.lang.String)
 	 */
-	@Override
 	public MObject objectByName(String objectId)
 	{
 		return system.state().objectByName(objectId);
@@ -635,9 +631,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#classByName(java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#classByName(java.lang.String)
 	 */
-	@Override
 	public MClass classByName(String className)
 	{
 		return model.getClass(className);
@@ -646,9 +641,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.use.api.USEfacade#associationClassByName(java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#associationClassByName(java.lang.String)
 	 */
-	@Override
 	public MAssociationClass associationClassByName(String associationClassName)
 	{
 		return model.getAssociationClass(associationClassName);
@@ -659,47 +653,101 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	 * 
 	 * @see org.quasar.use.api.USEfacade#associationByName(java.lang.String)
 	 */
-	@Override
 	public MAssociation associationByName(String associationName)
 	{
 		return model.getAssociation(associationName);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.quasar.use.api.USEfacade#attributeByName(org.tzi.use.uml.sys.MObject, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#attributeByName(org.tzi.use.uml.sys.MObject, java.lang.String)
 	 */
-	@Override
 	public MAttribute attributeByName(MObject theObject, String attributeName)
 	{
 		assert theObject != null;
 
 		return theObject.cls().attribute(attributeName, true);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#AllInstances(org.tzi.use.uml.mm.MClass)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allInstances(org.tzi.use.uml.mm.MClass)
 	 */
-	@Override
 	public Set<MObject> allInstances(MClass theClass)
 	{
 		return system.state().objectsOfClass(theClass);
 	}
-	
-	
-	public Set<MClass> allClasses()
-	{
-		System.out.println("ANNOTATION>" + model.getAnnotation("FlowElement2"));
-		return new HashSet<MClass>(model.classes());
-	}
-	
-	
-	public Map<String, MElementAnnotation> allAnnotations(MClass theClass)
-	{
-//		theClass.getAnnotation("FlowElement2");
-		return 		model.getAllAnnotations();
 
-//		return theClass.getAllAnnotations();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allClasses()
+	 */
+	public Collection<MClass> allClasses()
+	{
+		return model.classes();
+		// return new HashSet<MClass>(model.classes());
 	}
-		
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allInvariants()
+	 */
+	public Collection<MClassInvariant> allInvariants()
+	{
+		return model.classInvariants();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allPreConditions()
+	 */
+	public Collection<MPrePostCondition> allPreConditions()
+	{
+		Collection<MPrePostCondition> result = new ArrayList<MPrePostCondition>();
+		for (MPrePostCondition assertion : model.prePostConditions())
+			if (assertion.isPre())
+				result.add(assertion);
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allPostConditions()
+	 */
+	public Collection<MPrePostCondition> allPostConditions()
+	{
+		Collection<MPrePostCondition> result = new ArrayList<MPrePostCondition>();
+		for (MPrePostCondition assertion : model.prePostConditions())
+			if (!assertion.isPre())
+				result.add(assertion);
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#annotations(org.tzi.use.uml.mm.MModelElement)
+	 */
+	public Map<String, MElementAnnotation> annotations(MModelElement element)
+	{
+		return element.getAllAnnotations();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#check(org.tzi.use.uml.mm.MClassInvariant)
+	 */
+	public boolean check(MClassInvariant anInvariant)
+	{
+		EvalContext context = new EvalContext(null, system.state(), system.varBindings(), null, "\t");
+
+		return ((BooleanValue) anInvariant.expandedExpression().eval(context)).isTrue();
+	}
 }

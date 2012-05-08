@@ -5,11 +5,15 @@
 package org.quasar.juse.api;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.quasar.juse.api.implementation.JUSEfacadeImplementation;
+import org.tzi.use.uml.mm.Annotatable;
 import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MElementAnnotation;
+import org.tzi.use.uml.mm.MPrePostCondition;
 import org.tzi.use.uml.ocl.value.StringValue;
 import org.tzi.use.uml.sys.MLink;
 import org.tzi.use.uml.sys.MLinkObject;
@@ -23,13 +27,17 @@ public final class MainExample_Programming
 {
 	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.3";
 
-//	 private final static String MODEL_DIRECTORY = "D:/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
-//	 private final static String MODEL_FILE = "CopaPaises_20120416.use";
-//	 private final static String SOIL_FILE = "euro2012.soil";
+	// private final static String MODEL_DIRECTORY = "D:/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
+	// private final static String MODEL_FILE = "CopaPaises_20120416.use";
+	// private final static String SOIL_FILE = "euro2012.soil";
+
+	// private final static String MODEL_DIRECTORY = "D:/TEACH/UML/Exemplos/UK_ProjectWorld";
+	// private final static String MODEL_FILE = "ProjectWorld.use";
+	// private final static String SOIL_FILE = "projects2.soil";
 
 	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/Anacleto/Metamodels/BPMN2";
 	private final static String	MODEL_FILE			= "BPMN2.0m.use";
-	private final static String	SOIL_FILE			= "????????";
+	private final static String	SOIL_FILE			= "BPMN2.0k.cmd";
 
 	/***********************************************************
 	 * @param args
@@ -37,11 +45,11 @@ public final class MainExample_Programming
 	 ***********************************************************/
 	public static void main(String[] args) throws InterruptedException
 	{
-//		testBasicFacade(args);
+		// testBasicFacade(args);
 
 		testProgramingFacade_BPMN2(args);
 
-//		 testProgramingFacade_CopaPaises(args);
+		// testProgramingFacade_CopaPaises(args);
 	}
 
 	/***********************************************************
@@ -71,24 +79,66 @@ public final class MainExample_Programming
 
 		api.compileSpecification(MODEL_FILE);
 
-		System.out.println("Number of classes -> " + api.allClasses().size());
+		System.out.println("\nNumber of classes -> " + api.allClasses().size() + "\n");
 
-		// Map<String, MElementAnnotation> m;
-		for (MClass aClass : api.allClasses())
-			if (aClass.isAnnotated())
+		api.readSOIL(SOIL_FILE, true);
+
+		System.out.println("\nINVARIANTS:");
+		for (MClassInvariant anInvariant : api.allInvariants())
+		{
+			if (!api.check(anInvariant))
 			{
-				System.out.println(aClass.name() + " IS ANNOTATED!");
-				for (Map.Entry<String, MElementAnnotation> e : api.allAnnotations(aClass).entrySet())
-					System.out.println("ANNOTATION> " + e.getKey() + ": " + e.getValue());
+				System.out.print("\tchecking invariant '" + anInvariant.cls().name() + "::" + anInvariant.name() + "' : ");
+				if (anInvariant.getAllAnnotations().keySet().isEmpty())
+					System.out.println("FAIL [Message missing ...]");
+				else
+					for (String key : anInvariant.getAllAnnotations().keySet())
+					{
+						switch (anInvariant.getAnnotationValue(key, "type").charAt(0))
+						{
+							case 'E':
+								System.out.print("[Error Message]");
+								break;
+							case 'W':
+								System.out.print("[Warning Message]");
+								break;
+							case 'I':
+								System.out.print("[Information Message]");
+								break;
+							case 'P':
+								System.out.print("[Plain Message]");
+								break;
+							default:
+								System.out.print("UNKNOWN MESSAGE TYPE!!!");
+						}
+						System.out.println(" > " + anInvariant.getAnnotationValue(key, "msg"));
+					}
 			}
-		
-		//api.command("check");
+		}
 
-		api.command("info vars");
+		// System.out.println("\nPRE-CONDITIONS:");
+		// for (MPrePostCondition aPre : api.allPreConditions())
+		// {
+		// for (String key : aPre.getAllAnnotations().keySet())
+		// System.out.println("\t@" + key + "(type=\"" + aPre.getAnnotationValue(key, "type") + "\", msg=\""
+		// + aPre.getAnnotationValue(key, "msg") + "\")");
+		// }
+		//
+		// System.out.println("\nPOST-CONDITIONS:");
+		// for (MPrePostCondition aPost : api.allPostConditions())
+		// {
+		// for (String key : aPost.getAllAnnotations().keySet())
+		// System.out.println("\t@" + key + "(type=\"" + aPost.getAnnotationValue(key, "type") + "\", msg=\""
+		// + aPost.getAnnotationValue(key, "msg") + "\")");
+		// }
+
+		// api.command("check");
+
+		// api.command("info vars");
 
 		// api.command("info state");
-		
-		api.createShell();
+
+		// api.createShell();
 	}
 
 	/***********************************************************
@@ -134,7 +184,7 @@ public final class MainExample_Programming
 		for (MObject jogador : api.allInstances(api.classByName("Jogador")))
 			System.out.println("JOGADOR > " + jogador);
 
-//		api.createShell();
+		// api.createShell();
 	}
 
 }

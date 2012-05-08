@@ -1,7 +1,6 @@
 package org.quasar.juse.api.implementation;
 
 import org.tzi.use.uml.mm.MClass;
-import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MOperation;
 import org.tzi.use.uml.ocl.type.EnumType;
 
