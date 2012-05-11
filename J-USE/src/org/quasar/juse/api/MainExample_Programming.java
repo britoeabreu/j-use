@@ -79,10 +79,12 @@ public final class MainExample_Programming
 
 		api.compileSpecification(MODEL_FILE);
 
-		System.out.println("\nNumber of classes -> " + api.allClasses().size() + "\n");
+		System.out.println("\t# classes = " + api.allClasses().size() + "\t\t# associations = " + api.allAssociations().size() + "\n");
 
 		api.readSOIL(SOIL_FILE, true);
-
+		
+		System.out.println("\t# objects = " + api.allObjects().size() + "\t\t# links = " + api.allLinks().size() + "\n");
+		
 		System.out.println("\nINVARIANTS:");
 		for (MClassInvariant anInvariant : api.allInvariants())
 		{

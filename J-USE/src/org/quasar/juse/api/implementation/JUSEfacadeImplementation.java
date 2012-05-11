@@ -76,6 +76,11 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	private MSystem	system	= null;
 	private Shell	shell	= null;
 
+	public JUSEfacadeImplementation()
+	{
+		System.out.println("j-use version 1.0.4, Copyright (C) 2012 QUASAR research group");
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -138,6 +143,8 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 			FileInputStream specStream = null;
 			try
 			{
+				System.out.println("\ncompileSpecification (" + specificationFilename + ")");
+
 				Log.verbose("compiling specification " + specificationFilename);
 				specStream = new FileInputStream(specificationFilename);
 				model = USECompiler.compileSpecification(specStream, specificationFilename, new PrintWriter(System.err),
@@ -689,6 +696,36 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 	{
 		return model.classes();
 		// return new HashSet<MClass>(model.classes());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allAssociations()
+	 */
+	public Collection<MAssociation> allAssociations()
+	{
+		return model.associations();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allObjects()
+	 */
+	public Collection<MObject> allObjects()
+	{
+		return system.state().allObjects();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allLinks()
+	 */
+	public Collection<MLink> allLinks()
+	{
+		return system.state().allLinks();
 	}
 
 	/*

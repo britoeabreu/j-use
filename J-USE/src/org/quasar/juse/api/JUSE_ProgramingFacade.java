@@ -139,35 +139,49 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	public MAttribute attributeByName(MObject theObject, String attributeName);
 	
 	/***********************************************************
-	* @return
+	* @return All the classes defined in the model
 	***********************************************************/
 	public Collection<MClass> allClasses();
 		
 	/***********************************************************
-	* @return
+	* @return All the associations defined in the model
+	***********************************************************/
+	public Collection<MAssociation> allAssociations();
+	
+	/***********************************************************
+	* @return All the objects defined in the system state
+	***********************************************************/
+	public Collection<MObject> allObjects();
+
+	/***********************************************************
+	* @return All the links defined in the system state
+	***********************************************************/
+	public Collection<MLink> allLinks();
+	
+	/***********************************************************
+	* @return All the invariants defined in the model
 	***********************************************************/
 	public Collection<MClassInvariant> allInvariants();
 	
 	/***********************************************************
-	* @return
+	* @return All the pre-conditions defined in the model
 	***********************************************************/
 	public Collection<MPrePostCondition> allPreConditions();
 	
 	/***********************************************************
-	* @return
+	* @return All the post-conditions defined in the model
 	***********************************************************/
 	public Collection<MPrePostCondition> allPostConditions();
 
 	/***********************************************************
-	* @param element
-	* @return
+	* @param element The model element
+	* @return The map containing the annotations of the model element
 	***********************************************************/
 	public Map<String, MElementAnnotation> annotations (MModelElement element);
 	
-
 	/***********************************************************
-	* @param anInvariant
-	* @return
+	* @param anInvariant The invariant being checked
+	* @return True if the invariant is fullfilled; False otherwise
 	***********************************************************/
 	public boolean check(MClassInvariant anInvariant);
 }
