@@ -36,7 +36,7 @@ public final class MainExample_Programming
 	// private final static String SOIL_FILE = "projects2.soil";
 
 	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/Anacleto/Metamodels/BPMN2";
-	private final static String	MODEL_FILE			= "BPMN2.0m.use";
+	private final static String	MODEL_FILE			= "BPMN2.0n.use";
 	private final static String	SOIL_FILE			= "BPMN2.0k.cmd";
 
 	/***********************************************************
@@ -98,8 +98,8 @@ public final class MainExample_Programming
 					{
 						switch (anInvariant.getAnnotationValue(key, "type").charAt(0))
 						{
-							case 'E':
-								System.out.print("[Error Message]");
+							case 'S':
+								System.out.print("[BPM2 specification non-conformance]");
 								break;
 							case 'W':
 								System.out.print("[Warning Message]");
@@ -113,7 +113,8 @@ public final class MainExample_Programming
 							default:
 								System.out.print("UNKNOWN MESSAGE TYPE!!!");
 						}
-						System.out.println(" > " + anInvariant.getAnnotationValue(key, "msg"));
+						System.out.print("> " + anInvariant.getAnnotationValue(key, "msg"));
+						System.out.println(" (" + anInvariant.getAnnotationValue(key, "origin") + ")");
 					}
 			}
 		}
