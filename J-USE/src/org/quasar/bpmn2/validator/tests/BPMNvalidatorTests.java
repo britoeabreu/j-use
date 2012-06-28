@@ -39,7 +39,7 @@ public class BPMNvalidatorTests
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
-		String[] args = { "-oclAnyCollectionsChecks:I" };
+		String[] args = { "-oclAnyCollectionsChecks:I"};
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
