@@ -482,6 +482,12 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		System.out.println("Java code generation concluded!\n");
 	}
 
+	@Override
+	public MObject createObject(String objectId, String theClass)
+	{
+		return createObject(objectId, classByName(theClass));
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -513,6 +519,12 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		assert theObject != null;
 
 		return system.state().deleteObject(theObject);
+	}
+
+	@Override
+	public MLinkObject createLinkObject(String objectId, String theAssociativeClass, List<MObject> members)
+	{
+		return createLinkObject(objectId, associationClassByName(theAssociativeClass), members);
 	}
 
 	/*
@@ -577,6 +589,12 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		assert theAttribute != null;
 
 		return theObject.state(system.state()).attributeValue(theAttribute);
+	}
+	
+	@Override
+	public MLink createLink(String theAssociation, List<MObject> members)
+	{
+		return createLink(associationByName(theAssociation), members);
 	}
 
 	/*
@@ -677,6 +695,12 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 		return theObject.cls().attribute(attributeName, true);
 	}
 
+	@Override
+	public Set<MObject> allInstances(String theClass)
+	{
+		return allInstances(classByName(theClass));
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -787,4 +811,6 @@ public class JUSEfacadeImplementation implements JUSE_ProgramingFacade, JUSE_Cod
 
 		return ((BooleanValue) anInvariant.expandedExpression().eval(context)).isTrue();
 	}
+
+
 }

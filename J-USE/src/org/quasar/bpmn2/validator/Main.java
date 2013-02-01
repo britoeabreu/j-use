@@ -4,14 +4,8 @@
  ***********************************************************/
 package org.quasar.bpmn2.validator;
 
-import java.util.Arrays;
-
 import org.quasar.juse.api.JUSE_CodeGeneratorFacade;
 import org.quasar.juse.api.implementation.JUSEfacadeImplementation;
-import org.tzi.use.uml.ocl.value.StringValue;
-import org.tzi.use.uml.sys.MLink;
-import org.tzi.use.uml.sys.MLinkObject;
-import org.tzi.use.uml.sys.MObject;
 
 /***********************************************************
  * @author fba 24 de Mar de 2012

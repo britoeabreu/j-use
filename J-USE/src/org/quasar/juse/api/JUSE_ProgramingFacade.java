@@ -52,6 +52,13 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	* @param theClass
 	* @return
 	***********************************************************/
+	public MObject createObject(String objectId, String theClass);
+	
+	/***********************************************************
+	* @param objectId
+	* @param theClass
+	* @return
+	***********************************************************/
 	public MObject createObject(String objectId, MClass theClass);
 	
 	/***********************************************************
@@ -59,6 +66,14 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	* @return
 	***********************************************************/
 	public DeleteObjectResult deleteObject(MObject theObject);
+	
+	/***********************************************************
+	* @param objectId
+	* @param theAssociativeClass
+	* @param members
+	* @return
+	***********************************************************/
+	public MLinkObject createLinkObject(String objectId, String theAssociativeClass, List<MObject> members);
 	
 	/***********************************************************
 	* @param objectId
@@ -93,6 +108,13 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	* @param members
 	* @return
 	***********************************************************/
+	public MLink createLink(String theAssociation, List<MObject> members);
+
+	/***********************************************************
+	* @param theAssociation
+	* @param members
+	* @return
+	***********************************************************/
 	public MLink createLink(MAssociation theAssociation, List<MObject> members);
 
 	/***********************************************************
@@ -101,6 +123,12 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	* @return
 	***********************************************************/
 	public DeleteObjectResult deleteLink(MAssociation theAssociation, List<MObject> members);
+
+	/***********************************************************
+	* @param className
+	* @return
+	***********************************************************/
+	public Set<MObject> allInstances(String theClass);
 
 	/***********************************************************
 	* @param className

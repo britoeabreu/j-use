@@ -24,10 +24,10 @@ import org.tzi.use.uml.mm.MClassInvariant;
  * 
  ***********************************************************/
 public class BPMNvalidatorTests {
-	private final static String USE_BASE_DIRECTORY = "C:/Program Files/use-3.0.4";
+	private final static String USE_BASE_DIRECTORY = "C:/Program Files (x86)/use-3.0.4";
 
-//	private final static String MODEL_DIRECTORY = "G:/Dropbox/Anacleto/Metamodels/BPMN2";
-	private final static String MODEL_DIRECTORY = "D:/tst";
+	private final static String MODEL_DIRECTORY = "D:/Dropbox/Anacleto/Metamodels/BPMN2";
+//	private final static String MODEL_DIRECTORY = "D:/tst";
 	private final static String MODEL_FILE = "BPMN2.0o.use";
 	private final static String SOIL_DIRECTORY = "TestSuiteModels";
 
@@ -77,101 +77,87 @@ public class BPMNvalidatorTests {
 		// System.out.println("\t# objects = " + api.allObjects().size() +
 		// "\t\t# links = " + api.allLinks().size() + "\n");
 		try {
-//			if (getWarnedInvariants().size() > 0)
-//				for (MClassInvariant anInvariant : getWarnedInvariants())
-//					printInvariantInfo(anInvariant);
-			if (getFailedInvariants().size() > 1)
-				for (MClassInvariant anInvariant : getFailedInvariants())
+			Set<MClassInvariant> failed = getFailedInvariants('S');
+			
+			if (failed.size() > 1)
+				for (MClassInvariant anInvariant : failed)
 					printInvariantInfo(anInvariant);
 		} catch (Exception e) {
 		}
 	}
 
-	/***********************************************************
-	 * @return
-	 ***********************************************************/
-	private Set<MClassInvariant> getFailedInvariants() {
 
+	/***********************************************************
+	* @return
+	***********************************************************/
+	private Set<MClassInvariant> getFailedInvariants(char type)
+	{
 		Set<MClassInvariant> result = new HashSet<MClassInvariant>();
-		for (MClassInvariant anInvariant : api.allInvariants()) {
-			if (!api.check(anInvariant)
-			// && anInvariant.name().compareTo(methodName) == 0
-			)
+		for (MClassInvariant anInvariant : api.allInvariants())
+		{
+			if (!api.check(anInvariant) && invariantValue(anInvariant, "type").charAt(0)==type)
 				result.add(anInvariant);
 		}
 		return result;
 	}
-
+	
 	/***********************************************************
-	 * @return
-	 ***********************************************************/
-	private Set<MClassInvariant> getWarnedInvariants() {
-
-		Set<MClassInvariant> result = new HashSet<MClassInvariant>();
-		for (MClassInvariant anInvariant : api.allInvariants()) {
-			if (!api.check(anInvariant)
-					&& anInvariant.name().substring(0, 3).compareTo("bp_") == 0)
-				result.add(anInvariant);
-		}
-		return result;
-	}
-
-	/***********************************************************
-	 * @param invariantName
-	 * @return
-	 ***********************************************************/
-	private boolean invariantFails(String invariantName) {
-		for (MClassInvariant anInvariant : getFailedInvariants()) {
+	* @param invariantName
+	* @return
+	***********************************************************/
+	private boolean invariantFails(String invariantName)
+	{
+		for (MClassInvariant anInvariant : getFailedInvariants('S'))
+		{
 			// System.out.println("INVARIANT NAME>" + anInvariant.name() + "<");
 			if (anInvariant.name().equals(invariantName))
 				return true;
 		}
 		return false;
 	}
+	
+	private String invariantValue(MClassInvariant anInvariant, String attributeName)
+	{
+		assertEquals(1, anInvariant.getAllAnnotations().size());
 
-	/***********************************************************
-	 * @param invariantName
-	 * @return
-	 ***********************************************************/
-	private boolean invariantWarns(String invariantName) {
-		for (MClassInvariant anInvariant : getWarnedInvariants()) {
-			// System.out.println("INVARIANT NAME>" + anInvariant.name() + "<");
-			if (anInvariant.name().equals(invariantName))
-				return false;
+		Set<String> keySet = anInvariant.getAllAnnotations().keySet();
+		assertEquals(1, keySet.size());
+		
+		for (String key : keySet)
+				return anInvariant.getAnnotationValue(key, attributeName);
+		
+		return null;
 		}
-		return true;
-	}
-
+	
 	/***********************************************************
-	 * @param anInvariant
-	 ***********************************************************/
-	private void printInvariantInfo(MClassInvariant anInvariant) {
-		System.out.print("\tchecking invariant '" + anInvariant.cls().name()
-				+ "::" + anInvariant.name() + "' : ");
-		if (anInvariant.getAllAnnotations().keySet().isEmpty())
+	* @param anInvariant
+	***********************************************************/
+	private void printInvariantInfo(MClassInvariant anInvariant)
+	{
+		System.out.print("\tchecking invariant '" + anInvariant.cls().name() + "::" + anInvariant.name() + "' : ");
+		if (anInvariant.getAllAnnotations().isEmpty())
 			System.out.println("FAIL [Message missing ...]");
 		else
-			for (String key : anInvariant.getAllAnnotations().keySet()) {
-				switch (anInvariant.getAnnotationValue(key, "type").charAt(0)) {
-				case 'S':
-					System.out.print("[BPMN2 specification non-conformance]");
-					break;
-				case 'B':
-					System.out.print("[Best practice violation]");
-					break;
-				case 'I':
-					System.out.print("[Information Message]");
-					break;
-				default:
-					System.out.print("UNKNOWN MESSAGE TYPE!!!");
+			{
+				switch (invariantValue(anInvariant, "type").charAt(0))
+				{
+					case 'S':
+						System.out.print("[BPMN2 specification non-conformance]");
+						break;
+					case 'B':
+						System.out.print("[Best practice violation]");
+						break;
+					case 'I':
+						System.out.print("[Information Message]");
+						break;
+					default:
+						System.out.print("UNKNOWN MESSAGE TYPE!!!");
 				}
-				System.out.print("> "
-						+ anInvariant.getAnnotationValue(key, "msg"));
-				System.out.println(" ("
-						+ anInvariant.getAnnotationValue(key, "origin") + ")");
+				System.out.print("> " + invariantValue(anInvariant,  "msg"));
+				System.out.println(" (" + invariantValue(anInvariant,  "origin") + ")");
 			}
 	}
-
+	
 	/***********************************************************
 	* 
 	***********************************************************/
@@ -182,13 +168,11 @@ public class BPMNvalidatorTests {
 		// System.out.println(">>>" +invariantName );
 
 		api.readSOIL(SOIL_DIRECTORY + "/PASS/" + methodName + ".cmd", true);
-		 assertEquals(0, getFailedInvariants().size());
-		// assertEquals(0, getWarnedInvariants().size());
-//		assertTrue(getWarnedInvariants().size() > 0);
-//		assertTrue(invariantWarns(methodName));
+		 assertEquals(0, getFailedInvariants('S').size());
+		assertTrue(!invariantFails(methodName));
 
 		api.readSOIL(SOIL_DIRECTORY + "/FAIL/" + methodName + ".cmd", true);
-		assertTrue(getFailedInvariants().size() > 0);
+		assertTrue(getFailedInvariants('S').size() > 0);
 		// System.out.println("DEBUG>" +invariantFails(invariantName));
 		assertTrue(invariantFails(methodName));
 	}
