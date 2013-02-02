@@ -29,9 +29,9 @@ public final class PIMETA_Loader
 {
 	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.4";
 
-	 private final static String MODEL_DIRECTORY = "D:/Dropbox/TOPICS/_CONSTRUCTION_EVALUATION/ASPECTS/PIMETA";
+	 private final static String MODEL_DIRECTORY = "metamodels/pimeta";
 	 private final static String MODEL_FILE = "pimeta.use";
-	 private final static String SOIL_FILE = "cmd/java.cmd";
+	 private final static String SOIL_FILE = "java.cmd";
 
 	
 
