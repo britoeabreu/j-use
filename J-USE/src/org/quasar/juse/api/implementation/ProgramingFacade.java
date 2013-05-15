@@ -42,6 +42,7 @@ import org.tzi.use.uml.ocl.expr.EvalContext;
 import org.tzi.use.uml.ocl.expr.Evaluator;
 import org.tzi.use.uml.ocl.expr.Expression;
 import org.tzi.use.uml.ocl.expr.MultiplicityViolationException;
+import org.tzi.use.uml.ocl.type.EnumType;
 import org.tzi.use.uml.ocl.value.UndefinedValue;
 import org.tzi.use.uml.ocl.value.Value;
 import org.tzi.use.uml.ocl.value.BooleanValue;
@@ -249,6 +250,16 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	public MClass classByName(String className)
 	{
 		return getSystem().model().getClass(className);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#enumByName(java.lang.String)
+	 */
+	public EnumType enumByName(String enumName)
+	{
+		return getSystem().model().enumType(enumName);
 	}
 
 	/*

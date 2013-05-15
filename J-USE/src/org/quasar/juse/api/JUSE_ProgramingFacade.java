@@ -32,6 +32,7 @@ import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MElementAnnotation;
 import org.tzi.use.uml.mm.MModelElement;
 import org.tzi.use.uml.mm.MPrePostCondition;
+import org.tzi.use.uml.ocl.type.EnumType;
 import org.tzi.use.uml.ocl.value.Value;
 import org.tzi.use.uml.sys.MLink;
 import org.tzi.use.uml.sys.MLinkObject;
@@ -148,6 +149,12 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	***********************************************************/
 	public MClass classByName(String className);
 
+	/***********************************************************
+	* @param enumName
+	* @return
+	***********************************************************/
+	public EnumType enumByName(String enumName);
+	
 	/***********************************************************
 	* @param associationClassName
 	* @return

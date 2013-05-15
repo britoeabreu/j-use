@@ -12,6 +12,7 @@ import org.quasar.juse.api.JUSE_BasicFacade;
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 import org.quasar.juse.api.implementation.BasicFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
+import org.tzi.use.uml.ocl.value.EnumValue;
 //import org.tzi.use.uml.mm.Annotatable;
 //import org.tzi.use.uml.mm.MClass;
 //import org.tzi.use.uml.mm.MClassInvariant;
@@ -149,8 +150,10 @@ public final class Example_InstancesGeneration
 		api.command("info state");
 
 		api.setObjectAttribute(ronaldo, api.attributeByName(ronaldo, "nome"), new StringValue("Cristiano Ronaldo"));
-
+		api.setObjectAttribute(ronaldo, api.attributeByName(ronaldo, "posicao"), new EnumValue(api.enumByName("PosicaoJogador"), "Avancado"));
+		
 		System.out.println(api.getObjectAttribute(ronaldo, api.attributeByName(ronaldo, "nome")));
+		System.out.println(api.getObjectAttribute(ronaldo, api.attributeByName(ronaldo, "posicao")));
 
 		for (MObject clube : api.allInstances("Clube"))
 			System.out.println("CLUBE > " + clube);
