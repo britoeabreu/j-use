@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.quasar.copaPaises.businessLayer.Pais;
+import org.quasar.copaPaises.persistenceLayer.Database;
 import org.tzi.use.uml.mm.*;
 import org.tzi.use.uml.ocl.expr.VarDecl;
 import org.tzi.use.uml.ocl.type.EnumType;
@@ -37,6 +39,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 	private String			author;
 	private String			basePackageName;
 	private String			businessLayerName;
+	private String			persistenceLayerName;
 	private ModelUtilities	util;
 
 	/***********************************************************
@@ -48,13 +51,16 @@ public class JavaBusinessVisitor extends JavaVisitor
 	 *            Full name of the base package where the code of the generated Java prototype will be placed
 	 * @param businessLayerName
 	 *            Relative name of the layer package where the source code for the business layer is to be placed
+	 * @param persistenceLayerName
+	 *            Relative name of the layer package where the source code for the persistence layer is to be placed
 	 ***********************************************************/
-	public JavaBusinessVisitor(MModel model, String author, String basePackageName, String businessLayerName)
+	public JavaBusinessVisitor(MModel model, String author, String basePackageName, String businessLayerName, String persistenceLayerName)
 	{
 		this.model = model;
 		this.author = author;
 		this.basePackageName = basePackageName;
 		this.businessLayerName = businessLayerName;
+		this.persistenceLayerName = persistenceLayerName;
 		this.util = new ModelUtilities(model);
 	}
 
@@ -139,6 +145,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("import java.util.Set;");
 		println("import java.util.HashSet;");
+		println("import " + basePackageName + "." + persistenceLayerName + ".Database;");
 
 		if (hasOrderedSets)
 		{
@@ -168,25 +175,17 @@ public class JavaBusinessVisitor extends JavaVisitor
 	@Override
 	public void printAllInstances(MClass theClass)
 	{
-		if (theClass.isAbstract())
-		{
-			println();
-			println("/**********************************************************************");
-			println("* @return set with all instances of the current class");
-			println("**********************************************************************/");
-			println("public static Set<" + theClass.name() + "> allInstances()");
-			println("{");
-			incIndent();
-			println("Set<" + theClass.name() + "> result = new HashSet<" + theClass.name() + ">();");
-			for (MClass descendant : theClass.children())
-				println("result.addAll(" + descendant.name() + ".allInstances);");
-			println("return result;");
-			decIndent();
-			println("}");
-		}
-		else
-			println("public static Set<" + theClass.name() + "> allInstances = new HashSet<" + theClass.name() + ">();");
-
+		println();
+		println("/***********************************************************");
+		println("* @return all instances of class " + theClass.name());
+		println("***********************************************************/");
+		print("public static Set<" + theClass.name() + "> ");
+		println(theClass.isAbstract() ? "allInstancesAbstract()" : "allInstances()");
+		println("{");
+		incIndent();
+		println("return Database.allInstances("+ theClass.name()  + ".class);");
+		decIndent();
+		println("}");
 		println();
 	}
 
@@ -206,8 +205,6 @@ public class JavaBusinessVisitor extends JavaVisitor
 		incIndent();
 		if (theClass.allParents().size() > 0)
 			println("super();");
-		if (!theClass.isAbstract())
-			println("allInstances.add(this);");
 		decIndent();
 		println("}");
 		println();
@@ -252,8 +249,6 @@ public class JavaBusinessVisitor extends JavaVisitor
 			if (attribute.getKind() == AssociationKind.ASSOCIATIVE2MEMBER)
 				println("this." + attribute.getName() + " = " + attribute.getName() + ";");
 		
-		if (!theClass.isAbstract())
-			println("allInstances.add(this);");
 		decIndent();
 		println("}");
 		println();
@@ -271,6 +266,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		for (MClass theParentClass : theClass.allParents())
 			inheritedAttributes.addAll(AttributeInfo.getAttributesInfo(theParentClass));
 
+		if (inheritedAttributes.size() + theClass.attributes().size() == 0)
+			return;
+		
 		println("/**********************************************************************");
 		println("* Parameterized constructor");
 		for (AttributeInfo attribute : inheritedAttributes)
@@ -313,8 +311,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
 			println("this." + attribute.getName() + " = " + attribute.getName() + ";");
-		if (!theClass.isAbstract())
-			println("allInstances.add(this);");
+
 		decIndent();
 		println("}");
 		println();
@@ -356,6 +353,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 								+ currentAttribute.getType() + "[1]"
 								+ (currentAttribute.getType().isOrderedSet() ? " ordered" : ""));
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -393,6 +392,22 @@ public class JavaBusinessVisitor extends JavaVisitor
 			decIndent();
 			println("}");
 			println();
+			
+			if (currentAttribute.getKind() == AssociationKind.MANY2MANY)
+			{
+				String otherType = JavaTypes.javaType(currentAttribute.getType());
+				printHeaderBasicGettersSetters(theClass, currentAttribute, "single setter");
+				println("* @param " + otherType.toLowerCase() + " the " + otherType.toLowerCase() + " to add");
+				println("**********************************************************************/");
+				println("public void add" + capitalize(currentAttribute.getName()) + "("
+								+ otherType + " " + otherType.toLowerCase() + ")");
+				println("{");
+				incIndent();
+				println("this." + currentAttribute.getName() + ".add(" + otherType.toLowerCase() + ");");
+				decIndent();
+				println("}");
+				println();
+			}
 		}
 	}
 
@@ -506,7 +521,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		if (targetAE.getType().isSet() || targetAE.getType().isOrderedSet())
 		{
 			println(associativeInterfaceType + " result = new " + associativeImplementationType + "();");
-			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances)");
+			print("for (" + associativeClass + " x : " + associativeClass);
+			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -517,7 +533,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		else
 		{
-			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances)");
+			print("for (" + associativeClass + " x : " + associativeClass);
+			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -589,7 +606,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		if (aInfo.getTargetAE().getType().isSet() || aInfo.getTargetAE().getType().isOrderedSet())
 		{
 			println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances)");
+			print("for (" + associativeClass + " x : " + associativeClass);
+			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");			
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -600,7 +618,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		else
 		{
-			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances)");
+			print("for (" + associativeClass + " x : " + associativeClass);
+			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -625,7 +644,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		{
 			println("for (" + targetClass + " t : " + targetRole + ")");
 			incIndent();
-			println("for (" + associativeClass + " x: " + associativeClass + ".allInstances)");
+			print("for (" + associativeClass + " x : " + associativeClass);
+			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "() == this)");
 			incIndent();
@@ -636,7 +656,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		else
 		{
-			println("for (" + associativeClass + " x: " + associativeClass + ".allInstances)");
+			print("for (" + associativeClass + " x : " + associativeClass);
+			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "() == this)");
 			incIndent();
@@ -675,7 +696,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		String targetInterfaceType = JavaTypes.getJavaInterfaceType(targetAE.getType());
 		// String targetImplementationType = JavaTypes.getJavaImplementationType(targetAE.getType());
 
-		String allInstances = aInfo.getTargetAE().cls().isAbstract() ? "allInstances()" : "allInstances";
+//		String allInstances = aInfo.getTargetAE().cls().isAbstract() ? "allInstances()" : "allInstances";
 
 		println("/**********************************************************************");
 		println("* ONE2ONE getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
@@ -685,7 +706,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public " + targetInterfaceType + " " + targetRole + "()");
 		println("{");
 		incIndent();
-		println("for (" + targetInterfaceType + " x : " + targetInterfaceType + "." + allInstances + ")");
+//		println("for (" + targetInterfaceType + " x : " + targetInterfaceType + "." + allInstances + ")");
+		print("for (" + targetInterfaceType + " x : " + targetInterfaceType);
+		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 		incIndent();
 		println("if (x." + sourceRole + "() == this)");
 		incIndent();
@@ -737,7 +760,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		String targetInterfaceType = JavaTypes.getJavaInterfaceType(targetAE.getType());
 		String targetImplementationType = JavaTypes.getJavaImplementationType(targetAE.getType());
 
-		String allInstances = aInfo.getTargetAE().cls().isAbstract() ? "allInstances()" : "allInstances";
+//		String allInstances = aInfo.getTargetAE().cls().isAbstract() ? "allInstances()" : "allInstances";
 
 		println("/**********************************************************************");
 		println("* ONE2MANY getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
@@ -748,7 +771,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-		println("for (" + targetClass + " x : " + targetClass + "." + allInstances + ")");
+		print("for (" + targetClass + " x : " + targetClass);
+		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 		incIndent();
 		println("if (x." + sourceRole + "()  ==  this)");
 		incIndent();
@@ -761,7 +785,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 
 		println("/**********************************************************************");
-		println("* ONE2MANY setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
+		println("* ONE2MANY multiple setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
 						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetRole + " the " + targetRole + " to set");
 		println("**********************************************************************/");
@@ -775,6 +799,19 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
+
+		println("/**********************************************************************");
+		println("* ONE2MANY single setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
+						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to add");
+		println("**********************************************************************/");
+		println("public void add" + targetClass + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
+		println("{");
+		incIndent();
+		println(targetClass.toLowerCase() + ".set" + capitalize(sourceRole) + "(this);");
+		decIndent();
+		println("}");
+		println();	
 	}
 
 	/*
@@ -804,7 +841,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		String targetInterfaceType = JavaTypes.getJavaInterfaceType(targetAE.getType());
 		String targetImplementationType = JavaTypes.getJavaImplementationType(targetAE.getType());
 
-		String allInstances = aInfo.getTargetAE().cls().isAbstract() ? "allInstances()" : "allInstances";
+//		String allInstances = aInfo.getTargetAE().cls().isAbstract() ? "allInstances()" : "allInstances";
 
 		println("/**********************************************************************");
 		println("* MANY2MANY getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
@@ -815,7 +852,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-		println("for (" + targetClass + " x : " + targetClass + "." + allInstances + ")");
+		print("for (" + targetClass + " x : " + targetClass);
+		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 		incIndent();
 		println("if (x." + sourceRole + "().contains(this))");
 		incIndent();
@@ -828,7 +866,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 
 		println("/**********************************************************************");
-		println("* MANY2MANY setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
+		println("* MANY2MANY multiple setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
 						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetRole + " the " + targetRole + " to set");
 		println("**********************************************************************/");
@@ -842,6 +880,19 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
+		
+		println("/**********************************************************************");
+		println("* MANY2MANY single setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
+						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to add");
+		println("**********************************************************************/");
+		println("public void add" + targetClass + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
+		println("{");
+		incIndent();
+		println(targetClass.toLowerCase() + ".add" + capitalize(sourceRole) + "(this);");
+		decIndent();
+		println("}");
+		println();			
 	}
 
 	/*
@@ -932,10 +983,10 @@ public class JavaBusinessVisitor extends JavaVisitor
 	@Override
 	public void printToString(MClass theClass)
 	{
-		println("/* (non-Javadoc)");
-		println("* @see java.lang.Object#toString()");
-		println("*/");
-		println("@Override");
+//		println("/* (non-Javadoc)");
+//		println("* @see java.lang.Object#toString()");
+//		println("*/");
+//		println("@Override");
 		println("/**********************************************************************");
 		println("* Object serializer");
 		println("**********************************************************************/");
@@ -943,6 +994,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		print("return \"" + theClass.name() + " [");
+		if (theClass.allParents().size()>0)
+			print("\" + super.toString() + \" ");
 		List<AttributeInfo> attributes = AttributeInfo.getAttributesInfo(theClass);
 		for (int i = 0; i < attributes.size(); i++)
 		{
@@ -950,7 +1003,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 			if (i < attributes.size() - 1)
 				print(", ");
 		}
-		println("]\\n\";");
+		println("]\";");
 		decIndent();
 		println("}");
 		println();

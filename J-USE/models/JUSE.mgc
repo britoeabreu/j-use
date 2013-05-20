@@ -21,7 +21,7 @@
         <Communication destinationClassName="org.quasar.juse.api.JUSE_ProgramingFacade"/>
         <Communication destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
     </Class>
-    <Class name="org.quasar.juse.api.JUSE_CodeGeneratorFacade" x="109" y="221">
+    <Class name="org.quasar.juse.api.JUSE_PrototypeGeneratorFacade" x="109" y="221">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -39,7 +39,7 @@
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"
             accessors-accepted="true" constructors-accepted="true"/>
-        <Communication destinationClassName="org.quasar.juse.api.JUSE_CodeGeneratorFacade"/>
+        <Communication destinationClassName="org.quasar.juse.api.JUSE_PrototypeGeneratorFacade"/>
         <Communication destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
     </Class>
     <Class name="org.quasar.juse.api.JUSE_BasicFacade" x="385" y="3">
@@ -62,6 +62,6 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Extension destinationClassName="org.quasar.juse.api.JUSE_ProgramingFacade"/>
-        <Extension destinationClassName="org.quasar.juse.api.JUSE_CodeGeneratorFacade"/>
+        <Extension destinationClassName="org.quasar.juse.api.JUSE_PrototypeGeneratorFacade"/>
     </Class>
 </ClassDiagram>

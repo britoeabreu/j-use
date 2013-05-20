@@ -4,8 +4,8 @@
  ***********************************************************/
 package org.quasar.bpmn2.validator;
 
-import org.quasar.juse.api.JUSE_CodeGeneratorFacade;
-import org.quasar.juse.api.implementation.CodeGeneratorFacade;
+import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
+import org.quasar.juse.api.implementation.PrototypeGeneratorFacade;
 
 /***********************************************************
  * @author fba 24 de Mar de 2012
@@ -17,6 +17,7 @@ public final class Main
 	private final static String	JAVA_WORKSPACE		= "D:/TEACH/Java/workspace";
 	private final static String	BUSINESSLAYER_NAME	= "businessLayer";
 	private final static String	PRESENTATIONLAYER_NAME	= "presentationLayer";
+	private final static String	PERSISTENCELAYER_NAME	= "persistenceLayer";
 	
 	private final static String	MODEL_DIRECTORY = "D:/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
 	private final static String	MODEL_FILE = "CopaPaises_20120416.use";
@@ -43,7 +44,7 @@ public final class Main
 	 ***********************************************************/
 	public static void main(String[] args) throws InterruptedException
 	{	 
-		JUSE_CodeGeneratorFacade api = new CodeGeneratorFacade();
+		JUSE_PrototypeGeneratorFacade api = new PrototypeGeneratorFacade();
 		
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
@@ -53,7 +54,8 @@ public final class Main
 
 		api.command("info state");
 
-		api.javaGeneration("Fernando Brito e Abreu", JAVA_WORKSPACE, TARGET_PACKAGE, BUSINESSLAYER_NAME, PRESENTATIONLAYER_NAME);
+		api.javaGeneration("Fernando Brito e Abreu", JAVA_WORKSPACE, TARGET_PACKAGE, 
+						BUSINESSLAYER_NAME, PRESENTATIONLAYER_NAME, PERSISTENCELAYER_NAME);
 		
 		 api.dumpState("Fernando Brito e Abreu", JAVA_WORKSPACE, CMD_FILE, false);
 	}

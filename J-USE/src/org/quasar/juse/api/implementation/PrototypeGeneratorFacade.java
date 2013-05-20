@@ -1,0 +1,618 @@
+/*
+ * J-USE - Java prototyping for the UML based specification environment (USE)
+ * Copyright (C) 2012 Fernando Brito e Abrey, QUASAR research group
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+package org.quasar.juse.api.implementation;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
+import org.quasar.juse.persistence.Database;
+
+import org.tzi.use.uml.mm.MAssociationClass;
+import org.tzi.use.uml.mm.MAttribute;
+import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.mm.MOperation;
+import org.tzi.use.uml.ocl.type.EnumType;
+import org.tzi.use.uml.ocl.type.Type;
+import org.tzi.use.uml.ocl.value.BooleanValue;
+import org.tzi.use.uml.ocl.value.IntegerValue;
+import org.tzi.use.uml.ocl.value.RealValue;
+import org.tzi.use.uml.ocl.value.StringValue;
+import org.tzi.use.uml.sys.MLink;
+import org.tzi.use.uml.sys.MLinkEnd;
+import org.tzi.use.uml.sys.MLinkObject;
+import org.tzi.use.uml.sys.MObject;
+import org.tzi.use.uml.sys.MObjectState;
+
+/***********************************************************
+ * @author fba 25 de Abr de 2012
+ * 
+ ***********************************************************/
+public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_PrototypeGeneratorFacade
+{
+	private Map<Integer, Object>	objectMapper	= null;
+
+	public PrototypeGeneratorFacade()
+	{
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_PrototypeGeneratorFacade#javaGeneration(java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	public void javaGeneration(String author, String javaWorkspace, String basePackageName, String businessLayerName,
+					String presentationLayerName, String persistenceLayerName)
+	{
+		if (getSystem().model() == null)
+		{
+			System.out.println("Please compile the specification first!");
+			return;
+		}
+
+		// AssociationInfo.testGetAssociationInfo(model);
+		// ModelUtilities mu = new ModelUtilities(model);
+		// mu.printModelUtilities();
+
+		System.out.println("\nJava plugin for USE version 1.0.6, Copyright (C) 2012-2013 QUASAR Group");
+		System.out.println("\t - generating Java code for " + getSystem().model().name() + "...");
+
+		JavaVisitor visitor = new JavaBusinessVisitor(getSystem().model(), author, basePackageName, businessLayerName, persistenceLayerName);
+
+		String targetDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
+						+ "/" + businessLayerName;
+		
+		String presentationDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
+						+ "/" + presentationLayerName;
+		
+		String persistenceDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
+						+ "/" + persistenceLayerName;
+
+		FileUtilities.createDirectory(presentationDirectory);
+		
+		FileUtilities.createDirectory(persistenceDirectory);
+		FileUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", 
+						                   persistenceDirectory + "/Database.java");
+		
+		FileUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", 
+						"org.quasar.juse.persistence", basePackageName + "." + persistenceLayerName);
+		
+		// visitAnnotations(e);
+
+		// print user-defined data types
+		for (EnumType t : getSystem().model().enumTypes())
+		{
+			if (FileUtilities.openOutputFile(targetDirectory, t.name() + ".java"))
+			{
+				// visitAnnotations(t);
+				visitor.printEnumType(t);
+				FileUtilities.println();
+				FileUtilities.closeOutputFile();
+			}
+		}
+
+		// visit classes
+		for (MClass cls : getSystem().model().classes())
+		{
+			if (FileUtilities.openOutputFile(targetDirectory, cls.name() + ".java"))
+			{
+				visitor.printClassHeader(cls);
+
+				FileUtilities.incIndent();
+
+				visitor.printAllInstances(cls);
+
+				visitor.printAttributes(cls);
+
+				if (cls instanceof MAssociationClass)
+					visitor.printAssociativeConstructor(cls);
+				else
+					visitor.printDefaultConstructor(cls);
+
+				visitor.printParameterizedConstructor(cls);
+
+				visitor.printBasicGettersSetters(cls);
+
+				visitor.printNavigators(cls);
+
+				for (MOperation op : cls.operations())
+					visitor.printSoilOperation(op);
+
+				visitor.printToString(cls);
+
+				visitor.printInvariants(cls);
+
+				FileUtilities.decIndent();
+				FileUtilities.println("}");
+
+				FileUtilities.closeOutputFile();
+
+				// System.out.println(cls.name() + " ... done!");
+			}
+		}
+
+		if (FileUtilities.openOutputFile(targetDirectory, "Main_" + getSystem().model().name() + ".java"))
+		{
+			visitor.printMain();
+		}
+
+		ModelUtilities util = new ModelUtilities(getSystem().model());
+		System.out.println("\t - code generation concluded (" + util.numberClasses() + " classes, " + util.numberAttributes()
+						+ " attributes, " + util.numberOperations() + " operations)\n");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_PrototypeGeneratorFacade#storeState(java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String, boolean)
+	 */
+	public void storeState(String javaWorkspace, String basePackageName, String businessLayerName, String databaseDirectory,
+					String libraryDirectory, String db4oJar)
+	{
+		String classPath = basePackageName + "." + businessLayerName;
+		String databasePath = javaWorkspace + "/" + getSystem().model().name() + "/" + databaseDirectory;
+		String libraryPath = javaWorkspace + "/" + getSystem().model().name() + "/" + libraryDirectory;
+
+		if (getSystem() == null || getSystem().model() == null)
+		{
+			System.out.println("Please compile the specification first!");
+			return;
+		}
+
+		objectMapper = new HashMap<Integer, Object>(getSystem().state().numObjects());
+
+		FileUtilities.createDirectory(databasePath);
+		FileUtilities.createDirectory(libraryPath);
+		FileUtilities.copyFile(libraryDirectory + "/" + db4oJar, libraryPath + "/" + db4oJar);
+
+		Database.init(databasePath, getSystem().model().name(), "db4o");
+
+		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase()
+						+ "\nPlease wait ...");
+
+		Database.cleanUp();
+
+		generateRegularObjects(classPath);
+		
+		generateLinkObjects(classPath);
+
+		//generateLinks(classPath);
+
+		setObjectsState(classPath);
+		
+		saveObjectsInDatabase();
+
+		Database.close();
+
+		System.out.println("Model snapshot database store concluded!\n");
+	}
+
+	/***********************************************************
+	 * @param classpath
+	 ***********************************************************/
+	private void generateRegularObjects(String classpath)
+	{
+		int regularObjects = 0;
+		for (MClass aClass : getSystem().model().classes())
+		{
+			if (!(aClass instanceof MAssociationClass))
+			{
+				Class<?> c;
+				try
+				{
+					c = Class.forName(classpath + "." + aClass.name());
+
+					Constructor<?> javaConstructor = c.getDeclaredConstructor();
+
+					for (MObject useObject : getSystem().state().objectsOfClass(aClass))
+					{
+						objectMapper.put(useObject.hashCode(), javaConstructor.newInstance());
+						regularObjects++;
+					}
+				}
+				catch (ClassNotFoundException e)
+				{
+					e.printStackTrace();
+				}
+				catch (SecurityException e)
+				{
+					e.printStackTrace();
+				}
+				catch (NoSuchMethodException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+				catch (InstantiationException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+				catch (InvocationTargetException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		System.out.println("\t - stored " + regularObjects + " regular objects");
+	}
+
+	private boolean isAssociationClassToRegularClasses(MClass aClass)
+	{
+		boolean result = true;
+		for (MClass assClass : ((MAssociationClass) aClass).associatedClasses())
+			if (assClass instanceof MAssociationClass)
+				result = false;
+		return result;
+	}
+
+	/***********************************************************
+	 * @param classpath
+	 ***********************************************************/
+	private void generateLinkObjects(String classpath)
+	{
+		int totalLinkObjects = 0;
+
+		// generates link objects whose connected objects are regular objects
+		for (MClass aClass : getSystem().model().classes())
+			if (aClass instanceof MAssociationClass)
+				if (isAssociationClassToRegularClasses(aClass))
+					totalLinkObjects += generateLinkObjectsFromClass(classpath, aClass);
+
+		// generates link objects whose connected objects are link objects
+		for (MClass aClass : getSystem().model().classes())
+			if (aClass instanceof MAssociationClass)
+				if (!isAssociationClassToRegularClasses(aClass))
+					totalLinkObjects += generateLinkObjectsFromClass(classpath, aClass);
+
+		System.out.println("\t - stored " + totalLinkObjects + " link objects");
+	}
+
+	/***********************************************************
+	 * @param classpath
+	 * @param aClass
+	 ***********************************************************/
+	private int generateLinkObjectsFromClass(String classpath, MClass aClass)
+	{
+		int linkObjects = 0;
+		Class<?> c, ac1, ac2;
+		try
+		{
+			c = Class.forName(classpath + "." + aClass.name());
+
+			MAssociationClass associationClass = (MAssociationClass) aClass;
+
+			ac1 = Class.forName(classpath + "." + associationClass.associationEnds().get(0).cls().name());
+			ac2 = Class.forName(classpath + "." + associationClass.associationEnds().get(1).cls().name());
+
+			Constructor<?> javaConstructor = c.getDeclaredConstructor(ac1, ac2);
+
+			for (MObject useObject : getSystem().state().objectsOfClass(aClass))
+			{
+				MLinkObject linkObject = (MLinkObject) useObject;
+
+				ArrayList<MObject> linked = new ArrayList<MObject>();
+				for (MObject anObject : linkObject.linkedObjects())
+					linked.add(anObject);
+
+				objectMapper.put(
+								useObject.hashCode(),
+								javaConstructor.newInstance(objectMapper.get(linked.get(0).hashCode()),
+												objectMapper.get(linked.get(1).hashCode())));
+
+				linkObjects++;
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NoSuchMethodException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InstantiationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+		return linkObjects;
+	}
+
+	/***********************************************************
+	 * @param classpath
+	 ***********************************************************/
+	private void generateLinks(String classpath)
+	{
+		int totalLinks = 0;
+
+		for (MLink theLink : getSystem().state().allLinks())
+			if (!(theLink instanceof MObject))
+			{
+				System.out.println("!insert (" + theLink.linkedObjects().get(0).name() + ", "
+								+ theLink.linkedObjects().get(1).name() + ") into " + theLink.association().name());
+
+				Object o1 = objectMapper.get(theLink.linkedObjects().get(0).hashCode());
+				Object o2 = objectMapper.get(theLink.linkedObjects().get(1).hashCode());
+
+				Method m = null;
+
+				for (MLinkEnd le : theLink.linkEnds())
+					System.out.print("|" + le.associationEnd().nameAsRolename());
+				System.out.println("|");
+
+				String c1 = theLink.association().associationEnds().get(0).cls().name();
+				String c2 = theLink.association().associationEnds().get(1).cls().name();
+				String r1 = theLink.association().associationEnds().get(0).nameAsRolename();
+				String r2 = theLink.association().associationEnds().get(1).nameAsRolename();
+				
+				String methodName = "set" + FileUtilities.capitalize(r2);
+				System.out.println( methodName + "(" + theLink.linkedObjects().get(1) + ")");
+				try
+				{
+						Class<?> c = Class.forName(classpath + "." + theLink.linkedObjects().get(0).cls().name());
+
+						System.out.println(c.getName() + "\n");
+
+						m = c.getDeclaredMethod(methodName, o1.getClass());
+						System.out.println(m);
+	//					m.invoke(o2);
+					
+					totalLinks++;
+				}
+				catch (SecurityException e)
+				{
+					e.printStackTrace();
+				}
+				catch (NoSuchMethodException e)
+				{
+					e.printStackTrace();
+				}
+				catch (IllegalArgumentException e)
+				{
+					e.printStackTrace();
+				}
+//				catch (IllegalAccessException e)
+//				{
+//					e.printStackTrace();
+//				}
+//				catch (InvocationTargetException e)
+//				{
+//					e.printStackTrace();
+//				}
+				catch (ClassNotFoundException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		System.out.println("\t - stored " + totalLinks + " links (association instances)");
+	}
+
+	private void setObjectsState(String classpath)
+	{
+		for (MClass aClass : getSystem().model().classes())
+		{
+			Class<?> c = null;
+			try
+			{
+				c = Class.forName(classpath + "." + aClass.name());
+			}
+			catch (ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+
+			for (MObject useObject : getSystem().state().objectsOfClass(aClass))
+			{
+				Object javaObject = objectMapper.get(useObject.hashCode());
+
+				MObjectState useObjectState = useObject.state(getSystem().state());
+
+				for (MAttribute attribute : aClass.attributes())
+					setJavaObjectAttribute(classpath, c, javaObject, useObjectState, attribute);
+			}
+		}
+		System.out.println("\t - objects state has been set!");
+	}
+
+	/***********************************************************
+	* @param classpath
+	* @param c
+	* @param javaObject
+	* @param useObjectState
+	* @param attribute
+	***********************************************************/
+	private static void setJavaObjectAttribute(String classpath, Class<?> c, Object javaObject, MObjectState useObjectState, MAttribute attribute)
+	{
+		// System.out.println("\t" + attribute.name() + " = " + useObjectState.attributeValue(attribute));
+
+		Method m = null;
+		String methodName = "set" + FileUtilities.capitalize(attribute.name());
+		if (useObjectState.attributeValue(attribute).isDefined())
+		{
+			try
+			{
+				m = c.getDeclaredMethod(methodName, toClass(classpath, attribute.type()));
+
+				if (attribute.type().isBoolean())
+					m.invoke(javaObject, ((BooleanValue) useObjectState.attributeValue(attribute)).value());
+				if (attribute.type().isInteger())
+					m.invoke(javaObject, ((IntegerValue) useObjectState.attributeValue(attribute)).value());
+				if (attribute.type().isReal())
+					m.invoke(javaObject, ((RealValue) useObjectState.attributeValue(attribute)).value());
+				if (attribute.type().isString())
+					m.invoke(javaObject, ((StringValue) useObjectState.attributeValue(attribute)).value());
+				if (attribute.type().isEnum())
+				{
+					/*
+					 * //Class<?> en = //// Enum<?> e = Enum.valueOf(en, ((EnumValue)
+					 * useObjectState.attributeValue(attribute)).value()); // //// Enum.valueOf( c, ((EnumValue)
+					 * useObjectState.attributeValue(attribute)).value());
+					 * 
+					 * Class<?> ce = Class.forName(c.getPackage().getName() + "." +attribute.type().shortName()); //
+					 * System.out.println(">>>>>>>>>>>>>>>>" + c + "|||"+ ce + "<<<<<<<<<<<<<<<<<");
+					 * 
+					 * Field f = null; try { f = c.getDeclaredField(attribute.name()); // System.out.println("Setting " +
+					 * attribute.name() + " in object  " + javaObject); f.setAccessible(true);
+					 * 
+					 * // Enum<?> e = Enum.valueOf(PosicaoJogador.class, ((EnumValue)
+					 * useObjectState.attributeValue(attribute)).value()); Enum<?> e = Enum.valueOf(ce, ((EnumValue)
+					 * useObjectState.attributeValue(attribute)).value()); f.set(javaObject, e);
+					 * 
+					 * f.set(javaObject, Enum.valueOf(ce, ((EnumValue) useObjectState.attributeValue(attribute)).value()));
+					 * 
+					 * } catch (SecurityException e1) { e1.printStackTrace(); } catch (NoSuchFieldException e1) {
+					 * System.out.println("NoSuchFieldException: " + f + " in object  " + javaObject); // e1.printStackTrace();
+					 * }
+					 * 
+					 * 
+					 * System.out.println(">>"+attribute.type()+ "." + ((EnumValue)
+					 * useObjectState.attributeValue(attribute)).value()+"<<"); // m.invoke(javaObject, e); //
+					 * m.invoke(javaObject, (((EnumValue) useObjectState.attributeValue(attribute)).value()).toString()); //
+					 * m.invoke(javaObject, TipoCampeonato.valueOf(useObjectState.attributeValue(attribute).value()));
+					 */
+				}
+			}
+			catch (IllegalArgumentException e)
+			{
+				System.out.println("IllegalArgumentException: " + c.getName() + "." + m.getName() + "("
+								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
+			}
+			catch (NoSuchMethodException e)
+			{
+				System.out.println("NoSuchMethodException: " + c.getName() + "." + m.getName() + "("
+								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
+			}
+			catch (ClassNotFoundException e)
+			{
+				System.out.println("ClassNotFoundException: " + c.getName() + "." + m.getName() + "("
+								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
+			}
+			catch (IllegalAccessException e)
+			{
+				System.out.println("IllegalAccessException: " + c.getName() + "." + m.getName() + "("
+								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
+			}
+			catch (InvocationTargetException e)
+			{
+				System.out.println("InvocationTargetException: " + c.getName() + "." + m.getName() + "("
+								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
+			}
+		}
+	}
+
+	/***********************************************************
+	* @param classpath
+	* @param oclType
+	* @return
+	* @throws ClassNotFoundException
+	***********************************************************/
+	private static Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
+	{
+		// System.out.println(oclType);
+		if (oclType.isNumber())
+			return int.class;
+		if (oclType.isInteger())
+			return int.class;
+		if (oclType.isReal())
+			return double.class;
+		if (oclType.isBoolean())
+			return boolean.class;
+		if (oclType.isString())
+			return String.class;
+		if (oclType.isEnum())
+			return Class.forName(classpath + "." + oclType.toString());
+		if (oclType.isObjectType())
+			return Class.forName(classpath + "." + oclType.toString());
+		if (oclType.isTrueObjectType())
+			return Class.forName(classpath + "." + oclType.toString());
+		if (oclType.isTrueOclAny())
+			return Object.class;
+		if (oclType.isVoidType())
+			return void.class;
+		if (oclType.isDate())
+			return Date.class;
+		if (oclType.isOrderedSet())
+			return Class.forName(oclType.toString().substring(11, oclType.toString().length() - 1));
+		if (oclType.isSet())
+			return Class.forName(oclType.toString().substring(4, oclType.toString().length() - 1));
+		// if (oclType.isCollection(true))
+		// return "Set<Object>";
+		// if (oclType.isTrueCollection())
+		// return "TrueCollection";
+		// if (oclType.isTrueSet())
+		// return "TrueSet";
+		// if (oclType.isSequence())
+		// return "Sequence";
+		// if (oclType.isTrueSequence())
+		// return "TrueSequence";
+		// if (oclType.isTrueOrderedSet())
+		// return "Number";
+		// if (oclType.isBag())
+		// return "Bag";
+		// if (oclType.isTrueBag())
+		// return "TrueBag";
+		// if (oclType.isInstantiableCollection())
+		// return "InstantiableCollection";
+		// if (oclType.isTupleType(true))
+		// return "Tuple";
+
+		return null;
+	}
+
+	/***********************************************************
+	* 
+	***********************************************************/
+	private void saveObjectsInDatabase()
+	{
+		System.out.print("\t - saving " + objectMapper.values().size() + " objects to the database ... ");
+		for (Object object: objectMapper.values())
+			Database.store(object);
+		System.out.println("Done!");
+	}
+}

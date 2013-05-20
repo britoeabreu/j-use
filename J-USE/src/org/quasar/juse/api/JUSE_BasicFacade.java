@@ -27,6 +27,11 @@ import org.tzi.use.uml.sys.MSystem;
 * 19 de Abr de 2012
 *
 ***********************************************************/
+/***********************************************************
+* @author fba
+* 18 de Mai de 2013
+*
+***********************************************************/
 public interface JUSE_BasicFacade
 {
 	/***********************************************************
@@ -61,7 +66,7 @@ public interface JUSE_BasicFacade
 	 *            The author of the specification
 	 * @param javaWorkspace
 	 *            Workspace directory where the generated commands file is to be created
-	 	 * @param cmdFile
+	 * @param cmdFile
 	 *            Name of the commands file
 	 * @param verbose
 	 *            If true sends commands to console as well

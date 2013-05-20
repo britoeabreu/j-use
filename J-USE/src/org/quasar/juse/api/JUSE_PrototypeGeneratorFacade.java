@@ -24,7 +24,7 @@ package org.quasar.juse.api;
 * 19 de Abr de 2012
 *
 ***********************************************************/
-public interface JUSE_CodeGeneratorFacade extends JUSE_BasicFacade
+public interface JUSE_PrototypeGeneratorFacade extends JUSE_BasicFacade
 {
 	/***********************************************************
 	 * @param author
@@ -37,7 +37,24 @@ public interface JUSE_CodeGeneratorFacade extends JUSE_BasicFacade
 	 *            Relative name of the layer package where the source code for the business layer is to be placed
 	 * @param presentationLayerName
 	 *            Relative name of the layer package where the source code for the presentation layer is to be placed
-	 ***********************************************************/
-	public void javaGeneration(String author, String javaWorkspace, String basePackageName, String businessLayerName, String presentationLayerName);
+	 * @param persistenceLayerName
+	 *            Relative name of the layer package where the source code for the persistence layer is to be placed	
+	 ************************************************************/
+	public void javaGeneration(String author, String javaWorkspace, String basePackageName, 
+					String businessLayerName, String presentationLayerName, String persistenceLayerName);
 
+	/***********************************************************
+	 * @param javaWorkspace
+	 *            Workspace directory where the generated Java prototype was created
+	 * @param basePackageName
+	 *            Full name of the base package where the code of the generated Java prototype was placed
+	 * @param businessLayerName
+	 *            Relative name of the layer package where the source code for the business layer was placed
+	 * @param databaseDirectory
+	*			 Relative name of the database directory 
+	 * @param libraryDirectory
+	 *           Relative name of the library directory
+	 * @param db4oJar TODO
+	***********************************************************/
+	public void storeState(String javaWorkspace, String basePackageName, String businessLayerName, String databaseDirectory, String libraryDirectory, String db4oJar);
 }

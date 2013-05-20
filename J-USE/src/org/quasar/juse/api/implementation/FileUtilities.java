@@ -1,47 +1,127 @@
 package org.quasar.juse.api.implementation;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.channels.FileChannel;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class FileUtilities
+public abstract class FileUtilities
 {
-	private final String	IDENTATOR	= "\t";
-	private int				fIndent		= 0;
-	private int				fIndentStep	= 1;
-	private String			buffer		= "";
-	private PrintWriter		fOut		= null;
-
-	/***********************************************************
-	 * Default constructor
-	 ***********************************************************/
-	public FileUtilities()
-	{
-		super();
-	}
+	private static final String	IDENTATOR	= "\t";
+	private static int			fIndent		= 0;
+	private static int			fIndentStep	= 1;
+	private static String		buffer		= "";
+	private static PrintWriter	fOut		= null;
 
 	/***********************************************************
 	 * @param directoryname
 	 *            The name of the directory to be created
 	 ***********************************************************/
-	public void createDirectory(String directoryname)
+	public static void createDirectory(String directoryname)
 	{
+		if (new File(directoryname).exists())
+			return;
+		else
+			try
+			{
+				// Create multiple directories
+				if ((new File(directoryname)).mkdirs())
+					System.out.println("Directory: " + directoryname + " created!");
+			}
+			catch (Exception e)
+			{
+				System.out.println("ERROR: Package directories " + directoryname
+								+ " could not be created. Check directory naming convention, priviledges or disk quota.");
+				e.printStackTrace();
+			}
+	}
+
+	/***********************************************************
+	 * @param sourceFilename
+	 * @param destFilename
+	 * @throws IOException
+	 ***********************************************************/
+	public static void copyFile(String sourceFilename, String destFilename)
+	{
+		File sourceFile = new File(sourceFilename);
+		File destFile = new File(destFilename);
+
+		// System.out.println("Copying file " + sourceFilename + " to " + destFilename);
+
+		if (!sourceFile.exists())
+		{
+			System.out.println("ERROR: Source file " + sourceFilename + " does not exist!");
+			return;
+		}
+
 		try
 		{
-			// Create multiple directories
-			if ((new File(directoryname)).mkdirs())
-				System.out.println("Package directories: " + directoryname + " created!");
+			if (!destFile.exists())
+			{
+				destFile.createNewFile();
+			}
+			FileChannel source = null;
+			FileChannel destination = null;
+			source = new FileInputStream(sourceFile).getChannel();
+			destination = new FileOutputStream(destFile).getChannel();
+
+			if (destination != null && source != null)
+				destination.transferFrom(source, 0, source.size());
+
+			if (source != null)
+				source.close();
+
+			if (destination == null)
+				System.out.println("ERROR: Destination file " + destFilename + " was not created!");
+			else
+				destination.close();
 		}
-		catch (Exception e)
+		catch (FileNotFoundException e)
 		{
-			System.out.println("ERROR: Package directories " + directoryname
-							+ " could not be created. Check directory naming convention, priviledges or disk quota.");
 			e.printStackTrace();
 		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/***********************************************************
+	 * @param directoryname
+	 *            The name of the directory to be removed
+	 ***********************************************************/
+	public static void removeDirectory(String directoryname)
+	{
+		deleteFolder(new File(directoryname));
+	}
+
+	private static void deleteFolder(File folder)
+	{
+		File[] files = folder.listFiles();
+		if (files != null)
+		{ // some JVMs return null for empty dirs
+			for (File f : files)
+			{
+				if (f.isDirectory())
+				{
+					deleteFolder(f);
+				}
+				else
+				{
+					f.delete();
+				}
+			}
+		}
+		folder.delete();
 	}
 
 	/***********************************************************
@@ -50,7 +130,7 @@ public class FileUtilities
 	 * @param classname
 	 *            The name of the file to open
 	 ***********************************************************/
-	public boolean openOutputFile(String directoryname, String filename)
+	public static boolean openOutputFile(String directoryname, String filename)
 	{
 		String file = directoryname + "/" + filename;
 		boolean result = true;
@@ -82,19 +162,52 @@ public class FileUtilities
 	}
 
 	/***********************************************************
+	* @param filename
+	* @param oldString
+	* @param newString
+	***********************************************************/
+	public static void replaceStringInFile(String filename, String oldString, String newString)
+	{
+		try
+		{
+			File file = new File(filename);
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line = "", oldtext = "";
+			while ((line = reader.readLine()) != null)
+			{
+				oldtext += line + "\r\n";
+			}
+			reader.close();
+
+			String newtext = oldtext.replaceAll(oldString, newString);
+
+			FileWriter writer = new FileWriter(filename);
+			writer.write(newtext);
+			writer.close();
+		}
+		catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+	}
+
+	/***********************************************************
 	 * Close the current opened file
 	 ***********************************************************/
-	public void closeOutputFile()
+	public static void closeOutputFile()
 	{
 		if (fOut != null)
+		{
+			fOut.flush();
 			fOut.close();
+		}
 	}
 
 	/***********************************************************
 	 * @param slist
 	 *            List of strings to be printed, followed by a newline
 	 ***********************************************************/
-	public void println(String... slist)
+	public static void println(String... slist)
 	{
 		for (int i = 0; i < fIndent; i++)
 			fOut.print(IDENTATOR);
@@ -109,7 +222,7 @@ public class FileUtilities
 	 * @param s
 	 *            String to be printed as a comment, followed by a newline
 	 ***********************************************************/
-	public void printlnc(String s)
+	public static void printlnc(String s)
 	{
 		println("//" + IDENTATOR + s);
 	}
@@ -118,7 +231,7 @@ public class FileUtilities
 	 * @param s
 	 *            String to be printed in the currently opened file (without newline)
 	 ***********************************************************/
-	public void print(String s)
+	public static void print(String s)
 	{
 		buffer += s;
 	}
@@ -126,7 +239,7 @@ public class FileUtilities
 	/***********************************************************
 	 * Increase the current identation level
 	 ***********************************************************/
-	public void incIndent()
+	public static void incIndent()
 	{
 		fIndent += fIndentStep;
 	}
@@ -134,7 +247,7 @@ public class FileUtilities
 	/***********************************************************
 	 * Decrease the current identation level
 	 ***********************************************************/
-	public void decIndent()
+	public static void decIndent()
 	{
 		if (fIndent < fIndentStep)
 			throw new RuntimeException("unbalanced indentation");
@@ -146,7 +259,7 @@ public class FileUtilities
 	 *            The original string
 	 * @return The string s with its first letter capitalized
 	 ***********************************************************/
-	public String capitalize(String s)
+	public static String capitalize(String s)
 	{
 		return s.toUpperCase().substring(0, 1) + s.substring(1);
 	}

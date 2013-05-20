@@ -131,7 +131,7 @@ public class BasicFacade implements JUSE_BasicFacade
 			FileInputStream specStream = null;
 			try
 			{
-				System.out.println("\ncompileSpecification (" + specificationFilename + ")");
+				System.out.println("\t- compiling specification (" + specificationFilename + ")");
 
 				Log.verbose("compiling specification " + specificationFilename);
 				specStream = new FileInputStream(specificationFilename);
@@ -209,7 +209,7 @@ public class BasicFacade implements JUSE_BasicFacade
 
 //		Options.quiet = quiet;
 
-		System.out.println("readSOIL (" + modelInstancesFilename + ")");
+		System.out.println("\nreadSOIL (" + modelInstancesFilename + ")\n");
 
 		// Unfortunately none of these 2 simple options work :( ...
 //		command("open " + modelInstancesFilename);		
@@ -263,29 +263,29 @@ public class BasicFacade implements JUSE_BasicFacade
 		String targetDirectory = javaWorkspace + "/" + system.model().name() + "/data";
 
 		MSystemState systemState = system.state();
-		FileUtilities fileUtilities = new FileUtilities();
+
 		String command;
 
-		if (! fileUtilities.openOutputFile(targetDirectory, cmdFile))
+		if (! FileUtilities.openOutputFile(targetDirectory, cmdFile))
 				return;
 
-		fileUtilities.println("-------------------------------------------------------------------");
-		fileUtilities.println("-- author: " + author);
-		fileUtilities.println("-------------------------------------------------------------------");
-		fileUtilities.println("reset");
-		fileUtilities.println();
+		FileUtilities.println("-------------------------------------------------------------------");
+		FileUtilities.println("-- author: " + author);
+		FileUtilities.println("-------------------------------------------------------------------");
+		FileUtilities.println("reset");
+		FileUtilities.println();
 
 		// generate regular objects
 		for (MObject theObject : systemState.allObjects())
 			if (!(theObject instanceof MLink))
 			{
 				command = "!create " + theObject.name() + ": " + theObject.cls().name();
-				fileUtilities.println(command);
+				FileUtilities.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
 
-		fileUtilities.println("-------------------------------------------------------------------");
+		FileUtilities.println("-------------------------------------------------------------------");
 
 		// generate regular link objects whose connected objects are regular objects
 		for (MObject theObject : systemState.allObjects())
@@ -298,7 +298,7 @@ public class BasicFacade implements JUSE_BasicFacade
 					command = "!create " + theObject.name() + ": " + theObject.cls().name() + " between ("
 									+ theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 									+ ")";
-					fileUtilities.println(command);
+					FileUtilities.println(command);
 					if (verbose)
 						System.out.println(command);
 				}
@@ -315,13 +315,13 @@ public class BasicFacade implements JUSE_BasicFacade
 					command = "!create " + theObject.name() + ": " + theObject.cls().name() + " between ("
 									+ theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 									+ ")";
-					fileUtilities.println(command);
+					FileUtilities.println(command);
 					if (verbose)
 						System.out.println(command);
 				}
 			}
 
-		fileUtilities.println("-------------------------------------------------------------------");
+		FileUtilities.println("-------------------------------------------------------------------");
 
 		// generate regular links
 		for (MLink theLink : systemState.allLinks())
@@ -329,12 +329,12 @@ public class BasicFacade implements JUSE_BasicFacade
 			{
 				command = "!insert (" + theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 								+ ") into " + theLink.association().name();
-				fileUtilities.println(command);
+				FileUtilities.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
 
-		fileUtilities.println("-------------------------------------------------------------------");
+		FileUtilities.println("-------------------------------------------------------------------");
 
 		// set objects state
 		for (MObject theObject : systemState.allObjects())
@@ -343,13 +343,13 @@ public class BasicFacade implements JUSE_BasicFacade
 			for (MAttribute attribute : theObject.cls().allAttributes())
 			{
 				command = "!set " + theObject.name() + "." + attribute.name() + " := " + objectState.attributeValue(attribute);
-				fileUtilities.println(command);
+				FileUtilities.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
 		}
 
-		fileUtilities.closeOutputFile();
+		FileUtilities.closeOutputFile();
 
 		// print some info about snapshot
 		System.out.println("Specification " + system.model().name() + " snapshot (" + systemState.allObjects().size() + " objects, "
@@ -357,7 +357,8 @@ public class BasicFacade implements JUSE_BasicFacade
 
 		System.out.println("Model snapshot dump concluded!\n");
 	}
-
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
