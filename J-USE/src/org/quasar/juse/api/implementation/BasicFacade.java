@@ -197,17 +197,16 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, boolean)
 	 */
-	public void readSOIL(String modelInstancesFilename, boolean quiet)
+	public boolean readSOIL(String modelInstancesFilename, boolean verbose)
 	{
+		boolean result = false;
 		if (system == null || system.model() == null)
 		{
 			System.out.println("Please compile the specification first!");
-			return;
+			return result;
 		}
 
 		modelInstancesFilename = System.getProperty("user.dir") + "/" + modelInstancesFilename;
-
-//		Options.quiet = quiet;
 
 		System.out.println("\nreadSOIL (" + modelInstancesFilename + ")\n");
 
@@ -228,11 +227,12 @@ public class BasicFacade implements JUSE_BasicFacade
 			{
 				while ((s = br.readLine()) != null)
 				{
-					if (!quiet)
+					if (verbose)
 						System.out.println(s);
 					shell.processLineSafely(s);
 				}
 				fr.close();
+				result = true;
 			}
 			catch (IOException e)
 			{
@@ -243,6 +243,7 @@ public class BasicFacade implements JUSE_BasicFacade
 		{
 			e.printStackTrace();
 		}
+		return result;
 	}
 
 	/*
@@ -258,7 +259,7 @@ public class BasicFacade implements JUSE_BasicFacade
 			return;
 		}
 
-		System.out.println("Dumping model snapshot to " + cmdFile);
+		System.out.println("\nDumping model snapshot to " + cmdFile);
 
 		String targetDirectory = javaWorkspace + "/" + system.model().name() + "/data";
 

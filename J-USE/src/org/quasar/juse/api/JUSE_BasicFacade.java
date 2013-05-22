@@ -55,10 +55,12 @@ public interface JUSE_BasicFacade
 	 * Processes a SOIL file
 	 * @param modelInstancesFilename
 	 *            The model instances filename (*.soil file)
-	 * @param quiet
-	 *            If false makes it verbose
+	 * @param verbose
+	 *            If true sends commands to console as well
+	 * @return
+	 * 				True if it was able to read the file correctly
 	 ***********************************************************/
-	public void readSOIL(String modelInstancesFilename, boolean quiet);
+	public boolean readSOIL(String modelInstancesFilename, boolean verbose);
 
 	/***********************************************************
 	 * Generates a CMD file containg objects, their setup and links among them
