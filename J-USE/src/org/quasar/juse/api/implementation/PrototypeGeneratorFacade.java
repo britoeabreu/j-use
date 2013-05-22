@@ -65,7 +65,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	 * java.lang.String, java.lang.String)
 	 */
 	public void javaGeneration(String author, String javaWorkspace, String basePackageName, String businessLayerName,
-					String presentationLayerName, String persistenceLayerName)
+					String presentationLayerName, String persistenceLayerName, String libraryDirectory, String db4oJar)
 	{
 		if (getSystem().model() == null)
 		{
@@ -90,6 +90,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		
 		String persistenceDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
 						+ "/" + persistenceLayerName;
+		
+		String libraryPath = javaWorkspace + "/" + getSystem().model().name() + "/" + libraryDirectory;
 
 		FileUtilities.createDirectory(presentationDirectory);
 		
@@ -100,6 +102,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		FileUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", 
 						"org.quasar.juse.persistence", basePackageName + "." + persistenceLayerName);
 		
+		FileUtilities.createDirectory(libraryPath);
+		FileUtilities.copyFile(libraryDirectory + "/" + db4oJar, libraryPath + "/" + db4oJar);
 		// visitAnnotations(e);
 
 		// print user-defined data types
@@ -170,12 +174,10 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	 * @see org.quasar.juse.api.JUSE_PrototypeGeneratorFacade#storeState(java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, boolean)
 	 */
-	public void storeState(String javaWorkspace, String basePackageName, String businessLayerName, String databaseDirectory,
-					String libraryDirectory, String db4oJar)
+	public void storeState(String javaWorkspace, String basePackageName, String businessLayerName, String databaseDirectory)
 	{
 		String classPath = basePackageName + "." + businessLayerName;
 		String databasePath = javaWorkspace + "/" + getSystem().model().name() + "/" + databaseDirectory;
-		String libraryPath = javaWorkspace + "/" + getSystem().model().name() + "/" + libraryDirectory;
 
 		if (getSystem() == null || getSystem().model() == null)
 		{
@@ -186,10 +188,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		objectMapper = new HashMap<Integer, Object>(getSystem().state().numObjects());
 
 		FileUtilities.createDirectory(databasePath);
-		FileUtilities.createDirectory(libraryPath);
-		FileUtilities.copyFile(libraryDirectory + "/" + db4oJar, libraryPath + "/" + db4oJar);
-
-		Database.init(databasePath, getSystem().model().name(), "db4o");
+		
+		Database.open(databasePath, getSystem().model().name(), "db4o");
 
 		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase()
 						+ "\nPlease wait ...");
@@ -612,7 +612,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	{
 		System.out.print("\t - saving " + objectMapper.values().size() + " objects to the database ... ");
 		for (Object object: objectMapper.values())
-			Database.store(object);
+			Database.insert(object);
 		System.out.println("Done!");
 	}
 }

@@ -26,8 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.quasar.copaPaises.businessLayer.Pais;
-import org.quasar.copaPaises.persistenceLayer.Database;
 import org.tzi.use.uml.mm.*;
 import org.tzi.use.uml.ocl.expr.VarDecl;
 import org.tzi.use.uml.ocl.type.EnumType;
@@ -805,7 +803,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to add");
 		println("**********************************************************************/");
-		println("public void add" + targetClass + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
+		println("public void add" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
 		println("{");
 		incIndent();
 		println(targetClass.toLowerCase() + ".set" + capitalize(sourceRole) + "(this);");
@@ -886,7 +884,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to add");
 		println("**********************************************************************/");
-		println("public void add" + targetClass + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
+		println("public void add" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
 		println("{");
 		incIndent();
 		println(targetClass.toLowerCase() + ".add" + capitalize(sourceRole) + "(this);");

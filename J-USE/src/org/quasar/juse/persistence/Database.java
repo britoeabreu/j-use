@@ -26,7 +26,7 @@ public abstract class Database
 	/***********************************************************
 	 * @return
 	 ***********************************************************/
-	public static synchronized void init(String _databasePath, String _databaseName, String _databaseExtension)
+	public static synchronized void open(String _databasePath, String _databaseName, String _databaseExtension)
 	{
 		databasePath = _databasePath;
 		databaseName = _databaseName;
@@ -124,7 +124,7 @@ public abstract class Database
 	* @param theClass
 	* @return
 	***********************************************************/
-	public static synchronized void store(Object object)
+	public static synchronized void insert(Object object)
 	{
 		getDB();
 		oc.store(object);

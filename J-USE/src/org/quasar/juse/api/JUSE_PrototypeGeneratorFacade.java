@@ -39,9 +39,13 @@ public interface JUSE_PrototypeGeneratorFacade extends JUSE_BasicFacade
 	 *            Relative name of the layer package where the source code for the presentation layer is to be placed
 	 * @param persistenceLayerName
 	 *            Relative name of the layer package where the source code for the persistence layer is to be placed	
+	 * @param libraryDirectory
+	 *           Relative name of the library directory
+	 * @param db4oJar
+	 *           DB4Objects jar filename to be put on the library directory
 	 ************************************************************/
 	public void javaGeneration(String author, String javaWorkspace, String basePackageName, 
-					String businessLayerName, String presentationLayerName, String persistenceLayerName);
+					String businessLayerName, String presentationLayerName, String persistenceLayerName, String libraryDirectory, String db4oJar);
 
 	/***********************************************************
 	 * @param javaWorkspace
@@ -52,9 +56,6 @@ public interface JUSE_PrototypeGeneratorFacade extends JUSE_BasicFacade
 	 *            Relative name of the layer package where the source code for the business layer was placed
 	 * @param databaseDirectory
 	*			 Relative name of the database directory 
-	 * @param libraryDirectory
-	 *           Relative name of the library directory
-	 * @param db4oJar TODO
 	***********************************************************/
-	public void storeState(String javaWorkspace, String basePackageName, String businessLayerName, String databaseDirectory, String libraryDirectory, String db4oJar);
+	public void storeState(String javaWorkspace, String basePackageName, String businessLayerName, String databaseDirectory);
 }

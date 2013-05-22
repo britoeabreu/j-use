@@ -20,13 +20,16 @@ public final class Prototype_CodeGeneration
 	private final static String	PRESENTATIONLAYER_NAME	= "presentationLayer";
 	private final static String	PERSISTENCELAYER_NAME	= "persistenceLayer";
 
-//	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
-//	private final static String	MODEL_FILE			= "AirNova.use";
-//	private final static String	TARGET_PACKAGE = "org.quasar.airNova";
+	private final static String LIBRARY_DIRECTORY = "lib";
+	private final static String	DB4O_JAR	= "db4o-8.0.249.16098-core-java5.jar";		
+
+	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
+	private final static String	MODEL_FILE			= "AirNova.use";
+	private final static String	TARGET_PACKAGE = "org.quasar.airNova";
 	
-	private final static String	MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
-	private final static String	MODEL_FILE = "CopaPaises_20120416.use";
-	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
+//	private final static String	MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
+//	private final static String	MODEL_FILE = "CopaPaises_20120416.use";
+//	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
 	
 //	private final static String	MODEL_DIRECTORY		= "D:/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
 //	private final static String	MODEL_FILE			= "Royal_Loyal.use";
@@ -53,7 +56,7 @@ public final class Prototype_CodeGeneration
 
 		api.compileSpecification(MODEL_FILE);
 
-		api.javaGeneration("Fernando Brito e Abreu", JAVA_WORKSPACE, TARGET_PACKAGE, 
-											BUSINESSLAYER_NAME, PRESENTATIONLAYER_NAME, PERSISTENCELAYER_NAME);
+		api.javaGeneration("Fernando Brito e Abreu", JAVA_WORKSPACE, TARGET_PACKAGE, 	BUSINESSLAYER_NAME, 
+						PRESENTATIONLAYER_NAME, PERSISTENCELAYER_NAME, LIBRARY_DIRECTORY, DB4O_JAR);
 	}	
 }
