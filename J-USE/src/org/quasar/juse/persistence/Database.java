@@ -53,6 +53,7 @@ public abstract class Database
 		System.out.println("\t - database reset to empty state");
 	}
 	
+	
 	/***********************************************************
 	 * @return
 	 ***********************************************************/
@@ -124,10 +125,11 @@ public abstract class Database
 	* @param theClass
 	* @return
 	***********************************************************/
-	public static synchronized void insert(Object object)
+	public static synchronized void insert(Object ...objects)
 	{
 		getDB();
-		oc.store(object);
+		for (Object o: objects)
+			oc.store(o);
 		oc.commit();
 	}
 
@@ -135,10 +137,11 @@ public abstract class Database
 	* @param theClass
 	* @return
 	***********************************************************/
-	public static synchronized void delete(Object object)
+	public static synchronized void delete(Object ...objects)
 	{
 		getDB();
-		oc.delete(object);
+		for (Object o: objects)
+			oc.delete(o);
 		oc.commit();
 	}
 
@@ -146,10 +149,11 @@ public abstract class Database
 	* @param theClass
 	* @return
 	***********************************************************/
-	public static synchronized void update(Object object)
+	public static synchronized void update(Object ...objects)
 	{
 		getDB();
-		oc.store(object);
+		for (Object o: objects)
+			oc.store(o);
 		oc.commit();
 		
 		// é preciso cuidado pois temos de ter a certeza que estamos a guardar o mesmo objecto, ou seja, como o java usa muito referencias pode
