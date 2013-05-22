@@ -55,8 +55,8 @@ public abstract class JavaTypes
 	public static String javaType(Type oclType)
 	{
 		// System.out.println(oclType);
-		if (oclType.isNumber())
-			return "int";
+//		if (oclType.isNumber())
+//			return "int";
 		if (oclType.isInteger())
 			return "int";
 		if (oclType.isReal())
