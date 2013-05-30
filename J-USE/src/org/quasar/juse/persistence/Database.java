@@ -23,9 +23,12 @@ public abstract class Database
 
 	private static ObjectContainer	oc = null;
 
+
 	/***********************************************************
-	 * @return
-	 ***********************************************************/
+	* @param _databasePath the relative path where the DB4O database will be placed
+	* @param _databaseName the name of the DB4O database file
+	* @param _databaseExtension the extension of the DB4O database file
+	***********************************************************/
 	public static synchronized void open(String _databasePath, String _databaseName, String _databaseExtension)
 	{
 		databasePath = _databasePath;

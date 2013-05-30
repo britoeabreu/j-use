@@ -7,13 +7,13 @@ import org.tzi.use.uml.ocl.type.EnumType;
 public abstract class JavaVisitor extends FileUtilities implements IJavaVisitor 
 {
 	@Override
-	public abstract void printFileHeader(String typeName);
+	public abstract void printFileHeader(String typeName, String layerName);
 
 	@Override
-	public abstract void printEnumType(EnumType theEnumType);
+	public abstract void printEnumType(EnumType theEnumType, String layerName);
 
 	@Override
-	public abstract void printClassHeader(MClass theClass);
+	public abstract void printClassHeader(MClass theClass, String layerName);
 	
 	@Override
 	public abstract void printAllInstances(MClass theClass);
@@ -59,6 +59,9 @@ public abstract class JavaVisitor extends FileUtilities implements IJavaVisitor
 	
 	@Override
 	public abstract void printInvariants(MClass theClass);
+
+	@Override
+	public abstract void printTupleTypes(Integer parameterNumber, String layerName);
 	
 	@Override
 	public abstract void printMain();

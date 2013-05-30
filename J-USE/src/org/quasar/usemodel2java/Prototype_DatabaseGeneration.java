@@ -23,7 +23,7 @@ public final class Prototype_DatabaseGeneration
 	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
 	private final static String	MODEL_FILE			= "AirNova.use";
 	private final static String	SOIL_FILE			= "AirNovaMicroteste3.soil";
-	private final static String	CMD_FILE			= "AirNovaMicroteste3_data.cmd";
+//	private final static String	CMD_FILE			= "AirNovaMicroteste3_data.cmd";
 
 //	 private final static String TARGET_PACKAGE = "org.quasar.copaPaises";
 //	 private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";

@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
 import org.quasar.juse.persistence.Database;
 
@@ -61,8 +62,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.quasar.juse.api.JUSE_PrototypeGeneratorFacade#javaGeneration(java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see org.quasar.juse.api.JUSE_PrototypeGeneratorFacade#javaGeneration(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void javaGeneration(String author, String javaWorkspace, String basePackageName, String businessLayerName,
 					String presentationLayerName, String persistenceLayerName, String libraryDirectory, String db4oJar)
@@ -80,28 +81,29 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		System.out.println("\nJava plugin for USE version 1.0.6, Copyright (C) 2012-2013 QUASAR Group");
 		System.out.println("\t - generating Java code for " + getSystem().model().name() + "...");
 
-		JavaVisitor visitor = new JavaBusinessVisitor(getSystem().model(), author, basePackageName, businessLayerName, persistenceLayerName);
+		JavaVisitor visitor = new JavaBusinessVisitor(getSystem().model(), author, basePackageName, businessLayerName,
+						persistenceLayerName, presentationLayerName);
 
 		String targetDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
 						+ "/" + businessLayerName;
-		
-		String presentationDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
-						+ "/" + presentationLayerName;
-		
-		String persistenceDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/" + basePackageName.replace('.', '/')
-						+ "/" + persistenceLayerName;
-		
+
+		String presentationDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/"
+						+ basePackageName.replace('.', '/') + "/" + presentationLayerName;
+
+		String persistenceDirectory = javaWorkspace + "/" + getSystem().model().name() + "/src/"
+						+ basePackageName.replace('.', '/') + "/" + persistenceLayerName;
+
 		String libraryPath = javaWorkspace + "/" + getSystem().model().name() + "/" + libraryDirectory;
 
 		FileUtilities.createDirectory(presentationDirectory);
-		
+
 		FileUtilities.createDirectory(persistenceDirectory);
-		FileUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", 
-						                   persistenceDirectory + "/Database.java");
-		
-		FileUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", 
-						"org.quasar.juse.persistence", basePackageName + "." + persistenceLayerName);
-		
+		FileUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", persistenceDirectory
+						+ "/Database.java");
+
+		FileUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", "org.quasar.juse.persistence",
+						basePackageName + "." + persistenceLayerName);
+
 		FileUtilities.createDirectory(libraryPath);
 		FileUtilities.copyFile(libraryDirectory + "/" + db4oJar, libraryPath + "/" + db4oJar);
 		// visitAnnotations(e);
@@ -112,7 +114,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 			if (FileUtilities.openOutputFile(targetDirectory, t.name() + ".java"))
 			{
 				// visitAnnotations(t);
-				visitor.printEnumType(t);
+				visitor.printEnumType(t, businessLayerName);
 				FileUtilities.println();
 				FileUtilities.closeOutputFile();
 			}
@@ -123,7 +125,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		{
 			if (FileUtilities.openOutputFile(targetDirectory, cls.name() + ".java"))
 			{
-				visitor.printClassHeader(cls);
+				visitor.printClassHeader(cls, businessLayerName);
 
 				FileUtilities.incIndent();
 
@@ -158,9 +160,40 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 			}
 		}
 
-		if (FileUtilities.openOutputFile(targetDirectory, "Main_" + getSystem().model().name() + ".java"))
+		// Set<Integer> tupleTypeParameters = new HashSet<Integer>();
+		//
+		// for (MClass theClass : getSystem().model().classes())
+		// {
+		// for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
+		// if (attribute.getType().isTupleType(true))
+		// tupleTypeParameters.add(((TupleType) attribute.getType()).getParts().size());
+		//
+		// for (MOperation operation : theClass.allOperations())
+		// {
+		// if (operation.resultType() != null && operation.resultType().isTupleType(true))
+		// tupleTypeParameters.add(((TupleType) operation.resultType()).getParts().size());
+		//
+		// for (VarDecl v : operation.paramList())
+		// if (v.type().isTupleType(true))
+		// tupleTypeParameters.add(((TupleType) v.type()).getParts().size());
+		// }
+		// }
+		//
+		// System.out.println("tupleTypeParameters> " + tupleTypeParameters.size());
+		//
+		// for (Integer n: tupleTypeParameters)
+
+		for (Integer n : JavaTypes.getTupleTypesCardinalities())
+			if (FileUtilities.openOutputFile(targetDirectory, "Tuple" + n + ".java"))
+			{
+				visitor.printTupleTypes(n, businessLayerName);
+				FileUtilities.closeOutputFile();
+			}
+
+		if (FileUtilities.openOutputFile(presentationDirectory, "Main_" + getSystem().model().name() + ".java"))
 		{
 			visitor.printMain();
+			FileUtilities.closeOutputFile();
 		}
 
 		ModelUtilities util = new ModelUtilities(getSystem().model());
@@ -188,7 +221,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		objectMapper = new HashMap<Integer, Object>(getSystem().state().numObjects());
 
 		FileUtilities.createDirectory(databasePath);
-		
+
 		Database.open(databasePath, getSystem().model().name(), "db4o");
 
 		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase()
@@ -197,13 +230,13 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		Database.cleanUp();
 
 		generateRegularObjects(classPath);
-		
+
 		generateLinkObjects(classPath);
 
-		//generateLinks(classPath);
+		// generateLinks(classPath);
 
 		setObjectsState(classPath);
-		
+
 		saveObjectsInDatabase();
 
 		Database.close();
@@ -367,6 +400,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	/***********************************************************
 	 * @param classpath
 	 ***********************************************************/
+	@SuppressWarnings("unused")
 	private void generateLinks(String classpath)
 	{
 		int totalLinks = 0;
@@ -390,19 +424,19 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				String c2 = theLink.association().associationEnds().get(1).cls().name();
 				String r1 = theLink.association().associationEnds().get(0).nameAsRolename();
 				String r2 = theLink.association().associationEnds().get(1).nameAsRolename();
-				
+
 				String methodName = "set" + FileUtilities.capitalize(r2);
-				System.out.println( methodName + "(" + theLink.linkedObjects().get(1) + ")");
+				System.out.println(methodName + "(" + theLink.linkedObjects().get(1) + ")");
 				try
 				{
-						Class<?> c = Class.forName(classpath + "." + theLink.linkedObjects().get(0).cls().name());
+					Class<?> c = Class.forName(classpath + "." + theLink.linkedObjects().get(0).cls().name());
 
-						System.out.println(c.getName() + "\n");
+					System.out.println(c.getName() + "\n");
 
-						m = c.getDeclaredMethod(methodName, o1.getClass());
-						System.out.println(m);
-	//					m.invoke(o2);
-					
+					m = c.getDeclaredMethod(methodName, o1.getClass());
+					System.out.println(m);
+					// m.invoke(o2);
+
 					totalLinks++;
 				}
 				catch (SecurityException e)
@@ -417,14 +451,14 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				{
 					e.printStackTrace();
 				}
-//				catch (IllegalAccessException e)
-//				{
-//					e.printStackTrace();
-//				}
-//				catch (InvocationTargetException e)
-//				{
-//					e.printStackTrace();
-//				}
+				// catch (IllegalAccessException e)
+				// {
+				// e.printStackTrace();
+				// }
+				// catch (InvocationTargetException e)
+				// {
+				// e.printStackTrace();
+				// }
 				catch (ClassNotFoundException e)
 				{
 					e.printStackTrace();
@@ -461,13 +495,15 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	}
 
 	/***********************************************************
-	* @param classpath
-	* @param c
-	* @param javaObject
-	* @param useObjectState
-	* @param attribute
-	***********************************************************/
-	private static void setJavaObjectAttribute(String classpath, Class<?> c, Object javaObject, MObjectState useObjectState, MAttribute attribute)
+	 * @param classpath
+	 * @param c
+	 * @param javaObject
+	 * @param useObjectState
+	 * @param attribute
+	 ***********************************************************/
+	@SuppressWarnings("null")
+	private static void setJavaObjectAttribute(String classpath, Class<?> c, Object javaObject, MObjectState useObjectState,
+					MAttribute attribute)
 	{
 		// System.out.println("\t" + attribute.name() + " = " + useObjectState.attributeValue(attribute));
 
@@ -547,11 +583,11 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	}
 
 	/***********************************************************
-	* @param classpath
-	* @param oclType
-	* @return
-	* @throws ClassNotFoundException
-	***********************************************************/
+	 * @param classpath
+	 * @param oclType
+	 * @return
+	 * @throws ClassNotFoundException
+	 ***********************************************************/
 	private static Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
 	{
 		// System.out.println(oclType);
@@ -611,7 +647,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	private void saveObjectsInDatabase()
 	{
 		System.out.print("\t - saving " + objectMapper.values().size() + " objects to the database ... ");
-		for (Object object: objectMapper.values())
+		for (Object object : objectMapper.values())
 			Database.insert(object);
 		System.out.println("Done!");
 	}

@@ -99,9 +99,6 @@ public class AttributeInfo
 		List<AttributeInfo> result = new ArrayList<AttributeInfo>();
 		ModelUtilities util = new ModelUtilities(theClass.model());
 		
-		for (MAttribute attribute : theClass.attributes())
-			result.add(new AttributeInfo(AssociationKind.NONE, attribute.name(), attribute.type()));
-		
 		for (AssociationInfo ai : AssociationInfo.getAssociationsInfo(theClass))
 		{
 			MClass sourceClass = ai.getSourceAE().cls();
@@ -146,6 +143,10 @@ public class AttributeInfo
 					System.out.println("ERROR: " + ai);
 			}
 		}
+		
+		for (MAttribute attribute : theClass.attributes())
+			result.add(new AttributeInfo(AssociationKind.NONE, attribute.name(), attribute.type()));
+		
 		return result;
 	}
 

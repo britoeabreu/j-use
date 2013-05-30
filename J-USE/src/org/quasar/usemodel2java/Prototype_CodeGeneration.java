@@ -24,11 +24,11 @@ public final class Prototype_CodeGeneration
 	private final static String	DB4O_JAR	= "db4o-8.0.249.16098-core-java5.jar";		
 
 	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
-	private final static String	MODEL_FILE			= "AirNova.use";
+	private final static String	MODEL_FILE			= "AirNova_RegrasNegocio.use";
 	private final static String	TARGET_PACKAGE = "org.quasar.airNova";
 	
 //	private final static String	MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
-//	private final static String	MODEL_FILE = "CopaPaises_20120416.use";
+//	private final static String	MODEL_FILE = "CopaPaises.use";
 //	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
 	
 //	private final static String	MODEL_DIRECTORY		= "D:/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";

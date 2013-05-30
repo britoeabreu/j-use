@@ -7,22 +7,28 @@ import org.tzi.use.uml.ocl.type.EnumType;
 public interface IJavaVisitor
 {
 	/***********************************************************
-	 * @param typeName
-	 *            The name of the type (enumerated type, class or interface) to create
-	 ***********************************************************/
-	public void printFileHeader(String typeName);
+	* @param typeName
+	*            The name of the type (enumerated type, class or interface) to create
+	* @param layerName
+	* 			The name of the layer where the file is to be created
+	***********************************************************/
+	public void printFileHeader(String typeName, String layerName);
 
 	/***********************************************************
 	 * @param theEnumType
 	 *            The enumerated type whose code is to be generated
+	* @param layerName
+	* 			The name of the layer where the file is to be created
 	 ***********************************************************/
-	public void printEnumType(EnumType theEnumType);
+	public void printEnumType(EnumType theEnumType, String layerName);
 
 	/***********************************************************
 	 * @param theClass
 	 *            The class whose header is to be generated
-	 ***********************************************************/
-	public void printClassHeader(MClass theClass);
+	* @param layerName
+	* 			The name of the layer where the file is to be created
+	************************************************************/
+	public void printClassHeader(MClass theClass, String layerName);
 
 	/***********************************************************
 	 * @param theClass
@@ -95,7 +101,7 @@ public interface IJavaVisitor
 	 *            Information about the navigation of type MANY2MANY whose getter and setter are to be generated
 	 ***********************************************************/
 	public void printMANY2MANY(AssociationInfo aInfo);
-
+	
 	/***********************************************************
 	 * @param op
 	 *            The SOIL operation whose code is to be generated
@@ -115,7 +121,16 @@ public interface IJavaVisitor
 	public void printInvariants(MClass theClass);
 
 	/***********************************************************
+	* @param parameterNumber
+	* 			The number of parameters of the generic class representing the OCL tuple type
+	* @param layerName
+	* 			The name of the layer where the file is to be created
+	***********************************************************/
+	public void printTupleTypes(Integer parameterNumber, String layerName);
+
+	/***********************************************************
 	 *  Prints the Main_<model name> class to boot the prototype
 	***********************************************************/
 	public void printMain();
+
 }

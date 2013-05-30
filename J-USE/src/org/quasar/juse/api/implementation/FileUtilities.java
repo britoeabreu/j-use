@@ -50,6 +50,7 @@ public abstract class FileUtilities
 	 * @param destFilename
 	 * @throws IOException
 	 ***********************************************************/
+	@SuppressWarnings("resource")
 	public static void copyFile(String sourceFilename, String destFilename)
 	{
 		File sourceFile = new File(sourceFilename);
