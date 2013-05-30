@@ -103,7 +103,7 @@ public abstract class JavaTypes
 		String result = "Tuple" + tupleParts.size() + "<";
 		for (int i = 0; i < tupleParts.size(); i++)
 		{
-			result += javaImplementationType(tupleParts.get(i).type());
+			result += javaInterfaceType(tupleParts.get(i).type());
 			if (i < tupleParts.size() - 1)
 				result += ", ";
 		}
