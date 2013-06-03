@@ -201,7 +201,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 		Database.open(databasePath, getSystem().model().name(), "db4o");
 
-		Database.dropDatabase();
+		Database.cleanUp();
 		
 		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase());
 

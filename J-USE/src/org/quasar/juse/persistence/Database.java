@@ -42,7 +42,7 @@ public abstract class Database
 	}
 
 	/***********************************************************
-	 * @return
+	 * @return info about the currently opened database
 	 ***********************************************************/
 	public static synchronized String currentDatabase()
 	{
@@ -52,29 +52,19 @@ public abstract class Database
 	/***********************************************************
 	* 
 	***********************************************************/
-	public static synchronized void dropDatabase()
+	public static synchronized void cleanUp()
 	{
 		Database.close();
 		try
 		{
 			File file = new File(databasePath + "/" + databaseName + "." + databaseExtension);
-			if (file.delete())
-				System.out.println("\nDatabase " + databaseName + "." + databaseExtension + " was dropped!");
-			else
-				System.out.println("\nDrop database failed.");
+			if (!file.delete())
+				System.out.println("\nDatabase " + databaseName + "." + databaseExtension + " clean up failed!");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-	}
-
-	/***********************************************************
-	 * deletes all database objects
-	 ***********************************************************/
-	public static synchronized void cleanUp()
-	{
-		deleteAll(Object.class);
 	}
 
 	/***********************************************************
@@ -84,17 +74,11 @@ public abstract class Database
 	public static synchronized void deleteAll(Class<?> theClass)
 	{
 		getDB();
-		// for (Object o: oc.query(theClass))
-		// {
-		// System.out.println(o.toString());
-		// oc.delete(o);
-		// }
-		// for (Object o : oc.queryByExample(new Object()))
-		// {
-		// System.out.println(o.toString());
-		// oc.delete(o);
-		// }
-		System.out.println("\t - database reset to empty state");
+		for (Object o : oc.query(theClass))
+		{
+			System.out.println(o.toString());
+			oc.delete(o);
+		}
 	}
 
 	/***********************************************************
@@ -225,6 +209,7 @@ public abstract class Database
 	 ***********************************************************/
 	public static synchronized void close()
 	{
+		getDB();
 		oc.close();
 	}
 
