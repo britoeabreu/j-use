@@ -114,6 +114,13 @@ public interface IJavaVisitor
 	 ***********************************************************/
 	public void printToString(MClass theClass);
 	
+
+	/***********************************************************
+	* @param theClass
+	*			The class whose comparator is to be generated
+	***********************************************************/
+	public void printCompareTo(MClass theClass);
+	
 	/***********************************************************
 	* @param theClass
 	 *            The class whose invariants are to be generated

@@ -44,7 +44,7 @@ import org.tzi.use.util.Log;
 import org.tzi.use.util.USEWriter;
 
 /***********************************************************
- * @author fba 
+ * @author fba
  * @version 1.0.4 - 25 de Abr de 2012
  * @version 1.0.6 - 25 de Abr de 2013
  ***********************************************************/
@@ -56,7 +56,7 @@ public class BasicFacade implements JUSE_BasicFacade
 
 	public BasicFacade()
 	{
-		System.out.println("j-use version 1.0.6, Copyright (C) 2012-2013 QUASAR research group");
+		System.out.println("\nj-use version 1.0.6, Copyright (C) 2012-2013 QUASAR research group");
 	}
 
 	/***********************************************************
@@ -121,7 +121,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 */
 	public MSystem compileSpecification(String specificationFilename)
 	{
-		MModel	model	= null;
+		MModel model = null;
 
 		// compile spec if filename given as argument
 		if (specificationFilename != null)
@@ -131,7 +131,7 @@ public class BasicFacade implements JUSE_BasicFacade
 			FileInputStream specStream = null;
 			try
 			{
-				System.out.println("\t- compiling specification (" + specificationFilename + ")");
+				System.out.println("\nCompiling specification " + specificationFilename);
 
 				Log.verbose("compiling specification " + specificationFilename);
 				specStream = new FileInputStream(specificationFilename);
@@ -208,13 +208,13 @@ public class BasicFacade implements JUSE_BasicFacade
 
 		modelInstancesFilename = System.getProperty("user.dir") + "/" + modelInstancesFilename;
 
-		System.out.println("\nreadSOIL (" + modelInstancesFilename + ")\n");
+		System.out.println("\nReading SOIL file " + modelInstancesFilename);
 
 		// Unfortunately none of these 2 simple options work :( ...
-//		command("open " + modelInstancesFilename);		
-//		shell.cmdRead(modelInstancesFilename, quiet);
-//		command("info state");
-		
+		// command("open " + modelInstancesFilename);
+		// shell.cmdRead(modelInstancesFilename, quiet);
+		// command("info state");
+
 		// ... so let's do it the hard way ...
 		FileReader fr = null;
 		try
@@ -225,12 +225,19 @@ public class BasicFacade implements JUSE_BasicFacade
 			String s = null;
 			try
 			{
+				int line = 0;
 				while ((s = br.readLine()) != null)
 				{
+					line++;
 					if (verbose)
 						System.out.println(s);
+					else
+						if (line % 500 == 0)
+							System.out.print(".");
+
 					shell.processLineSafely(s);
 				}
+				System.out.println("\n... finished reading " + line + " lines.\n");
 				fr.close();
 				result = true;
 			}
@@ -259,16 +266,19 @@ public class BasicFacade implements JUSE_BasicFacade
 			return;
 		}
 
-		System.out.println("\nDumping model snapshot to " + cmdFile);
-
 		String targetDirectory = javaWorkspace + "/" + system.model().name() + "/data";
 
 		MSystemState systemState = system.state();
 
 		String command;
 
-		if (! FileUtilities.openOutputFile(targetDirectory, cmdFile))
-				return;
+		if (!FileUtilities.openOutputFile(targetDirectory, cmdFile))
+		{
+			System.out.println("Dumping model snapshot to " + targetDirectory + "/" + cmdFile);
+			return;
+		}
+		else
+			System.out.println("Dumping model snapshot to " + targetDirectory + "/" + cmdFile);
 
 		FileUtilities.println("-------------------------------------------------------------------");
 		FileUtilities.println("-- author: " + author);
@@ -277,17 +287,21 @@ public class BasicFacade implements JUSE_BasicFacade
 		FileUtilities.println();
 
 		// generate regular objects
+		int line = 0;
 		for (MObject theObject : systemState.allObjects())
 			if (!(theObject instanceof MLink))
 			{
+				line++;
 				command = "!create " + theObject.name() + ": " + theObject.cls().name();
 				FileUtilities.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
+		System.out.println("\t- wrote " + line + " create object commands");
 
 		FileUtilities.println("-------------------------------------------------------------------");
 
+		line = 0;
 		// generate regular link objects whose connected objects are regular objects
 		for (MObject theObject : systemState.allObjects())
 			if (theObject instanceof MLink)
@@ -296,6 +310,7 @@ public class BasicFacade implements JUSE_BasicFacade
 
 				if (!(theLink.linkedObjects().get(0) instanceof MLink) && !(theLink.linkedObjects().get(1) instanceof MLink))
 				{
+					line++;
 					command = "!create " + theObject.name() + ": " + theObject.cls().name() + " between ("
 									+ theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 									+ ")";
@@ -313,6 +328,7 @@ public class BasicFacade implements JUSE_BasicFacade
 
 				if (theLink.linkedObjects().get(0) instanceof MLink || theLink.linkedObjects().get(1) instanceof MLink)
 				{
+					line++;
 					command = "!create " + theObject.name() + ": " + theObject.cls().name() + " between ("
 									+ theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 									+ ")";
@@ -321,45 +337,56 @@ public class BasicFacade implements JUSE_BasicFacade
 						System.out.println(command);
 				}
 			}
+		System.out.println("\t- wrote " + line + " create link object commands");
 
 		FileUtilities.println("-------------------------------------------------------------------");
 
+		line = 0;
 		// generate regular links
 		for (MLink theLink : systemState.allLinks())
 			if (!(theLink instanceof MObject))
 			{
+				line++;
 				command = "!insert (" + theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 								+ ") into " + theLink.association().name();
 				FileUtilities.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
+		System.out.println("\t- wrote " + line + " insert link commands");
 
 		FileUtilities.println("-------------------------------------------------------------------");
 
+		line = 0;
 		// set objects state
 		for (MObject theObject : systemState.allObjects())
 		{
 			MObjectState objectState = theObject.state(systemState);
 			for (MAttribute attribute : theObject.cls().allAttributes())
 			{
-				command = "!set " + theObject.name() + "." + attribute.name() + " := " + objectState.attributeValue(attribute);
-				FileUtilities.println(command);
-				if (verbose)
-					System.out.println(command);
+				if (objectState.attributeValue(attribute).isDefined())
+				{
+					line++;
+					command = "!set " + theObject.name() + "." + attribute.name() + " := "
+									+ objectState.attributeValue(attribute);
+					FileUtilities.println(command);
+					if (verbose)
+						System.out.println(command);
+				}
 			}
 		}
+		System.out.println("\t- wrote " + line + " set object state commands");
 
 		FileUtilities.closeOutputFile();
 
 		// print some info about snapshot
-		System.out.println("Specification " + system.model().name() + " snapshot (" + systemState.allObjects().size() + " objects, "
-						+ systemState.allLinks().size() + " links)");
+		// System.out.println("Specification " + system.model().name() + " snapshot (" + systemState.allObjects().size() +
+		// " objects, "
+		// + systemState.allLinks().size() + " links)");
 
 		System.out.println("Model snapshot dump concluded!\n");
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

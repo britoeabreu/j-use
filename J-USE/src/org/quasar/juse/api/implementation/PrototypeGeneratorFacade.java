@@ -20,13 +20,13 @@
 package org.quasar.juse.api.implementation;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
 import org.quasar.juse.persistence.Database;
@@ -38,11 +38,11 @@ import org.tzi.use.uml.mm.MOperation;
 import org.tzi.use.uml.ocl.type.EnumType;
 import org.tzi.use.uml.ocl.type.Type;
 import org.tzi.use.uml.ocl.value.BooleanValue;
+import org.tzi.use.uml.ocl.value.EnumValue;
 import org.tzi.use.uml.ocl.value.IntegerValue;
 import org.tzi.use.uml.ocl.value.RealValue;
 import org.tzi.use.uml.ocl.value.StringValue;
 import org.tzi.use.uml.sys.MLink;
-import org.tzi.use.uml.sys.MLinkEnd;
 import org.tzi.use.uml.sys.MLinkObject;
 import org.tzi.use.uml.sys.MObject;
 import org.tzi.use.uml.sys.MObjectState;
@@ -149,39 +149,16 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 				visitor.printToString(cls);
 
+				visitor.printCompareTo(cls);
+				
 				visitor.printInvariants(cls);
 
 				FileUtilities.decIndent();
 				FileUtilities.println("}");
 
 				FileUtilities.closeOutputFile();
-
-				// System.out.println(cls.name() + " ... done!");
 			}
 		}
-
-		// Set<Integer> tupleTypeParameters = new HashSet<Integer>();
-		//
-		// for (MClass theClass : getSystem().model().classes())
-		// {
-		// for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
-		// if (attribute.getType().isTupleType(true))
-		// tupleTypeParameters.add(((TupleType) attribute.getType()).getParts().size());
-		//
-		// for (MOperation operation : theClass.allOperations())
-		// {
-		// if (operation.resultType() != null && operation.resultType().isTupleType(true))
-		// tupleTypeParameters.add(((TupleType) operation.resultType()).getParts().size());
-		//
-		// for (VarDecl v : operation.paramList())
-		// if (v.type().isTupleType(true))
-		// tupleTypeParameters.add(((TupleType) v.type()).getParts().size());
-		// }
-		// }
-		//
-		// System.out.println("tupleTypeParameters> " + tupleTypeParameters.size());
-		//
-		// for (Integer n: tupleTypeParameters)
 
 		for (Integer n : JavaTypes.getTupleTypesCardinalities())
 			if (FileUtilities.openOutputFile(targetDirectory, "Tuple" + n + ".java"))
@@ -224,24 +201,23 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 		Database.open(databasePath, getSystem().model().name(), "db4o");
 
-		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase()
-						+ "\nPlease wait ...");
-
-		Database.cleanUp();
+		Database.dropDatabase();
+		
+		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase());
 
 		generateRegularObjects(classPath);
 
 		generateLinkObjects(classPath);
 
-		// generateLinks(classPath);
-
 		setObjectsState(classPath);
+		
+		generateLinks(classPath);
 
 		saveObjectsInDatabase();
 
 		Database.close();
 
-		System.out.println("Model snapshot database store concluded!\n");
+		System.out.println("\nModel snapshot database store concluded!\n");
 	}
 
 	/***********************************************************
@@ -263,6 +239,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 					for (MObject useObject : getSystem().state().objectsOfClass(aClass))
 					{
+						// System.out.println(useObject);
 						objectMapper.put(useObject.hashCode(), javaConstructor.newInstance());
 						regularObjects++;
 					}
@@ -300,6 +277,10 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		System.out.println("\t - stored " + regularObjects + " regular objects");
 	}
 
+	/***********************************************************
+	* @param aClass
+	* @return
+	***********************************************************/
 	private boolean isAssociationClassToRegularClasses(MClass aClass)
 	{
 		boolean result = true;
@@ -348,10 +329,12 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 			ac1 = Class.forName(classpath + "." + associationClass.associationEnds().get(0).cls().name());
 			ac2 = Class.forName(classpath + "." + associationClass.associationEnds().get(1).cls().name());
 
+			
 			Constructor<?> javaConstructor = c.getDeclaredConstructor(ac1, ac2);
 
 			for (MObject useObject : getSystem().state().objectsOfClass(aClass))
 			{
+				// System.out.println(useObject);
 				MLinkObject linkObject = (MLinkObject) useObject;
 
 				ArrayList<MObject> linked = new ArrayList<MObject>();
@@ -398,9 +381,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	}
 
 	/***********************************************************
-	 * @param classpath
-	 ***********************************************************/
-	@SuppressWarnings("unused")
+	* @param classpath
+	***********************************************************/
 	private void generateLinks(String classpath)
 	{
 		int totalLinks = 0;
@@ -408,65 +390,81 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		for (MLink theLink : getSystem().state().allLinks())
 			if (!(theLink instanceof MObject))
 			{
-				System.out.println("!insert (" + theLink.linkedObjects().get(0).name() + ", "
-								+ theLink.linkedObjects().get(1).name() + ") into " + theLink.association().name());
+//				System.out.println("!insert (" + theLink.linkedObjects().get(0).name() + ", "
+//								+ theLink.linkedObjects().get(1).name() + ") into " + theLink.association().name());
 
-				Object o1 = objectMapper.get(theLink.linkedObjects().get(0).hashCode());
-				Object o2 = objectMapper.get(theLink.linkedObjects().get(1).hashCode());
+				Object target = objectMapper.get(theLink.linkedObjects().get(0).hashCode());
+				Object argument = objectMapper.get(theLink.linkedObjects().get(1).hashCode());
 
-				Method m = null;
+				String argumentRole = theLink.association().associationEnds().get(1).nameAsRolename();
 
-				for (MLinkEnd le : theLink.linkEnds())
-					System.out.print("|" + le.associationEnd().nameAsRolename());
-				System.out.println("|");
+				String methodName;
+				if (theLink.association().associationEnds().get(1).isCollection())
+					methodName = "add" + FileUtilities.capitalize(argumentRole);
+				else
+					methodName = "set" + FileUtilities.capitalize(argumentRole);
 
-				String c1 = theLink.association().associationEnds().get(0).cls().name();
-				String c2 = theLink.association().associationEnds().get(1).cls().name();
-				String r1 = theLink.association().associationEnds().get(0).nameAsRolename();
-				String r2 = theLink.association().associationEnds().get(1).nameAsRolename();
-
-				String methodName = "set" + FileUtilities.capitalize(r2);
-				System.out.println(methodName + "(" + theLink.linkedObjects().get(1) + ")");
+//				System.out.println(theLink.linkedObjects().get(0).name() + "." + methodName + "("
+//								+ theLink.linkedObjects().get(1) + ": " +theLink.linkedObjects().get(1).type().shortName() +")");
+				
+				Class<?> c = null;
 				try
 				{
-					Class<?> c = Class.forName(classpath + "." + theLink.linkedObjects().get(0).cls().name());
-
-					System.out.println(c.getName() + "\n");
-
-					m = c.getDeclaredMethod(methodName, o1.getClass());
-					System.out.println(m);
-					// m.invoke(o2);
-
-					totalLinks++;
+					c = Class.forName(classpath + "." + theLink.linkedObjects().get(0).cls().name());
 				}
-				catch (SecurityException e)
-				{
-					e.printStackTrace();
-				}
-				catch (NoSuchMethodException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalArgumentException e)
-				{
-					e.printStackTrace();
-				}
-				// catch (IllegalAccessException e)
-				// {
-				// e.printStackTrace();
-				// }
-				// catch (InvocationTargetException e)
-				// {
-				// e.printStackTrace();
-				// }
 				catch (ClassNotFoundException e)
 				{
 					e.printStackTrace();
 				}
+				
+				if (invokeMethod(target, argument, argument.getClass(), methodName, c))
+								totalLinks++;
 			}
 		System.out.println("\t - stored " + totalLinks + " links (association instances)");
 	}
 
+	/***********************************************************
+	* @param target
+	* @param argument
+	* @param methodName
+	* @param c
+	* @return
+	***********************************************************/
+	private boolean invokeMethod(Object target, Object argument, Class<?> argumentClass, String methodName, Class<?> c)
+	{
+		Method m = null;
+		try
+		{
+			m = c.getMethod(methodName, argumentClass);
+			m.invoke(target, argument);
+		}
+		catch (SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NoSuchMethodException e)
+		{
+//			System.out.println("invokeMethod(...): Seeking method " + methodName + " in superclass " + argumentClass.getSuperclass().getSimpleName());
+			invokeMethod(target, argument, argumentClass.getSuperclass(), methodName, c);
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	/***********************************************************
+	* @param classpath
+	***********************************************************/
 	private void setObjectsState(String classpath)
 	{
 		for (MClass aClass : getSystem().model().classes())
@@ -486,8 +484,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				Object javaObject = objectMapper.get(useObject.hashCode());
 
 				MObjectState useObjectState = useObject.state(getSystem().state());
-
-				for (MAttribute attribute : aClass.attributes())
+				
+				for (MAttribute attribute : aClass.allAttributes())
 					setJavaObjectAttribute(classpath, c, javaObject, useObjectState, attribute);
 			}
 		}
@@ -501,19 +499,22 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	 * @param useObjectState
 	 * @param attribute
 	 ***********************************************************/
-	@SuppressWarnings("null")
-	private static void setJavaObjectAttribute(String classpath, Class<?> c, Object javaObject, MObjectState useObjectState,
+	private void setJavaObjectAttribute(String classpath, Class<?> c, Object javaObject, MObjectState useObjectState,
 					MAttribute attribute)
 	{
-		// System.out.println("\t" + attribute.name() + " = " + useObjectState.attributeValue(attribute));
+		// System.out.println("\t" + c.getSimpleName() + "." + attribute.name() + " = " +
+		// useObjectState.attributeValue(attribute));
 
 		Method m = null;
+		Object argument = null;
+		
 		String methodName = "set" + FileUtilities.capitalize(attribute.name());
 		if (useObjectState.attributeValue(attribute).isDefined())
 		{
 			try
 			{
-				m = c.getDeclaredMethod(methodName, toClass(classpath, attribute.type()));
+//				m = c.getDeclaredMethod(methodName, toClass(classpath, attribute.type()));
+				m = c.getMethod(methodName, toClass(classpath, attribute.type()));
 
 				if (attribute.type().isBoolean())
 					m.invoke(javaObject, ((BooleanValue) useObjectState.attributeValue(attribute)).value());
@@ -525,43 +526,28 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 					m.invoke(javaObject, ((StringValue) useObjectState.attributeValue(attribute)).value());
 				if (attribute.type().isEnum())
 				{
-					/*
-					 * //Class<?> en = //// Enum<?> e = Enum.valueOf(en, ((EnumValue)
-					 * useObjectState.attributeValue(attribute)).value()); // //// Enum.valueOf( c, ((EnumValue)
-					 * useObjectState.attributeValue(attribute)).value());
-					 * 
-					 * Class<?> ce = Class.forName(c.getPackage().getName() + "." +attribute.type().shortName()); //
-					 * System.out.println(">>>>>>>>>>>>>>>>" + c + "|||"+ ce + "<<<<<<<<<<<<<<<<<");
-					 * 
-					 * Field f = null; try { f = c.getDeclaredField(attribute.name()); // System.out.println("Setting " +
-					 * attribute.name() + " in object  " + javaObject); f.setAccessible(true);
-					 * 
-					 * // Enum<?> e = Enum.valueOf(PosicaoJogador.class, ((EnumValue)
-					 * useObjectState.attributeValue(attribute)).value()); Enum<?> e = Enum.valueOf(ce, ((EnumValue)
-					 * useObjectState.attributeValue(attribute)).value()); f.set(javaObject, e);
-					 * 
-					 * f.set(javaObject, Enum.valueOf(ce, ((EnumValue) useObjectState.attributeValue(attribute)).value()));
-					 * 
-					 * } catch (SecurityException e1) { e1.printStackTrace(); } catch (NoSuchFieldException e1) {
-					 * System.out.println("NoSuchFieldException: " + f + " in object  " + javaObject); // e1.printStackTrace();
-					 * }
-					 * 
-					 * 
-					 * System.out.println(">>"+attribute.type()+ "." + ((EnumValue)
-					 * useObjectState.attributeValue(attribute)).value()+"<<"); // m.invoke(javaObject, e); //
-					 * m.invoke(javaObject, (((EnumValue) useObjectState.attributeValue(attribute)).value()).toString()); //
-					 * m.invoke(javaObject, TipoCampeonato.valueOf(useObjectState.attributeValue(attribute).value()));
-					 */
+					String enumValue = ((EnumValue) useObjectState.attributeValue(attribute)).value();
+					Field f = c.getDeclaredField(attribute.name());
+					Class<?> enumClass = Class.forName(classpath + "." + attribute.type().shortName());
+					@SuppressWarnings("unchecked")
+					Enum<?> e = Enum.valueOf(enumClass.asSubclass(Enum.class), enumValue);
+					f.setAccessible(true);
+					f.set(javaObject, e);
+				}
+				if (attribute.type().isObjectType())
+				{
+					argument = objectMapper.get(useObjectState.attributeValue(attribute).hashCode());
+					m.invoke(javaObject, argument);
 				}
 			}
 			catch (IllegalArgumentException e)
 			{
-				System.out.println("IllegalArgumentException: " + c.getName() + "." + m.getName() + "("
-								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
+				System.out.println("IllegalArgumentException: " + javaObject.hashCode() + "." + m.getName() + "("
+								+ argument.hashCode() + " : " + argument.getClass().getSimpleName() + ")");
 			}
 			catch (NoSuchMethodException e)
 			{
-				System.out.println("NoSuchMethodException: " + c.getName() + "." + m.getName() + "("
+				System.out.println("NoSuchMethodException: " + c.getName() + "." + methodName + "("
 								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
 			}
 			catch (ClassNotFoundException e)
@@ -579,6 +565,14 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				System.out.println("InvocationTargetException: " + c.getName() + "." + m.getName() + "("
 								+ useObjectState.attributeValue(attribute) + " : " + attribute.type() + ")");
 			}
+			catch (SecurityException e)
+			{
+				e.printStackTrace();
+			}
+			catch (NoSuchFieldException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -588,7 +582,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	 * @return
 	 * @throws ClassNotFoundException
 	 ***********************************************************/
-	private static Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
+	private Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
 	{
 		// System.out.println(oclType);
 		if (oclType.isNumber())
@@ -646,9 +640,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	***********************************************************/
 	private void saveObjectsInDatabase()
 	{
-		System.out.print("\t - saving " + objectMapper.values().size() + " objects to the database ... ");
-		for (Object object : objectMapper.values())
-			Database.insert(object);
-		System.out.println("Done!");
+		System.out.print("\t - saving " + objectMapper.values().size() + " objects to the database ");
+		Database.insert(objectMapper.values());
 	}
 }

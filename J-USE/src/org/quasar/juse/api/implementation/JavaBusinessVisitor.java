@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
 package org.quasar.juse.api.implementation;
 
 import java.text.DateFormat;
@@ -146,7 +145,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		Set<MClass> parents = theClass.parents();
 		if (!parents.isEmpty())
 			print(" extends " + StringUtil.fmtSeq(parents.iterator(), ","));
-		println();
+		
+		println(" implements Comparable<Object>");
 		println("{");
 	}
 
@@ -1038,6 +1038,25 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.quasar.juse.api.implementation.IJavaVisitor#printCompareTo(org.tzi.use.uml.mm.MClass)
+	 */
+	@Override
+	public void printCompareTo(MClass theClass)
+	{
+		println("/**********************************************************************");
+		println("* @param other " + theClass.name() + " to compare to the current one");
+		println("* @return");
+		println("**********************************************************************/");
+		println("public int compareTo(Object other)");
+		println("{");
+		incIndent();
+		println("return this.hashCode() - ((" + theClass.name() +") other).hashCode();");
+		decIndent();
+		println("}");
+		println();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1154,6 +1173,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("import " + basePackageName + "." + businessLayerName + ".*;");
 		println("import " + basePackageName + "." + persistenceLayerName + ".Database;");
 		println();
+		println("import java.util.Scanner;");
+		println();
 
 		println("public abstract class Main_", model.name());
 		println("{");
@@ -1164,11 +1185,104 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public static void main(String[] args)");
 		println("{");
 		incIndent();
-		printlnc("TODO");
+		println("Database.open(\"database\", \"" + model.name() + "\", \"db4o\");");
+		println();
+		println("boolean over = false;");
+		println();
+		println("do");
+		println("{");
+		incIndent();
+		println("Scanner in = new Scanner(System.in);");
+		println();
+		println("displayMenu();");
+		println();
+		println("int option;");
+		println("try");
+		println("{");
+		incIndent();
+		println("String answer = in.next();");
+		println("option = Integer.parseInt(answer);");
+		decIndent();
+		println("}");
+		println("catch (NumberFormatException e)");
+		println("{");
+		incIndent();
+		println("System.out.println(\"Invalid input!...\\n\");");
+		println("continue;");
+		decIndent();
+		println("}");
+		println();
+		println("switch (option)");
+		println("{");
+		incIndent();
+		println("case 0:");
+		incIndent();
+		println("over = true;");
+		println("break;");
+		decIndent();
+		int i = 1;
+		for (MClass cls : model.classes())
+		{
+			println("case " + i + ":");
+			incIndent();
+			println("showResults(" + cls.name() + ".class);");
+			println("break;");
+			decIndent();
+			i++;
+		}
+		println("default:");
+		incIndent();
+		println("System.out.println(\"Invalid option!...\\n\");");
+		println("break;");
+		decIndent();
+		println("}");
+		decIndent();
+		println("}");
+		println("while (!over);");
+		println();
+		println("Database.close();");
+		decIndent();
+		println("}");
+		println();
+		println("/***********************************************************");
+		println("* The main menu of the " + model.name() + " information system");
+		println("***********************************************************/");
+		println("public static void displayMenu()");
+		println("{");
+		incIndent();
+		println("System.out.println(\"------------------------------------\");");
+		println("System.out.println(\"" + model.name() + " Information System\");");
+		println("System.out.println(\"------------------------------------\");");
+		println("System.out.println(\"0) EXIT\");");
+		i = 1;
+		for (MClass cls : model.classes())
+		{
+			println("System.out.println(\"" + i + ") " + cls.name() + "\");");
+			i++;
+		}
+
+		println("System.out.println();");
+		println("System.out.print(\"OPTION> \");");
+		decIndent();
+		println("}");
+		println();
+		println("/***********************************************************");
+		println("* @param c the class whose instances we want to show");
+		println("***********************************************************/");
+		println("public static void showResults(Class<?> c)");
+		println("{");
+		incIndent();
+		println("System.out.println(\"---------------------------------------------------------------------------------------------------------------------\");");
+		println("System.out.println(\"| \" + Database.allInstances(c).size() + \" instances of class \" + c.getSimpleName());");
+		println("System.out.println(\"---------------------------------------------------------------------------------------------------------------------\");");
+		println("for (Object o : Database.allInstances(c))");
+		incIndent();
+		println("System.out.println(o);");
+		decIndent();
+		println("System.out.println();");
 		decIndent();
 		println("}");
 		decIndent();
 		println("}");
 	}
-
 }
