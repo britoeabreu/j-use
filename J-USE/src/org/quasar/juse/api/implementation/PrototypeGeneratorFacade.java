@@ -30,6 +30,8 @@ import java.util.Map;
 
 import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
 import org.quasar.juse.persistence.Database;
+import org.quasar.toolkit.FileSystemUtilities;
+import org.quasar.toolkit.SourceFileWriter;
 
 import org.tzi.use.uml.mm.MAssociationClass;
 import org.tzi.use.uml.mm.MAttribute;
@@ -95,39 +97,39 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 		String libraryPath = javaWorkspace + "/" + getSystem().model().name() + "/" + libraryDirectory;
 
-		FileUtilities.createDirectory(presentationDirectory);
+		FileSystemUtilities.createDirectory(presentationDirectory);
 
-		FileUtilities.createDirectory(persistenceDirectory);
-		FileUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", persistenceDirectory
+		FileSystemUtilities.createDirectory(persistenceDirectory);
+		FileSystemUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", persistenceDirectory
 						+ "/Database.java");
 
-		FileUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", "org.quasar.juse.persistence",
+		FileSystemUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", "org.quasar.juse.persistence",
 						basePackageName + "." + persistenceLayerName);
 
-		FileUtilities.createDirectory(libraryPath);
-		FileUtilities.copyFile(libraryDirectory + "/" + db4oJar, libraryPath + "/" + db4oJar);
+		FileSystemUtilities.createDirectory(libraryPath);
+		FileSystemUtilities.copyFile(libraryDirectory + "/" + db4oJar, libraryPath + "/" + db4oJar);
 		// visitAnnotations(e);
 
 		// print user-defined data types
 		for (EnumType t : getSystem().model().enumTypes())
 		{
-			if (FileUtilities.openOutputFile(targetDirectory, t.name() + ".java"))
+			if (SourceFileWriter.openSourceFile(targetDirectory, t.name() + ".java"))
 			{
 				// visitAnnotations(t);
 				visitor.printEnumType(t, businessLayerName);
-				FileUtilities.println();
-				FileUtilities.closeOutputFile();
+				SourceFileWriter.println();
+				SourceFileWriter.closeSourceFile();
 			}
 		}
 
 		// visit classes
 		for (MClass cls : getSystem().model().classes())
 		{
-			if (FileUtilities.openOutputFile(targetDirectory, cls.name() + ".java"))
+			if (SourceFileWriter.openSourceFile(targetDirectory, cls.name() + ".java"))
 			{
 				visitor.printClassHeader(cls, businessLayerName);
 
-				FileUtilities.incIndent();
+				SourceFileWriter.incIndent();
 
 				visitor.printAllInstances(cls);
 
@@ -153,24 +155,24 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				
 				visitor.printInvariants(cls);
 
-				FileUtilities.decIndent();
-				FileUtilities.println("}");
+				SourceFileWriter.decIndent();
+				SourceFileWriter.println("}");
 
-				FileUtilities.closeOutputFile();
+				SourceFileWriter.closeSourceFile();
 			}
 		}
 
 		for (Integer n : JavaTypes.getTupleTypesCardinalities())
-			if (FileUtilities.openOutputFile(targetDirectory, "Tuple" + n + ".java"))
+			if (SourceFileWriter.openSourceFile(targetDirectory, "Tuple" + n + ".java"))
 			{
 				visitor.printTupleTypes(n, businessLayerName);
-				FileUtilities.closeOutputFile();
+				SourceFileWriter.closeSourceFile();
 			}
 
-		if (FileUtilities.openOutputFile(presentationDirectory, "Main_" + getSystem().model().name() + ".java"))
+		if (SourceFileWriter.openSourceFile(presentationDirectory, "Main_" + getSystem().model().name() + ".java"))
 		{
 			visitor.printMain();
-			FileUtilities.closeOutputFile();
+			SourceFileWriter.closeSourceFile();
 		}
 
 		ModelUtilities util = new ModelUtilities(getSystem().model());
@@ -197,7 +199,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 		objectMapper = new HashMap<Integer, Object>(getSystem().state().numObjects());
 
-		FileUtilities.createDirectory(databasePath);
+		FileSystemUtilities.createDirectory(databasePath);
 
 		Database.open(databasePath, getSystem().model().name(), "db4o");
 
@@ -400,9 +402,9 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 				String methodName;
 				if (theLink.association().associationEnds().get(1).isCollection())
-					methodName = "add" + FileUtilities.capitalize(argumentRole);
+					methodName = "add" + SourceFileWriter.capitalize(argumentRole);
 				else
-					methodName = "set" + FileUtilities.capitalize(argumentRole);
+					methodName = "set" + SourceFileWriter.capitalize(argumentRole);
 
 //				System.out.println(theLink.linkedObjects().get(0).name() + "." + methodName + "("
 //								+ theLink.linkedObjects().get(1) + ": " +theLink.linkedObjects().get(1).type().shortName() +")");
@@ -508,7 +510,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		Method m = null;
 		Object argument = null;
 		
-		String methodName = "set" + FileUtilities.capitalize(attribute.name());
+		String methodName = "set" + SourceFileWriter.capitalize(attribute.name());
 		if (useObjectState.attributeValue(attribute).isDefined())
 		{
 			try

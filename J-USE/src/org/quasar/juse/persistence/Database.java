@@ -2,6 +2,7 @@ package org.quasar.juse.persistence;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -143,11 +144,18 @@ public abstract class Database
 	 * @param theClass
 	 * @return
 	 ***********************************************************/
-	public static synchronized <T> Set<T> allInstances(Class<T> theClass)
-	{
+    @SuppressWarnings("unchecked")
+	public static synchronized <T, Y> Set<T> allInstances(Class<Y> prototype) 
+    {
 		getDB();
-		return new HashSet<T>(oc.query(theClass));
-	}
+        return new HashSet<T>((Collection<? extends T>) oc.query(prototype));
+    }
+	
+//	public static synchronized <T> Set<T> allInstances(Class<T> theClass)
+//	{
+//		getDB();
+//		return new HashSet<T>(oc.query(theClass));
+//	}
 
 	/***********************************************************
 	 * @param theClass
@@ -210,6 +218,7 @@ public abstract class Database
 	public static synchronized void close()
 	{
 		getDB();
+		oc.commit();
 		oc.close();
 	}
 

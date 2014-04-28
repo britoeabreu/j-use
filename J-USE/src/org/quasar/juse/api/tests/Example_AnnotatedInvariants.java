@@ -45,7 +45,7 @@ public final class Example_AnnotatedInvariants
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		api.command("check");
 
@@ -61,11 +61,11 @@ public final class Example_AnnotatedInvariants
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		System.out.println("\t# classes = " + api.allClasses().size() + "\t\t# associations = " + api.allAssociations().size() + "\n");
 
-		api.readSOIL(SOIL_FILE, true);
+		api.readSOIL(MODEL_DIRECTORY, SOIL_FILE, true);
 		
 		System.out.println("\t# objects = " + api.allObjects().size() + "\t\t# links = " + api.allLinks().size() + "\n");
 		

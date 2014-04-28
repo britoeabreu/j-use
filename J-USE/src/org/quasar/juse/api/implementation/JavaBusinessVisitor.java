@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.tzi.use.uml.mm.*;
@@ -145,7 +146,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		Set<MClass> parents = theClass.parents();
 		if (!parents.isEmpty())
 			print(" extends " + StringUtil.fmtSeq(parents.iterator(), ","));
-		
+
 		println(" implements Comparable<Object>");
 		println("{");
 	}
@@ -188,6 +189,16 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
+	/***********************************************************
+	 * @param theClass
+	 *            whose root we want
+	 * @return the root parent of the class passed as parameter
+	 ***********************************************************/
+	private MClass baseAncestor(MClass theClass)
+	{
+		return theClass.parents().isEmpty() ? theClass : baseAncestor(theClass.parents().iterator().next());
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -200,8 +211,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("/***********************************************************");
 		println("* @return all instances of class " + theClass.name());
 		println("***********************************************************/");
-		print("public static Set<" + theClass.name() + "> ");
-		println(theClass.isAbstract() ? "allInstancesAbstract()" : "allInstances()");
+		print("public static Set<" + baseAncestor(theClass).name() + "> allInstances()");
 		println("{");
 		incIndent();
 		println("return Database.allInstances(" + theClass.name() + ".class);");
@@ -543,8 +553,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		if (targetAE.getType().isSet() || targetAE.getType().isOrderedSet())
 		{
 			println(associativeInterfaceType + " result = new " + associativeImplementationType + "();");
-			print("for (" + associativeClass + " x : " + associativeClass);
-			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			// print("for (" + associativeClass + " x : " + associativeClass);
+			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -555,8 +566,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		else
 		{
-			print("for (" + associativeClass + " x : " + associativeClass);
-			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			// print("for (" + associativeClass + " x : " + associativeClass);
+			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -628,8 +640,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		if (aInfo.getTargetAE().getType().isSet() || aInfo.getTargetAE().getType().isOrderedSet())
 		{
 			println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-			print("for (" + associativeClass + " x : " + associativeClass);
-			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			// print("for (" + associativeClass + " x : " + associativeClass);
+			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -640,8 +653,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		else
 		{
-			print("for (" + associativeClass + " x : " + associativeClass);
-			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			// print("for (" + associativeClass + " x : " + associativeClass);
+			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
@@ -666,8 +680,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		{
 			println("for (" + targetClass + " t : " + targetRole + ")");
 			incIndent();
-			print("for (" + associativeClass + " x : " + associativeClass);
-			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			// print("for (" + associativeClass + " x : " + associativeClass);
+			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "() == this)");
 			incIndent();
@@ -678,8 +693,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		else
 		{
-			print("for (" + associativeClass + " x : " + associativeClass);
-			println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			// print("for (" + associativeClass + " x : " + associativeClass);
+			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
 			println("if (x." + sourceRole + "() == this)");
 			incIndent();
@@ -728,9 +744,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public " + targetInterfaceType + " " + targetRole + "()");
 		println("{");
 		incIndent();
-		// println("for (" + targetInterfaceType + " x : " + targetInterfaceType + "." + allInstances + ")");
-		print("for (" + targetInterfaceType + " x : " + targetInterfaceType);
-		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		// print("for (" + targetInterfaceType + " x : " + targetInterfaceType);
+		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		println("for (" + targetInterfaceType + " x : " + targetInterfaceType + ".allInstances())");
 		incIndent();
 		println("if (x." + sourceRole + "() == this)");
 		incIndent();
@@ -793,14 +809,24 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-		print("for (" + targetClass + " x : " + targetClass);
-		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		// print("for (" + targetClass + " x : " + targetClass);
+		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		if (targetAE.cls().allParents().isEmpty())
+			println("for (" + targetClass + " x : " + targetClass + ".allInstances())");
+		else
+			println("for (" + targetAE.cls().allParents().toArray()[0] + " v : " + targetClass + ".allInstances())");
+		println("{");
 		incIndent();
+
+		if (!targetAE.cls().allParents().isEmpty())
+			println(targetClass +" x = (" + targetClass + ") v;");
+
 		println("if (x." + sourceRole + "()  ==  this)");
 		incIndent();
 		println("result.add(x);");
 		decIndent();
 		decIndent();
+		println("}");
 		println("return result;");
 		decIndent();
 		println("}");
@@ -874,8 +900,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-		print("for (" + targetClass + " x : " + targetClass);
-		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		// print("for (" + targetClass + " x : " + targetClass);
+		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		println("for (" + targetClass + " x : " + targetClass + ".allInstances())");
 		incIndent();
 		println("if (x." + sourceRole + "() != null && x." + sourceRole + "().contains(this))");
 		incIndent();
@@ -946,6 +973,15 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 
+		if (op.hasResultType() && op.resultType().isInstantiableCollection())
+		{
+			String targetInterfaceType = JavaTypes.javaInterfaceType(op.resultType());
+			String targetImplementationType = JavaTypes.javaImplementationType(op.resultType());
+
+			println(targetInterfaceType + " result = new " + targetImplementationType + "();");
+			println();
+		}
+
 		if (op.hasExpression())
 		{
 			printlnc("TODO");
@@ -965,7 +1001,13 @@ public class JavaBusinessVisitor extends JavaVisitor
 				printlnc("" + op.expression());
 		}
 		if (op.hasResultType())
-			println("return " + JavaTypes.javaDummyValue(op.resultType()) + ";");
+		{
+			println();
+			if (op.resultType().isInstantiableCollection())
+				println("return result;");
+			else
+				println("return " + JavaTypes.javaDummyValue(op.resultType()) + ";");
+		}
 
 		decIndent();
 		println("}");
@@ -1022,14 +1064,61 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public String toString()");
 		println("{");
 		incIndent();
-		print("return \"" + theClass.name() + " [");
-		if (theClass.allParents().size() > 0)
-			print("\" + super.toString() + \" ");
-		List<AttributeInfo> attributes = AttributeInfo.getAttributesInfo(theClass);
+		print("return \"" + theClass.name() + "[");
+
+		// if (theClass.allParents().size() > 0)
+		// print("\" + super.toString() + \" ");
+
+		// List<AttributeInfo> attributes = AttributeInfo.getAttributesInfo(theClass);
+		List<MAttribute> attributes = theClass.allAttributes();
 		for (int i = 0; i < attributes.size(); i++)
 		{
-			print(attributes.get(i).getName() + "=\" + " + attributes.get(i).getName() + " + \"");
+			// print(attributes.get(i).getName() + " = \" + " + attributes.get(i).getName() + " + \"");
+			print(attributes.get(i).name() + "=\"+" + attributes.get(i).name() + "() + \"");
+
 			if (i < attributes.size() - 1)
+				print(", ");
+		}
+
+		Map<String, MNavigableElement> ends = theClass.navigableEnds();
+		if (attributes.size() > 0 && ends.size() > 0)
+			print(", ");
+
+		int i = 0;
+		for (MNavigableElement end : ends.values())
+		{
+			if (theClass instanceof MAssociationClass)
+			{
+				MAssociationClass theAssociationClass = (MAssociationClass) theClass;
+				if (theAssociationClass.associatedClasses().contains(end.cls()))
+					print(end.nameAsRolename() + "(\" + (" + end.nameAsRolename() + "()==null?\"0\":\"1\")" + "+ \")");
+				else
+					if (end.isCollection())
+						print(end.nameAsRolename() + "(\" + " + end.nameAsRolename() + "().size() + \")");
+					else
+						print(end.nameAsRolename() + "(\" + (" + end.nameAsRolename() + "()==null?\"0\":\"1\")" + "+ \")");
+			}
+			else
+			{
+				if (end.cls() instanceof MAssociationClass)
+				{
+					MAssociationClass theAssociationClass = (MAssociationClass) end.cls();
+					if (theAssociationClass.associatedClasses().contains(theClass))
+						print(end.nameAsRolename() + "(\" + " + end.nameAsRolename() + "().size() + \")");
+					else
+						if (end.isCollection())
+							print(end.nameAsRolename() + "(\" + " + end.nameAsRolename() + "().size() + \")");
+						else
+							print(end.nameAsRolename() + "(\" + (" + end.nameAsRolename() + "()==null?\"0\":\"1\")" + "+ \")");
+				}
+				else
+					if (end.isCollection())
+						print(end.nameAsRolename() + "(\" + " + end.nameAsRolename() + "().size() + \")");
+					else
+						print(end.nameAsRolename() + "(\" + (" + end.nameAsRolename() + "()==null?\"0\":\"1\")" + "+ \")");
+			}
+
+			if (i++ < ends.size() - 1)
 				print(", ");
 		}
 		println("]\";");
@@ -1038,7 +1127,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.quasar.juse.api.implementation.IJavaVisitor#printCompareTo(org.tzi.use.uml.mm.MClass)
 	 */
 	@Override
@@ -1051,7 +1142,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public int compareTo(Object other)");
 		println("{");
 		incIndent();
-		println("return this.hashCode() - ((" + theClass.name() +") other).hashCode();");
+		println("return this.hashCode() - ((" + theClass.name() + ") other).hashCode();");
 		decIndent();
 		println("}");
 		println();

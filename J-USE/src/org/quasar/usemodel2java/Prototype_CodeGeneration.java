@@ -13,7 +13,7 @@ import org.quasar.juse.api.implementation.PrototypeGeneratorFacade;
  ***********************************************************/
 public final class Prototype_CodeGeneration
 {
-	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.6";
+	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.7";
 	
 	private final static String	JAVA_WORKSPACE		= "D:/Dropbox/TEACH/Java/workspace";
 	private final static String	BUSINESSLAYER_NAME	= "businessLayer";
@@ -23,13 +23,18 @@ public final class Prototype_CodeGeneration
 	private final static String LIBRARY_DIRECTORY = "lib";
 	private final static String	DB4O_JAR	= "db4o-8.0.249.16098-core-java5.jar";		
 
-	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
-	private final static String	MODEL_FILE			= "AirNova_RegrasNegocio.use";
-	private final static String	TARGET_PACKAGE = "org.quasar.airNova";	
+//	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
+//	private final static String	MODEL_FILE			= "RoyalAndLoyal.use";
+//	private final static String	TARGET_PACKAGE = "org.quasar.royalLoyal";	
 	
-//	private final static String	MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
-//	private final static String	MODEL_FILE = "CopaPaises.use";
-//	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
+//	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
+//	private final static String	MODEL_FILE			= "AirNova_RegrasNegocio.use";
+//	private final static String	TARGET_PACKAGE = "org.quasar.airNova";	
+	
+	
+	private final static String	MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O/CopaPaises_microtest";
+	private final static String	MODEL_FILE = "CopaPaises.use";
+	private final static String	TARGET_PACKAGE = "org.quasar.copaPaises";
 	
 //	private final static String	MODEL_DIRECTORY		= "D:/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
 //	private final static String	MODEL_FILE			= "Royal_Loyal.use";
@@ -54,7 +59,7 @@ public final class Prototype_CodeGeneration
 		
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		api.javaGeneration("Fernando Brito e Abreu", JAVA_WORKSPACE, TARGET_PACKAGE, 	BUSINESSLAYER_NAME, 
 						PRESENTATIONLAYER_NAME, PERSISTENCELAYER_NAME, LIBRARY_DIRECTORY, DB4O_JAR);

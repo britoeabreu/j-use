@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.tzi.use.analysis.coverage.CoverageAnalyzer;
+import org.tzi.use.analysis.coverage.CoverageData;
+import org.tzi.use.gui.views.diagrams.BinaryAssociationOrLinkEdge;
+import org.tzi.use.gui.views.diagrams.classdiagram.ClassNode;
 import org.tzi.use.parser.ocl.OCLCompiler;
 import org.tzi.use.uml.mm.MAssociation;
 import org.tzi.use.uml.mm.MAssociationClass;
@@ -36,6 +40,7 @@ import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
 import org.tzi.use.uml.mm.MClassInvariant;
 import org.tzi.use.uml.mm.MElementAnnotation;
+import org.tzi.use.uml.mm.MModel;
 import org.tzi.use.uml.mm.MModelElement;
 import org.tzi.use.uml.mm.MPrePostCondition;
 import org.tzi.use.uml.ocl.expr.EvalContext;
@@ -251,7 +256,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	{
 		return getSystem().model().getClass(className);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -292,6 +297,16 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 		assert theObject != null;
 
 		return theObject.cls().attribute(attributeName, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#invariantByName(java.lang.String)
+	 */
+	public MClassInvariant invariantByName(String invariantName)
+	{
+		return getSystem().model().getClassInvariant(invariantName);
 	}
 
 	/*
@@ -444,6 +459,51 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 			System.out.println("-> " + "Could not evaluate. " + e.getMessage());
 		}
 		return val;
+	}
+
+	@Override
+	public double associationCoverage()
+	{
+		MModel model = getSystem().model();
+
+		int coveredAssociations = 0;
+		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model);
+		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();
+
+		CoverageData theData = data.get(model);
+
+		Map<MModelElement, Integer> propCover = theData.getPropertyCoverage();
+
+		int maxAttCover = theData.highestInt(propCover);
+		int value;
+
+		for (MClass cls : model.classes())
+		{
+			if (theData.getCompleteClassCoverage().containsKey(cls))
+			{
+				value = theData.getCompleteClassCoverage().get(cls);
+			}
+			else
+			{
+				value = 0;
+			}
+
+		}
+
+		// ---------------------------------------------------
+		// for (MModelElement elem: coverageMap.keySet())
+		// if (elem instanceof MAssociation)
+		// if (coverageMap.get(elem).
+		// coveredAssociations++;
+		return 0;
+		// getSystem().model().associations().size();
+	}
+
+	@Override
+	public double associationEndCoverage()
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

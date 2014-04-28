@@ -51,9 +51,9 @@ public final class Main
 		
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 		
-		api.readSOIL(SOIL_FILE, true);
+		api.readSOIL(MODEL_DIRECTORY, SOIL_FILE, true);
 
 		api.command("info state");
 

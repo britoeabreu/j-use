@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class
+        name="org.quasar.juse.api.implementation.PrototypeGeneratorFacade"
+        x="-91" y="619">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.quasar.juse.api.implementation.BasicFacade"/>
+        <Extension destinationClassName="org.quasar.juse.api.JUSE_PrototypeGeneratorFacade"/>
+        <Communication destinationClassName="org.quasar.juse.api.implementation.BasicFacade"/>
+    </Class>
+    <Class name="org.quasar.juse.api.JUSE_ProgramingFacade" x="797" y="36">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
+    </Class>
+    <Class name="org.quasar.juse.api.implementation.BasicFacade" x="362" y="357">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
+    </Class>
+    <Class name="org.quasar.juse.api.implementation.ProgramingFacade"
+        x="768" y="657">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.quasar.juse.api.JUSE_ProgramingFacade"/>
+        <Extension destinationClassName="org.quasar.juse.api.implementation.BasicFacade"/>
+    </Class>
+    <Class name="org.quasar.juse.api.JUSE_PrototypeGeneratorFacade"
+        x="-83" y="239">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.quasar.juse.api.JUSE_BasicFacade"/>
+    </Class>
+    <Class name="org.quasar.juse.api.JUSE_BasicFacade" x="315" y="-7">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+</ClassDiagram>

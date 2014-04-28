@@ -21,12 +21,6 @@ package org.quasar.juse.api;
 
 import org.tzi.use.uml.sys.MSystem;
 
-
-/***********************************************************
-* @author fba
-* 19 de Abr de 2012
-*
-***********************************************************/
 /***********************************************************
 * @author fba
 * 18 de Mai de 2013
@@ -47,12 +41,16 @@ public interface JUSE_BasicFacade
 	/**********************************************************
 	 * @param specificationFilename
 	 *            The specification filename (*.use file)
+	 * @param verbose
+	 *            If true sends compilation info to console
 	 * @return system the model and its state
 	 ***********************************************************/
-	public MSystem compileSpecification(String specificationFilename);
+	public MSystem compileSpecification(String specificationFilename, boolean verbose);
 
 	/***********************************************************
 	 * Processes a SOIL file
+	 * @param modelInstancesDirectory
+	 *           Directory where the SOIL file resides
 	 * @param modelInstancesFilename
 	 *            The model instances filename (*.soil file)
 	 * @param verbose
@@ -60,7 +58,7 @@ public interface JUSE_BasicFacade
 	 * @return
 	 * 				True if it was able to read the file correctly
 	 ***********************************************************/
-	public boolean readSOIL(String modelInstancesFilename, boolean verbose);
+	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose);
 
 	/***********************************************************
 	 * Generates a CMD file containg objects, their setup and links among them

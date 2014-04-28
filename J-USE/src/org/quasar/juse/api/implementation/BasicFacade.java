@@ -20,6 +20,7 @@
 package org.quasar.juse.api.implementation;
 
 import org.quasar.juse.api.JUSE_BasicFacade;
+import org.quasar.toolkit.SourceFileWriter;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -109,7 +110,7 @@ public class BasicFacade implements JUSE_BasicFacade
 
 		// compile spec if filename given as command line argument
 		if (Options.specFilename != null)
-			compileSpecification(Options.specFilename);
+			compileSpecification(Options.specFilename, true);
 
 		return this;
 	}
@@ -119,7 +120,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#compileSpecification(java.lang.String)
 	 */
-	public MSystem compileSpecification(String specificationFilename)
+	public MSystem compileSpecification(String specificationFilename, boolean verbose)
 	{
 		MModel model = null;
 
@@ -131,7 +132,8 @@ public class BasicFacade implements JUSE_BasicFacade
 			FileInputStream specStream = null;
 			try
 			{
-				System.out.println("\nCompiling specification " + specificationFilename);
+				if (verbose)
+					System.out.println("\nCompiling specification " + specificationFilename);
 
 				Log.verbose("compiling specification " + specificationFilename);
 				specStream = new FileInputStream(specificationFilename);
@@ -197,7 +199,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, boolean)
 	 */
-	public boolean readSOIL(String modelInstancesFilename, boolean verbose)
+	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose)
 	{
 		boolean result = false;
 		if (system == null || system.model() == null)
@@ -206,20 +208,21 @@ public class BasicFacade implements JUSE_BasicFacade
 			return result;
 		}
 
-		modelInstancesFilename = System.getProperty("user.dir") + "/" + modelInstancesFilename;
-
-		System.out.println("\nReading SOIL file " + modelInstancesFilename);
+		String instancesFilename = modelInstancesDirectory + "/" + modelInstancesFilename;
+		
+		if (verbose)
+			System.out.println("\nReading SOIL file " + instancesFilename);
 
 		// Unfortunately none of these 2 simple options work :( ...
-		// command("open " + modelInstancesFilename);
-		// shell.cmdRead(modelInstancesFilename, quiet);
+		// command("open " + instancesFilename);
+		// shell.cmdRead(instancesFilename, quiet);
 		// command("info state");
 
 		// ... so let's do it the hard way ...
 		FileReader fr = null;
 		try
 		{
-			fr = new FileReader(modelInstancesFilename);
+			fr = new FileReader(instancesFilename);
 
 			BufferedReader br = new BufferedReader(fr);
 			String s = null;
@@ -229,6 +232,7 @@ public class BasicFacade implements JUSE_BasicFacade
 				while ((s = br.readLine()) != null)
 				{
 					line++;
+
 					if (verbose)
 						System.out.println(s);
 					else
@@ -237,7 +241,8 @@ public class BasicFacade implements JUSE_BasicFacade
 
 					shell.processLineSafely(s);
 				}
-				System.out.println("\n... finished reading " + line + " lines.\n");
+				if (verbose)
+					System.out.println("\n... finished reading " + line + " lines.\n");
 				fr.close();
 				result = true;
 			}
@@ -266,25 +271,26 @@ public class BasicFacade implements JUSE_BasicFacade
 			return;
 		}
 
-		String targetDirectory = javaWorkspace + "/" + system.model().name() + "/data";
+//		String targetDirectory = javaWorkspace + "/" + system.model().name() + "/data";
+		String targetDirectory = javaWorkspace;
 
 		MSystemState systemState = system.state();
 
 		String command;
 
-		if (!FileUtilities.openOutputFile(targetDirectory, cmdFile))
+		if (!SourceFileWriter.openSourceFile(targetDirectory, cmdFile))
 		{
-			System.out.println("Dumping model snapshot to " + targetDirectory + "/" + cmdFile);
+			System.out.println("ERROR: cannot dump model snapshot to " + targetDirectory + "/" + cmdFile);
 			return;
 		}
 		else
 			System.out.println("Dumping model snapshot to " + targetDirectory + "/" + cmdFile);
 
-		FileUtilities.println("-------------------------------------------------------------------");
-		FileUtilities.println("-- author: " + author);
-		FileUtilities.println("-------------------------------------------------------------------");
-		FileUtilities.println("reset");
-		FileUtilities.println();
+		SourceFileWriter.println("-------------------------------------------------------------------");
+		SourceFileWriter.println("-- author: " + author);
+		SourceFileWriter.println("-------------------------------------------------------------------");
+		SourceFileWriter.println("reset");
+		SourceFileWriter.println();
 
 		// generate regular objects
 		int line = 0;
@@ -293,13 +299,13 @@ public class BasicFacade implements JUSE_BasicFacade
 			{
 				line++;
 				command = "!create " + theObject.name() + ": " + theObject.cls().name();
-				FileUtilities.println(command);
+				SourceFileWriter.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
 		System.out.println("\t- wrote " + line + " create object commands");
 
-		FileUtilities.println("-------------------------------------------------------------------");
+		SourceFileWriter.println("-------------------------------------------------------------------");
 
 		line = 0;
 		// generate regular link objects whose connected objects are regular objects
@@ -314,7 +320,7 @@ public class BasicFacade implements JUSE_BasicFacade
 					command = "!create " + theObject.name() + ": " + theObject.cls().name() + " between ("
 									+ theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 									+ ")";
-					FileUtilities.println(command);
+					SourceFileWriter.println(command);
 					if (verbose)
 						System.out.println(command);
 				}
@@ -332,14 +338,14 @@ public class BasicFacade implements JUSE_BasicFacade
 					command = "!create " + theObject.name() + ": " + theObject.cls().name() + " between ("
 									+ theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 									+ ")";
-					FileUtilities.println(command);
+					SourceFileWriter.println(command);
 					if (verbose)
 						System.out.println(command);
 				}
 			}
 		System.out.println("\t- wrote " + line + " create link object commands");
 
-		FileUtilities.println("-------------------------------------------------------------------");
+		SourceFileWriter.println("-------------------------------------------------------------------");
 
 		line = 0;
 		// generate regular links
@@ -349,13 +355,13 @@ public class BasicFacade implements JUSE_BasicFacade
 				line++;
 				command = "!insert (" + theLink.linkedObjects().get(0).name() + ", " + theLink.linkedObjects().get(1).name()
 								+ ") into " + theLink.association().name();
-				FileUtilities.println(command);
+				SourceFileWriter.println(command);
 				if (verbose)
 					System.out.println(command);
 			}
 		System.out.println("\t- wrote " + line + " insert link commands");
 
-		FileUtilities.println("-------------------------------------------------------------------");
+		SourceFileWriter.println("-------------------------------------------------------------------");
 
 		line = 0;
 		// set objects state
@@ -369,7 +375,10 @@ public class BasicFacade implements JUSE_BasicFacade
 					line++;
 					command = "!set " + theObject.name() + "." + attribute.name() + " := "
 									+ objectState.attributeValue(attribute);
-					FileUtilities.println(command);
+					
+					command.replaceAll("\\\\", "\\\\\\\\");
+					
+					SourceFileWriter.println(command);
 					if (verbose)
 						System.out.println(command);
 				}
@@ -377,7 +386,7 @@ public class BasicFacade implements JUSE_BasicFacade
 		}
 		System.out.println("\t- wrote " + line + " set object state commands");
 
-		FileUtilities.closeOutputFile();
+		SourceFileWriter.closeSourceFile();
 
 		// print some info about snapshot
 		// System.out.println("Specification " + system.model().name() + " snapshot (" + systemState.allObjects().size() +

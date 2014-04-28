@@ -1,10 +1,11 @@
 package org.quasar.juse.api.implementation;
 
+import org.quasar.toolkit.SourceFileWriter;
 import org.tzi.use.uml.mm.MClass;
 import org.tzi.use.uml.mm.MOperation;
 import org.tzi.use.uml.ocl.type.EnumType;
 
-public abstract class JavaVisitor extends FileUtilities implements IJavaVisitor 
+public abstract class JavaVisitor extends SourceFileWriter implements IJavaVisitor 
 {
 	@Override
 	public abstract void printFileHeader(String typeName, String layerName);

@@ -174,10 +174,27 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	public MAttribute attributeByName(MObject theObject, String attributeName);
 	
 	/***********************************************************
+	* @param invariantName
+	* @return
+	***********************************************************/
+	public MClassInvariant invariantByName(String invariantName);
+	
+	/***********************************************************
 	* @return All the classes defined in the model
 	***********************************************************/
 	public Collection<MClass> allClasses();
 		
+	
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public double associationCoverage();
+	
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public double associationEndCoverage();
+	
 	/***********************************************************
 	* @return All the associations defined in the model
 	***********************************************************/

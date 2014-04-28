@@ -45,7 +45,7 @@ public class BPMNvalidatorTests {
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		System.out
 				.println("\t# classes = " + api.allClasses().size()
@@ -167,11 +167,11 @@ public class BPMNvalidatorTests {
 
 		// System.out.println(">>>" +invariantName );
 
-		api.readSOIL(SOIL_DIRECTORY + "/PASS/" + methodName + ".cmd", true);
+		api.readSOIL(SOIL_DIRECTORY + "/PASS/",  methodName + ".cmd", true);
 		 assertEquals(0, getFailedInvariants('S').size());
 		assertTrue(!invariantFails(methodName));
 
-		api.readSOIL(SOIL_DIRECTORY + "/FAIL/" + methodName + ".cmd", true);
+		api.readSOIL(SOIL_DIRECTORY + "/FAIL/", methodName + ".cmd", true);
 		assertTrue(getFailedInvariants('S').size() > 0);
 		// System.out.println("DEBUG>" +invariantFails(invariantName));
 		assertTrue(invariantFails(methodName));

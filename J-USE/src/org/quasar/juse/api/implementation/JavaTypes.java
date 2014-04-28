@@ -81,10 +81,10 @@ public abstract class JavaTypes
 			return "HashSet<" + javaImplementationType(((SetType) oclType).elemType()) + ">";		
 		if (oclType.isOrderedSet())
 			return "TreeSet<" + javaImplementationType(((OrderedSetType) oclType).elemType()) + ">";
-		if (oclType.isSequence())
-			return "ArrayDeque<" + javaImplementationType(((SequenceType) oclType).elemType()) + ">";
 		if (oclType.isBag())
 			return "ArrayList<" + javaImplementationType(((BagType) oclType).elemType()) + ">";
+		if (oclType.isSequence())
+			return "ArrayDeque<" + javaImplementationType(((SequenceType) oclType).elemType()) + ">";
 		if (oclType.isTupleType(true))
 			return javaTupleType((TupleType) oclType);
 
@@ -215,7 +215,7 @@ public abstract class JavaTypes
 				if (oclType.isSequence())
 				{
 					result.add("import java.util.Queue;");
-					// result.add("import java.util.ArrayDeque;");
+					result.add("import java.util.ArrayDeque;");
 				}
 				if (oclType.isOrderedSet())
 				{

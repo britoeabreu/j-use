@@ -63,7 +63,7 @@ public final class Example_InstancesGeneration
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		api.command("check");
 
@@ -80,7 +80,7 @@ public final class Example_InstancesGeneration
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		api.command("check");
 
@@ -126,7 +126,7 @@ public final class Example_InstancesGeneration
 
 		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
 
-		api.compileSpecification(MODEL_FILE);
+		api.compileSpecification(MODEL_FILE, true);
 
 		api.command("check");
 
