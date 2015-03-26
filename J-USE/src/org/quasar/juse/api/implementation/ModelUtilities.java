@@ -19,10 +19,13 @@
 
 package org.quasar.juse.api.implementation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.tzi.use.uml.mm.MAssociationClass;
+import org.tzi.use.uml.mm.MAssociationEnd;
 import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
 import org.tzi.use.uml.mm.MModel;
@@ -47,50 +50,49 @@ public class ModelUtilities
 	}
 
 	/***********************************************************
-	* @return
-	***********************************************************/
+	 * @return
+	 ***********************************************************/
 	public int numberClasses()
 	{
 		return model.classes().size();
 	}
-	
+
 	/***********************************************************
-	* @return
-	***********************************************************/
+	 * @return
+	 ***********************************************************/
 	public int numberAttributes()
 	{
 		int result = 0;
-		for (MClass aClass: model.classes())
-			result+= AttributeInfo.getAttributesInfo(aClass).size();
+		for (MClass aClass : model.classes())
+			result += AttributeInfo.getAttributesInfo(aClass).size();
 		return result;
 	}
 
 	/***********************************************************
-	* @return
-	***********************************************************/
+	 * @return
+	 ***********************************************************/
 	public int numberOperations()
 	{
 		int result = 0;
-		for (MClass aClass: model.classes())
-		{			
+		for (MClass aClass : model.classes())
+		{
 			if (AttributeInfo.getAttributesInfo(aClass).size() > 0)
-				result++;	// DefaultConstructor;
+				result++; // DefaultConstructor;
 
-			result++;	// Parameterized Constructor
+			result++; // Parameterized Constructor
 
-			result+= 2 * aClass.attributes().size(); 	// Getters & Setters for "native" attributes
+			result += 2 * aClass.attributes().size(); // Getters & Setters for "native" attributes
 
 			if (aClass instanceof MAssociationClass)
-				result += 4;	// Each association class adds 4 more navigators (towards the 2 members, in both directions)
-			
-			result += aClass.operations().size();	// Operations specified in OCL / SOIL
+				result += 4; // Each association class adds 4 more navigators (towards the 2 members, in both directions)
+
+			result += aClass.operations().size(); // Operations specified in OCL / SOIL
 		}
-		
-		result += 4* model.associations().size();	// One getter and one setter for each navigation direction
+
+		result += 4 * model.associations().size(); // One getter and one setter for each navigation direction
 
 		return result;
 	}
-	
 
 	/***********************************************************
 	 * @param theClass
@@ -167,6 +169,66 @@ public class ModelUtilities
 		Set<Type> tmp = getClassInboundDependencies(theClass);
 		tmp.remove(theClass.type());
 		return tmp.size();
+	}
+
+	public static MClass getAssociativeClass(MClass leftMAClass, MClass rightMAClass)
+	{
+		for (AssociationInfo sourceAss : AssociationInfo.getAssociationsInfo(leftMAClass))
+			if (sourceAss.getKind() == AssociationKind.MEMBER2ASSOCIATIVE)
+				for (AssociationInfo targetAss : AssociationInfo.getAssociationsInfo(rightMAClass))
+					if (targetAss.getKind() == AssociationKind.MEMBER2ASSOCIATIVE
+									&& sourceAss.getTargetAEClass() == targetAss.getTargetAEClass())
+						return sourceAss.getTargetAEClass();
+		return null;
+	}
+
+	public static MClass getOtherMember(MAssociationClass associative, MClass member)
+	{
+		for (AssociationInfo sourceAss : AssociationInfo.getAssociationsInfo(member))
+			if (sourceAss.getKind() == AssociationKind.MEMBER2ASSOCIATIVE && sourceAss.getTargetAEClass() == associative)
+				for (AssociationInfo targetAss : AssociationInfo.getAssociationsInfo(associative))
+					if (targetAss.getKind() == AssociationKind.ASSOCIATIVE2MEMBER
+									&& targetAss.getSourceAEClass() == associative && targetAss.getTargetAEClass() != member)
+						return targetAss.getTargetAEClass();
+		return null;
+	}
+
+	public static MAssociationEnd getOtherMemberAssociation(MAssociationClass associative, MClass member)
+	{
+		for (AssociationInfo sourceAss : AssociationInfo.getAssociationsInfo(member))
+			if (sourceAss.getKind() == AssociationKind.MEMBER2ASSOCIATIVE && sourceAss.getTargetAEClass() == associative)
+				for (AssociationInfo targetAss : AssociationInfo.getAssociationsInfo(associative))
+					if (targetAss.getKind() == AssociationKind.ASSOCIATIVE2MEMBER
+									&& targetAss.getSourceAEClass() == associative && targetAss.getTargetAEClass() != member)
+						return targetAss.getTargetAE();
+		return null;
+	}
+
+	public static boolean hasAssociations(MClass cls)
+	{
+		if (AssociationInfo.getAllAssociationsInfo(cls).isEmpty())
+			return false;
+		else
+			return true;
+	}
+
+	public static boolean isSpecialPrimitive(MClass theClass)
+	{
+		if (theClass.name().equals("CalendarDate") || theClass.name().equals("CalendarTime"))
+			return true;
+		else
+			return false;
+	}
+
+	public static List<MClass> getAttributeObjectTypeOwners(MClass theClass)
+	{
+		List<MClass> list = new ArrayList<MClass>();
+		for (MClass clazz : theClass.model().classes())
+			if (theClass != clazz && clazz.isAnnotated() && clazz.getAnnotation("domain") != null)
+				for (MAttribute att : clazz.allAttributes())
+					if (att.type().isObjectType() && att.type().toString().equals(theClass.name()))
+						list.add(clazz);
+		return list;
 	}
 
 	/***********************************************************

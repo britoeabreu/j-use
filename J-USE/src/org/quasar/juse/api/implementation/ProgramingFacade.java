@@ -22,6 +22,7 @@ package org.quasar.juse.api.implementation;
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 
 import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +37,7 @@ import org.tzi.use.gui.views.diagrams.classdiagram.ClassNode;
 import org.tzi.use.parser.ocl.OCLCompiler;
 import org.tzi.use.uml.mm.MAssociation;
 import org.tzi.use.uml.mm.MAssociationClass;
+import org.tzi.use.uml.mm.MAssociationEnd;
 import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
 import org.tzi.use.uml.mm.MClassInvariant;
@@ -56,6 +58,7 @@ import org.tzi.use.uml.sys.MLinkObject;
 import org.tzi.use.uml.sys.MObject;
 import org.tzi.use.uml.sys.MSystemException;
 import org.tzi.use.uml.sys.MSystemState.DeleteObjectResult;
+import org.tzi.use.util.Log;
 
 /***********************************************************
  * @author fba 25 de Abr de 2012
@@ -306,7 +309,11 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 */
 	public MClassInvariant invariantByName(String invariantName)
 	{
-		return getSystem().model().getClassInvariant(invariantName);
+		for (MClassInvariant inv : getSystem().model().classInvariants())
+			if (inv.name().equals(invariantName))
+				return inv;
+		return null;
+		// return getSystem().model().getClassInvariant(invariantName);
 	}
 
 	/*
@@ -423,11 +430,28 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#check(org.tzi.use.uml.mm.MClassInvariant)
 	 */
-	public boolean check(MClassInvariant anInvariant)
+	public boolean check(MClassInvariant anInvariant) throws RuntimeException
 	{
 		EvalContext context = new EvalContext(null, getSystem().state(), getSystem().varBindings(), null, "\t");
 
 		return ((BooleanValue) anInvariant.expandedExpression().eval(context)).isTrue();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#checkStructure()
+	 */
+	public boolean checkStructure()
+	{
+		System.setOut(new java.io.PrintStream(new OutputStream()
+		{
+			public void write(int b)
+			{
+			}
+		}));
+
+		return getSystem().state().checkStructure(new PrintWriter(System.out));
 	}
 
 	/*
@@ -466,44 +490,52 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	{
 		MModel model = getSystem().model();
 
-		int coveredAssociations = 0;
 		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model);
 		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();
 
 		CoverageData theData = data.get(model);
 
-		Map<MModelElement, Integer> propCover = theData.getPropertyCoverage();
+		Map<MAssociation, Integer> associationCoverage = theData.getAssociationCoverage();
 
-		int maxAttCover = theData.highestInt(propCover);
-		int value;
+		int assocSize = 0;
+		int assocCovered = 0;
 
-		for (MClass cls : model.classes())
+		for (MAssociation assoc : model.associations())
 		{
-			if (theData.getCompleteClassCoverage().containsKey(cls))
-			{
-				value = theData.getCompleteClassCoverage().get(cls);
-			}
-			else
-			{
-				value = 0;
-			}
-
+			// System.out.println("\t"+assoc.name()+ "\t" + associationCoverage.get(assoc));
+			assocSize++;
+			if (associationCoverage.get(assoc) != null)
+				assocCovered++;
 		}
 
-		// ---------------------------------------------------
-		// for (MModelElement elem: coverageMap.keySet())
-		// if (elem instanceof MAssociation)
-		// if (coverageMap.get(elem).
-		// coveredAssociations++;
-		return 0;
-		// getSystem().model().associations().size();
+		return ((double) assocCovered) / assocSize;
 	}
 
 	@Override
 	public double associationEndCoverage()
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		MModel model = getSystem().model();
+
+		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model);
+		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();
+
+		CoverageData theData = data.get(model);
+
+		Map<MAssociationEnd, Integer> associationEndCoverage = theData.getAssociationEndCoverage();
+
+		int aendSize = 0;
+		int aendCovered = 0;
+
+		for (MAssociation assoc : model.associations())
+			for (MAssociationEnd aend : assoc.associationEnds())
+			{
+				// System.out.println("\t"+aend.nameAsRolename()+ "\t" + associationEndCoverage.get(aend));
+				aendSize++;
+				if (associationEndCoverage.get(aend) != null)
+					aendCovered++;
+			}
+
+		return ((double) aendCovered) / aendSize;
 	}
 
 }

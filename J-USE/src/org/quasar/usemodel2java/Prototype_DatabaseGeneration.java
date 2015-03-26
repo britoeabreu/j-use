@@ -20,35 +20,40 @@ import org.quasar.juse.api.implementation.PrototypeGeneratorFacade;
  ***********************************************************/
 public final class Prototype_DatabaseGeneration
 {
-	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.6";
+	private final static String	USE_BASE_DIRECTORY		= "D:\\Dropbox\\TEACH\\Java\\workspace\\use-4.0.0";
 
 	private final static String	JAVA_WORKSPACE		= "D:/Dropbox/TEACH/Java/workspace";
 	private final static String	BUSINESSLAYER_NAME	= "businessLayer";
 	private final static String	DATABASE_DIRECTORY	= "database";
 
-	// private final static String TARGET_PACKAGE = "org.quasar.airNova";
-	// private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
-	// private final static String MODEL_FILE = "AirNova.use";
-	// private final static String SOIL_FILE = "AirNova_data.soil";
-	// private final static String CMD_FILE = "AirNova_data.cmd";
+	 private final static String TARGET_PACKAGE = "org.quasar.airNova";
+	 private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O/Data";
+	 private final static String MODEL_FILE = "AirNova.use";
+	 private final static String SOIL_FILE = "AirNova4.soil";
+	 private final static String CMD_FILE = "AirNova4.cmd";
 
-//	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/_SHARED/PedroCoimbra/JavaModel";
-//	private final static String	MODEL_FILE			= "JavaMMv3_FLAME.use";
-//	private final static String	SOIL_FILE			= "AirNova.soil";
-//	private final static String	CMD_FILE			= "AirNova.cmd";
-	
-//	private final static String	TARGET_PACKAGE = "org.quasar.royalLoyal";	
-//	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
-//	private final static String	MODEL_FILE			= "RoyalAndLoyal.use";
-//	private final static String	SOIL_FILE			= "RoyalAndLoyal_correctSnapshot.soil";
-//	private final static String	CMD_FILE			= "RoyalAndLoyal_correctSnapshot.cmd";
+	// private final static String MODEL_DIRECTORY = "D:/Dropbox/_SHARED/PedroCoimbra/JavaModel";
+	// private final static String MODEL_FILE = "JavaMMv3_FLAME.use";
+	// private final static String SOIL_FILE = "AirNova.soil";
+	// private final static String CMD_FILE = "AirNova.cmd";
 
-	 private final static String TARGET_PACKAGE = "org.quasar.copaPaises";
-	private final static String	MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O/CopaPaises_microtest";
-	 private final static String MODEL_FILE = "CopaPaises.use";
-	 private final static String SOIL_FILE = "dadosMicrotest3.soil";
-	 private final static String CMD_FILE = "dadosMicrotest3.cmd";
-	 
+	// private final static String TARGET_PACKAGE = "org.quasar.royalLoyal";
+	// private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/UK_TO_RoyalLoyal_RXUC/USE";
+	// private final static String MODEL_FILE = "RoyalAndLoyal.use";
+	// private final static String SOIL_FILE = "RoyalAndLoyal_correctSnapshot.soil";
+	// private final static String CMD_FILE = "RoyalAndLoyal_correctSnapshot.cmd";
+
+//	private final static String	TARGET_PACKAGE		= "org.quasar.phoenix";
+//	private final static String	MODEL_DIRECTORY		= "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_OrganizacaoAcademica_OC/USE";
+//	private final static String	MODEL_FILE			= "Phoenix2.use";
+//	private final static String	SOIL_FILE			= "PHOENIXdata2.cmd";
+//	private final static String	CMD_FILE			= "PHOENIXdata2.cmd";
+
+	// private final static String TARGET_PACKAGE = "org.quasar.copaPaises";
+	// private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O/CopaPaises_microtest";
+	// private final static String MODEL_FILE = "CopaPaises.use";
+	// private final static String SOIL_FILE = "dadosMicrotest3.soil";
+	// private final static String CMD_FILE = "dadosMicrotest3.cmd";
 
 	/***********************************************************
 	 * @param args
@@ -124,12 +129,12 @@ public final class Prototype_DatabaseGeneration
 			api.storeState(JAVA_WORKSPACE, TARGET_PACKAGE, BUSINESSLAYER_NAME, DATABASE_DIRECTORY);
 		}
 
-		api.dumpState("Fernando Brito e Abreu", MODEL_DIRECTORY, CMD_FILE, false);
-
-		api.command("reset");
-		api.command("info state");
-
-		api.readSOIL(MODEL_DIRECTORY, CMD_FILE, false);
+		// api.dumpState("Fernando Brito e Abreu", MODEL_DIRECTORY, CMD_FILE, false);
+		//
+		// api.command("reset");
+		// api.command("info state");
+		//
+		// api.readSOIL(MODEL_DIRECTORY, CMD_FILE, false);
 		api.command("info state");
 	}
 }

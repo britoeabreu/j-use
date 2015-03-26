@@ -174,9 +174,10 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	public MAttribute attributeByName(MObject theObject, String attributeName);
 	
 	/***********************************************************
-	* @param invariantName
-	* @return
-	***********************************************************/
+	* @param invariantName     - must be given as "class::inv".
+     * 
+     * @return null if invariant <code>name</name> does not exist.
+ 	 ***********************************************************/
 	public MClassInvariant invariantByName(String invariantName);
 	
 	/***********************************************************
@@ -233,9 +234,17 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	
 	/***********************************************************
 	* @param anInvariant The invariant being checked
-	* @return True if the invariant is fullfilled; False otherwise
+	* @return True if the invariant is fullfilled; False otherwise 
+	* throws exception when the invariant cannot be evaluated (e.g. precondition failure)
 	***********************************************************/
-	public boolean check(MClassInvariant anInvariant);
+	public boolean check(MClassInvariant anInvariant) throws RuntimeException;
+
+	
+	/***********************************************************
+	* @return True if all cardinality constraints are fulfilled
+	***********************************************************/
+	public boolean checkStructure();
+	
 	
 	/***********************************************************
 	* @param expression the OCL expression to be evaluated

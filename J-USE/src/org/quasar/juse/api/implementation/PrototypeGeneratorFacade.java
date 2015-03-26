@@ -80,7 +80,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		// ModelUtilities mu = new ModelUtilities(model);
 		// mu.printModelUtilities();
 
-		System.out.println("\nJava plugin for USE version 1.0.6, Copyright (C) 2012-2013 QUASAR Group");
+		System.out.println("\nJava plugin for USE version 1.1.7, Copyright (C) 2014-2015 QUASAR Group");
 		System.out.println("\t - generating Java code for " + getSystem().model().name() + "...");
 
 		JavaVisitor visitor = new JavaBusinessVisitor(getSystem().model(), author, basePackageName, businessLayerName,

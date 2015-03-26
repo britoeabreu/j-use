@@ -31,20 +31,20 @@ public abstract class SourceFileWriter
 			if (fOut != null)
 				fOut.close();
 			File f = new File(file);
-			if (f.exists())
-			{
-				JFrame frame = new JFrame();
-				int answer = JOptionPane.showConfirmDialog(frame, "The file " + filename
-								+ " already exists!\nDo you want to overwrite it?", "WARNING", JOptionPane.YES_NO_OPTION);
-				frame.dispose();
-				if (answer == JOptionPane.YES_OPTION)
-					fOut = new PrintWriter(new FileWriter(file));
-				else
-					result = false;
-			}
-			else
+			//if (f.exists())
+//			{
+//				JFrame frame = new JFrame();
+//				int answer = JOptionPane.showConfirmDialog(frame, "The file " + filename
+//								+ " already exists!\nDo you want to overwrite it?", "WARNING", JOptionPane.YES_NO_OPTION);
+//				frame.dispose();
+//				if (answer == JOptionPane.YES_OPTION)
+//					fOut = new PrintWriter(new FileWriter(file));
+//				else
+//					result = false;
+//			}
+//			else
 				fOut = new PrintWriter(new FileWriter(file));
-		}
+	}
 		catch (IOException e)
 		{
 			FileSystemUtilities.createDirectory(directoryname);

@@ -199,7 +199,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, boolean)
 	 */
-	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose)
+	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose) throws NullPointerException
 	{
 		boolean result = false;
 		if (system == null || system.model() == null)
@@ -235,9 +235,9 @@ public class BasicFacade implements JUSE_BasicFacade
 
 					if (verbose)
 						System.out.println(s);
-					else
-						if (line % 500 == 0)
-							System.out.print(".");
+//					else
+//						if (line % 500 == 0)
+//							System.out.print(".");
 
 					shell.processLineSafely(s);
 				}

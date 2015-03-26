@@ -58,7 +58,7 @@ public interface JUSE_BasicFacade
 	 * @return
 	 * 				True if it was able to read the file correctly
 	 ***********************************************************/
-	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose);
+	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose) throws NullPointerException;
 
 	/***********************************************************
 	 * Generates a CMD file containg objects, their setup and links among them
