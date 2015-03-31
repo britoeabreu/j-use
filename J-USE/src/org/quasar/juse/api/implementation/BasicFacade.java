@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 
 import org.tzi.use.config.Options;
 import org.tzi.use.main.Session;
@@ -103,7 +104,7 @@ public class BasicFacade implements JUSE_BasicFacade
 		if (modelDirectory != null)
 		{
 			System.setProperty("user.dir", modelDirectory);
-			Options.setLastDirectory(modelDirectory);
+			Options.setLastDirectory(Paths.get(modelDirectory));
 		}
 		// System.out.println("user.dir=" + System.getProperty("user.dir"));
 		// System.out.println("lastDirectory=" + Options.getLastDirectory());

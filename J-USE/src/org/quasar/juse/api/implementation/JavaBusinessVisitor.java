@@ -117,12 +117,12 @@ public class JavaBusinessVisitor extends JavaVisitor
 	public void printAttributes(MClass theClass)
 	{
 		for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
-			if (attribute.getType().isSet() || attribute.getType().isOrderedSet())
+			if (attribute.getType().isTypeOfSet() || attribute.getType().isTypeOfOrderedSet())
 				println("private " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + " = "
 								+ " new " + JavaTypes.javaImplementationType(attribute.getType()) + "();");
 			else{
 				if(isSuperClass(theClass)){
-					if(attribute.getType().isEnum())
+					if(attribute.getType().isTypeOfEnum())
 						println("protected String " + attribute.getName() + ";");
 //					else if(attribute.getName().equals("ID"))
 //						println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + ";");
@@ -152,7 +152,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 			print("abstract ");
 		print("class " + theClass.name());
 
-		Set<MClass> parents = theClass.parents();
+		Set<? extends MClass> parents = theClass.parents();
 		if (!parents.isEmpty())
 			print(" extends " + StringUtil.fmtSeq(parents.iterator(), ","));
 
@@ -414,22 +414,22 @@ public class JavaBusinessVisitor extends JavaVisitor
 			case ONE2ONE:
 				println("* " + currentAttribute.getKind() + " " + tag + " for " + theClass + "[1] <-> "
 								+ currentAttribute.getType() + "[1]"
-								+ (currentAttribute.getType().isOrderedSet() ? " ordered" : ""));
+								+ (currentAttribute.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 				break;
 			case ONE2MANY:
 				println("* " + currentAttribute.getKind() + " " + tag + " for " + theClass + "[*] <-> "
 								+ currentAttribute.getType() + "[1]"
-								+ (currentAttribute.getType().isOrderedSet() ? " ordered" : ""));
+								+ (currentAttribute.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 				break;
 			case MANY2MANY:
 				println("* " + currentAttribute.getKind() + " " + tag + " for " + theClass + "[*] <-> "
 								+ currentAttribute.getType() + "[*]"
-								+ (currentAttribute.getType().isOrderedSet() ? " ordered" : ""));
+								+ (currentAttribute.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 				break;
 			case ASSOCIATIVE2MEMBER:
 				println("* " + currentAttribute.getKind() + " " + tag + " for " + theClass + "[*] <-> "
 								+ currentAttribute.getType() + "[1]"
-								+ (currentAttribute.getType().isOrderedSet() ? " ordered" : ""));
+								+ (currentAttribute.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 				break;
 			default:
 				break;
@@ -594,21 +594,21 @@ public class JavaBusinessVisitor extends JavaVisitor
 		MMultiplicity sourceMultiplicity = sourceAE.multiplicity();
 		MMultiplicity targetMultiplicity = targetAE.multiplicity();
 
-		String associativeInterfaceType = targetAE.getType().isOrderedSet() ? "SortedSet<" + associativeClass + ">" : (targetAE
-						.getType().isSet() ? "Set<" + associativeClass + ">" : associativeClass);
+		String associativeInterfaceType = targetAE.getType().isTypeOfOrderedSet() ? "SortedSet<" + associativeClass + ">" : (targetAE
+						.getType().isTypeOfSet() ? "Set<" + associativeClass + ">" : associativeClass);
 
-		String associativeImplementationType = targetAE.getType().isOrderedSet() ? "TreeSet<" + associativeClass + ">"
-						: (targetAE.getType().isSet() ? "HashSet<" + associativeClass + ">" : associativeClass);
+		String associativeImplementationType = targetAE.getType().isTypeOfOrderedSet() ? "TreeSet<" + associativeClass + ">"
+						: (targetAE.getType().isTypeOfSet() ? "HashSet<" + associativeClass + ">" : associativeClass);
 
 		println("/**********************************************************************");
 		println("* MEMBER2ASSOCIATIVE getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + associativeClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @return the " + associativeRole + " of the " + sourceRole);
 		println("**********************************************************************/");
 		println("public " + associativeInterfaceType + " " + associativeRole + "()");
 		println("{");
 		incIndent();
-		if (targetAE.getType().isSet() || targetAE.getType().isOrderedSet())
+		if (targetAE.getType().isTypeOfSet() || targetAE.getType().isTypeOfOrderedSet())
 		{
 			println(associativeInterfaceType + " result = new " + associativeImplementationType + "();");
 			// print("for (" + associativeClass + " x : " + associativeClass);
@@ -641,13 +641,13 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* MEMBER2ASSOCIATIVE setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + associativeClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + associativeRole + " the " + associativeRole + " to set");
 		println("**********************************************************************/");
 		println("public void set" + capitalize(associativeRole) + "(" + associativeInterfaceType + " " + associativeRole + ")");
 		println("{");
 		incIndent();
-		if (aInfo.getTargetAE().getType().isSet() || aInfo.getTargetAE().getType().isOrderedSet())
+		if (aInfo.getTargetAE().getType().isTypeOfSet() || aInfo.getTargetAE().getType().isTypeOfOrderedSet())
 		{
 			println("for (" + associativeClass + " x : " + associativeRole + ")");
 			incIndent();
@@ -689,13 +689,13 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* MEMBER2MEMBER getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @return the " + targetRole + " of the " + sourceRole);
 		println("**********************************************************************/");
 		println("public " + targetInterfaceType + " " + targetRole + "()");
 		println("{");
 		incIndent();
-		if (aInfo.getTargetAE().getType().isSet() || aInfo.getTargetAE().getType().isOrderedSet())
+		if (aInfo.getTargetAE().getType().isTypeOfSet() || aInfo.getTargetAE().getType().isTypeOfOrderedSet())
 		{
 			println(targetInterfaceType + " result = new " + targetImplementationType + "();");
 			// print("for (" + associativeClass + " x : " + associativeClass);
@@ -728,13 +728,13 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* MEMBER2MEMBER setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetRole + " the " + targetRole + " to set");
 		println("**********************************************************************/");
 		println("public void set" + capitalize(targetRole) + "(" + targetInterfaceType + " " + targetRole + ")");
 		println("{");
 		incIndent();
-		if (targetAE.getType().isSet() || targetAE.getType().isOrderedSet())
+		if (targetAE.getType().isTypeOfSet() || targetAE.getType().isTypeOfOrderedSet())
 		{
 			println("for (" + targetClass + " t : " + targetRole + ")");
 			incIndent();
@@ -886,7 +886,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* ONE2MANY getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @return the " + targetRole + " of the " + sourceRole);
 		println("**********************************************************************/");
 		println("public " + targetInterfaceType + " " + targetRole + "()");
@@ -920,7 +920,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* ONE2MANY multiple setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetRole + " the " + targetRole + " to set");
 		println("**********************************************************************/");
 		println("public void set" + capitalize(targetRole) + "(" + targetInterfaceType + " " + targetRole + ")");
@@ -936,7 +936,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* ONE2MANY single setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to add");
 		println("**********************************************************************/");
 		println("public void add" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
@@ -949,7 +949,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		
 		println("/**********************************************************************");
 		println("* ONE2MANY single remover for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to remove");
 		println("**********************************************************************/");
 		println("public void remove" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
@@ -992,7 +992,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* MANY2MANY getter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @return the " + targetRole + " of the " + sourceRole);
 		println("**********************************************************************/");
 		println("public " + targetInterfaceType + " " + targetRole + "()");
@@ -1024,7 +1024,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* MANY2MANY multiple setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetRole + " the " + targetRole + " to set");
 		println("**********************************************************************/");
 		println("public void set" + capitalize(targetRole) + "(" + targetInterfaceType + " " + targetRole + ")");
@@ -1040,7 +1040,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 
 		println("/**********************************************************************");
 		println("* MANY2MANY single setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to add");
 		println("**********************************************************************/");
 		println("public void add" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
@@ -1053,7 +1053,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		
 		println("/**********************************************************************");
 		println("* MANY2MANY single setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
 		println("* @param " + targetClass.toLowerCase() + " the " + targetClass.toLowerCase() + " to remove");
 		println("**********************************************************************/");
 		println("public void remove" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ")");
@@ -1201,7 +1201,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 				print(", ");
 		}
 
-		Map<String, MNavigableElement> ends = theClass.navigableEnds();
+		Map<String, ? extends MNavigableElement> ends = theClass.navigableEnds();
 		if (attributes.size() > 0 && ends.size() > 0)
 			print(", ");
 
@@ -1448,6 +1448,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("break;");
 		decIndent();
 		println("}");
+		println("in.close();");
 		decIndent();
 		println("}");
 		println("while (!over);");

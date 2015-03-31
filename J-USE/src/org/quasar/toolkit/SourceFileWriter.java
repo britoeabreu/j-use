@@ -1,12 +1,12 @@
 package org.quasar.toolkit;
 
-import java.io.File;
+//import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+//import javax.swing.JFrame;
+//import javax.swing.JOptionPane;
 
 public abstract class SourceFileWriter
 {
@@ -30,7 +30,7 @@ public abstract class SourceFileWriter
 		{
 			if (fOut != null)
 				fOut.close();
-			File f = new File(file);
+//			File f = new File(file);
 			//if (f.exists())
 //			{
 //				JFrame frame = new JFrame();

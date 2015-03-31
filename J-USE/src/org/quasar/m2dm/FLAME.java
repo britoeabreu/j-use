@@ -1,23 +1,24 @@
 package org.quasar.m2dm;
 
-import java.util.Arrays;
+//import java.util.Arrays;
 //import java.util.HashMap;
 //import java.util.Map;
 
-import org.quasar.juse.api.JUSE_BasicFacade;
+//import org.quasar.juse.api.JUSE_BasicFacade;
 import org.quasar.juse.api.JUSE_ProgramingFacade;
-import org.quasar.juse.api.implementation.BasicFacade;
+//import org.quasar.juse.api.implementation.BasicFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
-import org.tzi.use.uml.ocl.value.EnumValue;
+
+//import org.tzi.use.uml.ocl.value.EnumValue;
 //import org.tzi.use.uml.mm.Annotatable;
 //import org.tzi.use.uml.mm.MClass;
 //import org.tzi.use.uml.mm.MClassInvariant;
 //import org.tzi.use.uml.mm.MElementAnnotation;
 //import org.tzi.use.uml.mm.MPrePostCondition;
-import org.tzi.use.uml.ocl.value.StringValue;
-import org.tzi.use.uml.sys.MLink;
-import org.tzi.use.uml.sys.MLinkObject;
-import org.tzi.use.uml.sys.MObject;
+//import org.tzi.use.uml.ocl.value.StringValue;
+//import org.tzi.use.uml.sys.MLink;
+//import org.tzi.use.uml.sys.MLinkObject;
+//import org.tzi.use.uml.sys.MObject;
 
 /***********************************************************
  * @author fba 24 de Mar de 2012

@@ -7,7 +7,7 @@ package org.quasar.usemodel2java;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
@@ -27,10 +27,10 @@ public final class Prototype_DatabaseGeneration
 	private final static String	DATABASE_DIRECTORY	= "database";
 
 	 private final static String TARGET_PACKAGE = "org.quasar.airNova";
-	 private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O/Data";
+	 private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTIEO_CompanhiaAerea_O";
 	 private final static String MODEL_FILE = "AirNova.use";
-	 private final static String SOIL_FILE = "AirNova4.soil";
-	 private final static String CMD_FILE = "AirNova4.cmd";
+	 private final static String SOIL_FILE = "Data/AirNova4.soil";
+	 private final static String CMD_FILE = "Data/AirNova4.cmd";
 
 	// private final static String MODEL_DIRECTORY = "D:/Dropbox/_SHARED/PedroCoimbra/JavaModel";
 	// private final static String MODEL_FILE = "JavaMMv3_FLAME.use";

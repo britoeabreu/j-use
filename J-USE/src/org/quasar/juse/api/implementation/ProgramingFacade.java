@@ -32,8 +32,7 @@ import java.util.Set;
 
 import org.tzi.use.analysis.coverage.CoverageAnalyzer;
 import org.tzi.use.analysis.coverage.CoverageData;
-import org.tzi.use.gui.views.diagrams.BinaryAssociationOrLinkEdge;
-import org.tzi.use.gui.views.diagrams.classdiagram.ClassNode;
+
 import org.tzi.use.parser.ocl.OCLCompiler;
 import org.tzi.use.uml.mm.MAssociation;
 import org.tzi.use.uml.mm.MAssociationClass;
@@ -58,7 +57,6 @@ import org.tzi.use.uml.sys.MLinkObject;
 import org.tzi.use.uml.sys.MObject;
 import org.tzi.use.uml.sys.MSystemException;
 import org.tzi.use.uml.sys.MSystemState.DeleteObjectResult;
-import org.tzi.use.util.Log;
 
 /***********************************************************
  * @author fba 25 de Abr de 2012
@@ -490,7 +488,9 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	{
 		MModel model = getSystem().model();
 
-		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model);
+		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model, true);
+		// The 2nd argument, when true, means that operation expressions will also be considered
+		
 		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();
 
 		CoverageData theData = data.get(model);
@@ -516,7 +516,9 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	{
 		MModel model = getSystem().model();
 
-		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model);
+		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model, true);
+		// The 2nd argument, when true, means that operation expressions will also be considered
+		
 		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();
 
 		CoverageData theData = data.get(model);

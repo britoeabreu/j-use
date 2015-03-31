@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.tzi.use.uml.ocl.type.*;
 import org.tzi.use.uml.ocl.type.TupleType.Part;
+import org.tzi.use.uml.ocl.type.Type.VoidHandling;
 
 /***********************************************************
  * @author fba 26 de Mai de 2013
@@ -32,40 +33,40 @@ import org.tzi.use.uml.ocl.type.TupleType.Part;
  ***********************************************************/
 public abstract class JavaTypes
 {
-	private static Set<Integer>	tupleTypesCardinalities = new HashSet<Integer>();
+	private static Set<Integer>	tupleTypesCardinalities	= new HashSet<Integer>();
 
 	/***********************************************************
-	* @return
-	***********************************************************/
+	 * @return
+	 ***********************************************************/
 	public static Set<Integer> getTupleTypesCardinalities()
 	{
 		return tupleTypesCardinalities;
 	}
-	
+
 	/***********************************************************
-	* @param collectionType
-	* @return
-	***********************************************************/
+	 * @param collectionType
+	 * @return
+	 ***********************************************************/
 	public static Type oclCollectionInnerType(CollectionType collectionType)
 	{
 		return collectionType.elemType();
 	}
-	
+
 	/***********************************************************
 	 * @param oclType
 	 * @return
 	 ***********************************************************/
 	public static String javaInterfaceType(Type oclType)
 	{
-		if (oclType.isOrderedSet())
+		if (oclType.isTypeOfOrderedSet())
 			return "SortedSet<" + javaInterfaceType(((OrderedSetType) oclType).elemType()) + ">";
-		if (oclType.isSet())
+		if (oclType.isTypeOfSet())
 			return "Set<" + javaInterfaceType(((SetType) oclType).elemType()) + ">";
-		if (oclType.isSequence())
+		if (oclType.isTypeOfSequence())
 			return "Queue<" + javaInterfaceType(((SequenceType) oclType).elemType()) + ">";
-		if (oclType.isBag())
-			return "List<" + javaInterfaceType(((BagType) oclType).elemType()) + ">";		
-		if (oclType.isTupleType(true))
+		if (oclType.isTypeOfBag())
+			return "List<" + javaInterfaceType(((BagType) oclType).elemType()) + ">";
+		if (oclType.isKindOfTupleType(VoidHandling.INCLUDE_VOID))
 			return javaTupleType((TupleType) oclType);
 
 		return javaPrimitiveType(oclType);
@@ -77,29 +78,29 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String javaImplementationType(Type oclType)
 	{
-		if (oclType.isSet())
-			return "HashSet<" + javaImplementationType(((SetType) oclType).elemType()) + ">";		
-		if (oclType.isOrderedSet())
+		if (oclType.isTypeOfSet())
+			return "HashSet<" + javaImplementationType(((SetType) oclType).elemType()) + ">";
+		if (oclType.isTypeOfOrderedSet())
 			return "TreeSet<" + javaImplementationType(((OrderedSetType) oclType).elemType()) + ">";
-		if (oclType.isBag())
+		if (oclType.isTypeOfBag())
 			return "ArrayList<" + javaImplementationType(((BagType) oclType).elemType()) + ">";
-		if (oclType.isSequence())
+		if (oclType.isTypeOfSequence())
 			return "ArrayDeque<" + javaImplementationType(((SequenceType) oclType).elemType()) + ">";
-		if (oclType.isTupleType(true))
+		if (oclType.isKindOfTupleType(VoidHandling.INCLUDE_VOID))
 			return javaTupleType((TupleType) oclType);
 
 		return javaPrimitiveType(oclType);
 	}
 
 	/***********************************************************
-	* @param oclType
-	* @return
-	***********************************************************/
+	 * @param oclType
+	 * @return
+	 ***********************************************************/
 	private static String javaTupleType(TupleType tupleType)
 	{
 		ArrayList<Part> tupleParts = new ArrayList<Part>(tupleType.getParts().values());
 		tupleTypesCardinalities.add(tupleParts.size());
-		
+
 		String result = "Tuple" + tupleParts.size() + "<";
 		for (int i = 0; i < tupleParts.size(); i++)
 		{
@@ -117,26 +118,28 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String javaPrimitiveType(Type oclType)
 	{
-		if (oclType.isInteger())
+		if (oclType.isTypeOfInteger())
 			return "int";
-		if (oclType.isReal())
+		if (oclType.isTypeOfReal())
 			return "double";
-		if (oclType.isBoolean())
+		if (oclType.isTypeOfBoolean())
 			return "boolean";
-		if (oclType.isString())
+		if (oclType.isTypeOfString())
 			return "String";
-		if (oclType.isEnum())
+		if (oclType.isTypeOfEnum())
 			return oclType.toString();
-		if (oclType.isObjectType())
+		if (oclType.isTypeOfClass())
 			return oclType.toString();
-		if (oclType.isTrueObjectType())
-			return oclType.toString();
-		if (oclType.isTrueOclAny())
+		// if (oclType.isObjectType())
+		// return oclType.toString();
+		// if (oclType.isTrueObjectType())
+		// return oclType.toString();
+		if (oclType.isTypeOfOclAny())
 			return "Object";
-		if (oclType.isVoidType())
+		if (oclType.isTypeOfVoidType())
 			return "void";
-		if (oclType.isDate())
-			return "Date";
+		// if (oclType.isDate())
+		// return "Date";
 
 		return "ERROR!";
 	}
@@ -147,52 +150,32 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String javaDummyValue(Type oclType)
 	{
-		if (oclType.isNumber())
+		if (oclType.isTypeOfInteger())
 			return "-1";
-		if (oclType.isInteger())
-			return "-1";
-		if (oclType.isReal())
+		if (oclType.isTypeOfReal())
 			return "-1.0";
-		if (oclType.isBoolean())
+		if (oclType.isTypeOfBoolean())
 			return "true";
-		if (oclType.isString())
+		if (oclType.isTypeOfString())
 			return "null";
-		if (oclType.isEnum())
+		if (oclType.isTypeOfEnum())
 			return "null";
-		if (oclType.isCollection(true))
+		if (oclType.isKindOfCollection(null))
 			return "null";
-		if (oclType.isTrueCollection())
+		if (oclType.isTypeOfTupleType())
 			return "null";
-		if (oclType.isSet())
+		if (oclType.isTypeOfClass())
 			return "null";
-		if (oclType.isTrueSet())
+		// if (oclType.isObjectType())
+		// return "null";
+		// if (oclType.isTrueObjectType())
+		// return "null";
+		if (oclType.isTypeOfOclAny())
 			return "null";
-		if (oclType.isSequence())
-			return "null";
-		if (oclType.isTrueSequence())
-			return "null";
-		if (oclType.isOrderedSet())
-			return "null";
-		if (oclType.isTrueOrderedSet())
-			return "null";
-		if (oclType.isBag())
-			return "null";
-		if (oclType.isTrueBag())
-			return "null";
-		if (oclType.isInstantiableCollection())
-			return "null";
-		if (oclType.isObjectType())
-			return "null";
-		if (oclType.isTrueObjectType())
-			return "null";
-		if (oclType.isTrueOclAny())
-			return "null";
-		if (oclType.isTupleType(true))
-			return "null";
-		if (oclType.isVoidType())
+		if (oclType.isTypeOfVoidType())
 			return "";
-		if (oclType.isDate())
-			return "null";
+		// if (oclType.isDate())
+		// return "null";
 
 		return "ERROR!";
 	}
@@ -212,22 +195,22 @@ public abstract class JavaTypes
 		{
 			if (oclType != null)
 			{
-				if (oclType.isSequence())
+				if (oclType.isTypeOfSequence())
 				{
 					result.add("import java.util.Queue;");
 					result.add("import java.util.ArrayDeque;");
 				}
-				if (oclType.isOrderedSet())
+				if (oclType.isTypeOfOrderedSet())
 				{
 					result.add("import java.util.SortedSet;");
 					result.add("import java.util.TreeSet;");
 				}
-				if (oclType.isBag())
+				if (oclType.isTypeOfBag())
 				{
 					result.add("import java.util.List;");
 					result.add("import java.util.ArrayList;");
 				}
-				if (oclType.isSet())
+				if (oclType.isTypeOfSet())
 				{
 					result.add("import java.util.HashSet;");
 				}

@@ -105,27 +105,27 @@ public class ModelUtilities
 		for (MClass p : theClass.parents())
 		{
 			result.addAll(getClassOutboundDependencies(p));
-			result.add(p.type());
+			result.add(p);
 		}
 
 		for (MAttribute a : theClass.attributes())
-			if (a.type().isObjectType())
+			if (a.type().isTypeOfClass())
 				result.add(a.type());
 
 		for (MAttribute a : theClass.attributes())
-			if (a.type().isObjectType())
+			if (a.type().isTypeOfClass())
 				result.add(a.type());
 
 		if (theClass instanceof MAssociationClass)
 			for (MClass member : ((MAssociationClass) theClass).associatedClasses())
-				result.add(member.type());
+				result.add(member);
 
 		for (MOperation op : theClass.allOperations())
 		{
-			if (op.hasResultType() && op.resultType().isObjectType())
+			if (op.hasResultType() && op.resultType().isTypeOfClass())
 				result.add(op.resultType());
 			for (VarDecl v : op.paramList())
-				if (v.type().isObjectType())
+				if (v.type().isTypeOfClass())
 					result.add(v.type());
 		}
 
@@ -143,8 +143,8 @@ public class ModelUtilities
 		Set<Type> result = new HashSet<Type>();
 
 		for (MClass other : model.classes())
-			if (other != theClass && getClassOutboundDependencies(other).contains(theClass.type()))
-				result.add(other.type());
+			if (other != theClass && getClassOutboundDependencies(other).contains(theClass))
+				result.add(other);
 
 		return result;
 	}
@@ -156,7 +156,7 @@ public class ModelUtilities
 	public int outgoingCoupling(MClass theClass)
 	{
 		Set<Type> tmp = getClassOutboundDependencies(theClass);
-		tmp.remove(theClass.type());
+		tmp.remove(theClass);
 		return tmp.size();
 	}
 
@@ -167,7 +167,7 @@ public class ModelUtilities
 	public int incomingCoupling(MClass theClass)
 	{
 		Set<Type> tmp = getClassInboundDependencies(theClass);
-		tmp.remove(theClass.type());
+		tmp.remove(theClass);
 		return tmp.size();
 	}
 
@@ -226,7 +226,7 @@ public class ModelUtilities
 		for (MClass clazz : theClass.model().classes())
 			if (theClass != clazz && clazz.isAnnotated() && clazz.getAnnotation("domain") != null)
 				for (MAttribute att : clazz.allAttributes())
-					if (att.type().isObjectType() && att.type().toString().equals(theClass.name()))
+					if (att.type().isTypeOfClass() && att.type().toString().equals(theClass.name()))
 						list.add(clazz);
 		return list;
 	}

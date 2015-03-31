@@ -113,16 +113,16 @@ public class AttributeInfo
 				case ONE2ONE:
 					if (theClass == sourceClass && sourceClass != targetClass 
 									&& theClass == util.lessComplexClass(sourceClass, targetClass))
-						result.add(new AttributeInfo(ai.getKind(), targetName, targetClass.type()));
+						result.add(new AttributeInfo(ai.getKind(), targetName, targetClass));
 					if (theClass == targetClass
 									&& theClass == util.lessComplexClass(sourceClass, targetClass))	
-						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass.type()));
+						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass));
 					break;
 				case ONE2MANY:
 					if (theClass == sourceClass && sourceClass != targetClass && ai.getSourceAE().isCollection())
-						result.add(new AttributeInfo(ai.getKind(), targetName, targetClass.type()));
+						result.add(new AttributeInfo(ai.getKind(), targetName, targetClass));
 					if (theClass == targetClass && ai.getTargetAE().isCollection())					
-						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass.type()));
+						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass));
 					break;
 				case MANY2MANY:
 					if (theClass == sourceClass && sourceClass != targetClass
@@ -133,7 +133,7 @@ public class AttributeInfo
 						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceType));
 					break;
 				case ASSOCIATIVE2MEMBER:
-					result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass.type()));
+					result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass));
 					break;
 				case MEMBER2ASSOCIATIVE:
 					break;

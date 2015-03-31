@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,8 +99,9 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		FileSystemUtilities.createDirectory(presentationDirectory);
 
 		FileSystemUtilities.createDirectory(persistenceDirectory);
-		FileSystemUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", persistenceDirectory
-						+ "/Database.java");
+//		FileSystemUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", persistenceDirectory
+//						+ "/Database.java");
+		FileSystemUtilities.copyFile("src/org/quasar/juse/persistence/Database.java", persistenceDirectory + "/Database.java");
 
 		FileSystemUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", "org.quasar.juse.persistence",
 						basePackageName + "." + persistenceLayerName);
@@ -146,10 +146,15 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 				visitor.printNavigators(cls);
 
+				boolean toStringInSOIL = false;
 				for (MOperation op : cls.operations())
+				{
 					visitor.printSoilOperation(op);
-
-				visitor.printToString(cls);
+					if (op.name().equals("toString")) 
+						toStringInSOIL = true;
+				}
+				if (!toStringInSOIL)
+					visitor.printToString(cls);
 
 				visitor.printCompareTo(cls);
 				
@@ -518,15 +523,19 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 //				m = c.getDeclaredMethod(methodName, toClass(classpath, attribute.type()));
 				m = c.getMethod(methodName, toClass(classpath, attribute.type()));
 
-				if (attribute.type().isBoolean())
+				if (attribute.type().isTypeOfBoolean())
 					m.invoke(javaObject, ((BooleanValue) useObjectState.attributeValue(attribute)).value());
-				if (attribute.type().isInteger())
+				
+				if (attribute.type().isTypeOfInteger())
 					m.invoke(javaObject, ((IntegerValue) useObjectState.attributeValue(attribute)).value());
-				if (attribute.type().isReal())
+				
+				if (attribute.type().isTypeOfReal())
 					m.invoke(javaObject, ((RealValue) useObjectState.attributeValue(attribute)).value());
-				if (attribute.type().isString())
+				
+				if (attribute.type().isTypeOfString())
 					m.invoke(javaObject, ((StringValue) useObjectState.attributeValue(attribute)).value());
-				if (attribute.type().isEnum())
+				
+				if (attribute.type().isTypeOfEnum())
 				{
 					String enumValue = ((EnumValue) useObjectState.attributeValue(attribute)).value();
 					Field f = c.getDeclaredField(attribute.name());
@@ -536,7 +545,9 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 					f.setAccessible(true);
 					f.set(javaObject, e);
 				}
-				if (attribute.type().isObjectType())
+				
+//				if (attribute.type().isObjectType())
+				if (attribute.type().isTypeOfClass())
 				{
 					argument = objectMapper.get(useObjectState.attributeValue(attribute).hashCode());
 					m.invoke(javaObject, argument);
@@ -587,32 +598,43 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	private Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
 	{
 		// System.out.println(oclType);
-		if (oclType.isNumber())
+//		if (oclType.isNumber())
+//			return int.class;
+		
+		if (oclType.isTypeOfInteger())
 			return int.class;
-		if (oclType.isInteger())
-			return int.class;
-		if (oclType.isReal())
+		
+		if (oclType.isTypeOfReal())
 			return double.class;
-		if (oclType.isBoolean())
+		
+		if (oclType.isTypeOfBoolean())
 			return boolean.class;
-		if (oclType.isString())
+		
+		if (oclType.isTypeOfString())
 			return String.class;
-		if (oclType.isEnum())
+		
+		if (oclType.isTypeOfEnum())
 			return Class.forName(classpath + "." + oclType.toString());
-		if (oclType.isObjectType())
+
+//		if (oclType.isObjectType())
+		if (oclType.isTypeOfClass())
 			return Class.forName(classpath + "." + oclType.toString());
-		if (oclType.isTrueObjectType())
-			return Class.forName(classpath + "." + oclType.toString());
-		if (oclType.isTrueOclAny())
+
+//		if (oclType.isTrueObjectType())
+//			return Class.forName(classpath + "." + oclType.toString());
+
+		if (oclType.isTypeOfOclAny())
 			return Object.class;
-		if (oclType.isVoidType())
+
+		if (oclType.isTypeOfVoidType())
 			return void.class;
-		if (oclType.isDate())
-			return Date.class;
-		if (oclType.isOrderedSet())
+
+		if (oclType.isTypeOfOrderedSet())
 			return Class.forName(oclType.toString().substring(11, oclType.toString().length() - 1));
-		if (oclType.isSet())
+
+		if (oclType.isTypeOfSet())
 			return Class.forName(oclType.toString().substring(4, oclType.toString().length() - 1));
+
 		// if (oclType.isCollection(true))
 		// return "Set<Object>";
 		// if (oclType.isTrueCollection())

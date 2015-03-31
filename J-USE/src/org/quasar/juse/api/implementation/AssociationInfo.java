@@ -30,9 +30,9 @@ import org.tzi.use.uml.mm.MModel;
 
 public class AssociationInfo
 {
-	private AssociationKind		kind;
+	private AssociationKind			kind;
 	private MAssociationEnd		sourceAE, targetAE;
-	private MAssociationClass	associationClass;
+	private MAssociationClass		associationClass;
 
 	/***********************************************************
 	 * @param kind
