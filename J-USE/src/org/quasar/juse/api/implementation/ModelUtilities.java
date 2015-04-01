@@ -76,6 +76,8 @@ public class ModelUtilities
 		int result = 0;
 		for (MClass aClass : model.classes())
 		{
+			result++; // allInstances() static operation
+			
 			if (AttributeInfo.getAttributesInfo(aClass).size() > 0)
 				result++; // DefaultConstructor;
 
@@ -87,9 +89,14 @@ public class ModelUtilities
 				result += 4; // Each association class adds 4 more navigators (towards the 2 members, in both directions)
 
 			result += aClass.operations().size(); // Operations specified in OCL / SOIL
+			
+			result += 3; // Each class overrides compareTo(other), equals(other) and toString()
+			
+			// An operation is generated for each invariant, plus a generic one that calls all existing invariants 
+			result +=  model.classInvariants(aClass).size() + 1;		
 		}
 
-		result += 4 * model.associations().size(); // One getter and one setter for each navigation direction
+		result += 2 * 3 * model.associations().size(); // One getter, one setter and one remover for each navigation direction
 
 		return result;
 	}

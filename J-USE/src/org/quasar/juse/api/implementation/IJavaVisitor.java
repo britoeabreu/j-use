@@ -123,6 +123,12 @@ public interface IJavaVisitor
 	
 	/***********************************************************
 	* @param theClass
+	*			The class whose equality checker is to be generated
+	***********************************************************/
+	public void printEquals(MClass theClass);
+	
+	/***********************************************************
+	* @param theClass
 	 *            The class whose invariants are to be generated
 	***********************************************************/
 	public void printInvariants(MClass theClass);

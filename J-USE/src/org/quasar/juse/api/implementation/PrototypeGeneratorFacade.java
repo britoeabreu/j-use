@@ -145,7 +145,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				visitor.printBasicGettersSetters(cls);
 
 				visitor.printNavigators(cls);
-
+				
 				boolean toStringInSOIL = false;
 				for (MOperation op : cls.operations())
 				{
@@ -153,13 +153,16 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 					if (op.name().equals("toString")) 
 						toStringInSOIL = true;
 				}
-				if (!toStringInSOIL)
-					visitor.printToString(cls);
+
+				visitor.printInvariants(cls);
 
 				visitor.printCompareTo(cls);
 				
-				visitor.printInvariants(cls);
-
+				visitor.printEquals(cls);
+				
+				if (!toStringInSOIL)
+					visitor.printToString(cls);
+				
 				SourceFileWriter.decIndent();
 				SourceFileWriter.println("}");
 

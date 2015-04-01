@@ -34,7 +34,7 @@ import org.tzi.use.util.StringUtil;
 
 public class JavaBusinessVisitor extends JavaVisitor
 {
-	private MModel		model;
+	private MModel			model;
 	private String			author;
 	private String			basePackageName;
 	private String			businessLayerName;
@@ -120,17 +120,22 @@ public class JavaBusinessVisitor extends JavaVisitor
 			if (attribute.getType().isTypeOfSet() || attribute.getType().isTypeOfOrderedSet())
 				println("private " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + " = "
 								+ " new " + JavaTypes.javaImplementationType(attribute.getType()) + "();");
-			else{
-				if(isSuperClass(theClass)){
-					if(attribute.getType().isTypeOfEnum())
+			else
+			{
+				if (isSuperClass(theClass))
+				{
+					if (attribute.getType().isTypeOfEnum())
 						println("protected String " + attribute.getName() + ";");
-//					else if(attribute.getName().equals("ID"))
-//						println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + ";");
+					// else if(attribute.getName().equals("ID"))
+					// println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() +
+					// ";");
 					else
-						println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + ";");
-				}else
-						println("private " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + ";");
-			}	
+						println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName()
+										+ ";");
+				}
+				else
+					println("private " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + ";");
+			}
 		println();
 	}
 
@@ -207,45 +212,49 @@ public class JavaBusinessVisitor extends JavaVisitor
 	{
 		return theClass.parents().isEmpty() ? theClass : baseAncestor(theClass.parents().iterator().next());
 	}
-	
+
 	/***********************************************************
-	* @param theClass to check
-	* @return true if is subclass, false if not
-	***********************************************************/
+	 * @param theClass
+	 *            to check
+	 * @return true if is subclass, false if not
+	 ***********************************************************/
 	private boolean isSubClass(MClass theClass)
 	{
-		for(MClass x : model.classes())
-			if(x != theClass && theClass.isSubClassOf(x))
+		for (MClass x : model.classes())
+			if (x != theClass && theClass.isSubClassOf(x))
 				return true;
 		return false;
 	}
-	
+
 	/***********************************************************
-	* @param theClass to check
-	* @return true if is super class, false if not
-	***********************************************************/
+	 * @param theClass
+	 *            to check
+	 * @return true if is super class, false if not
+	 ***********************************************************/
 	private boolean isSuperClass(MClass theClass)
 	{
-		for(MClass x : model.classes())
-			if( (!theClass.parents().isEmpty() && x != theClass && x.isSubClassOf(theClass))//middle super
-				|| (theClass.parents().isEmpty() && x != theClass && x.isSubClassOf(theClass)) )//top super
+		for (MClass x : model.classes())
+			if ((!theClass.parents().isEmpty() && x != theClass && x.isSubClassOf(theClass))// middle super
+							|| (theClass.parents().isEmpty() && x != theClass && x.isSubClassOf(theClass)))// top super
 				return true;
 		return false;
 	}
-	
+
 	/***********************************************************
-	* @param theClass to check
-	* @return returns a list with the indirect associations
-	***********************************************************/
-	public List<AssociationInfo> getIndirectAssociations(MClass theClass){
+	 * @param theClass
+	 *            to check
+	 * @return returns a list with the indirect associations
+	 ***********************************************************/
+	public List<AssociationInfo> getIndirectAssociations(MClass theClass)
+	{
 		List<AssociationInfo> allAssociations = new ArrayList<AssociationInfo>();
-		for(MClass parent : theClass.allParents())
+		for (MClass parent : theClass.allParents())
 			allAssociations.addAll(AssociationInfo.getAssociationsInfo(parent));
 		List<AssociationInfo> directAssociations = new ArrayList<AssociationInfo>(AssociationInfo.getAssociationsInfo(theClass));
 		allAssociations.removeAll(directAssociations);
 		return allAssociations;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -486,7 +495,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 				decIndent();
 				println("}");
 				println();
-				
+
 				printHeaderBasicGettersSetters(theClass, currentAttribute, "single remover");
 				println("* @param " + otherName + " the " + otherName + " to remove");
 				println("**********************************************************************/");
@@ -594,8 +603,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		MMultiplicity sourceMultiplicity = sourceAE.multiplicity();
 		MMultiplicity targetMultiplicity = targetAE.multiplicity();
 
-		String associativeInterfaceType = targetAE.getType().isTypeOfOrderedSet() ? "SortedSet<" + associativeClass + ">" : (targetAE
-						.getType().isTypeOfSet() ? "Set<" + associativeClass + ">" : associativeClass);
+		String associativeInterfaceType = targetAE.getType().isTypeOfOrderedSet() ? "SortedSet<" + associativeClass + ">"
+						: (targetAE.getType().isTypeOfSet() ? "Set<" + associativeClass + ">" : associativeClass);
 
 		String associativeImplementationType = targetAE.getType().isTypeOfOrderedSet() ? "TreeSet<" + associativeClass + ">"
 						: (targetAE.getType().isTypeOfSet() ? "HashSet<" + associativeClass + ">" : associativeClass);
@@ -672,7 +681,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		MAssociationEnd sourceAE = aInfo.getSourceAE();
 		MAssociationEnd targetAE = aInfo.getTargetAE();
 		MAssociationClass associationClass = aInfo.getAssociationClass();
-		
+
 		String sourceClass = sourceAE.cls().name();
 		String targetClass = targetAE.cls().name();
 		String associativeClass = associationClass.name();
@@ -763,28 +772,31 @@ public class JavaBusinessVisitor extends JavaVisitor
 		}
 		decIndent();
 		println("}");
-		
-//		println("/**********************************************************************");
-//		println("* MEMBER2MEMBER setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
-//						+ targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
-//		println("* @param " + targetRole + " the " + targetRole + " to set");
-//		println("**********************************************************************/");
-//		println("public void add" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ", " + associativeClass + " " + associativeClass.toLowerCase() + ")");
-//		println("{");
-//		incIndent();
-//		println(associativeClass.toLowerCase() + ".add(" + targetClass.toLowerCase() + " , this);");
-//		decIndent();
-//		println("}");
-//		println();
-		
-		
+
+		// println("/**********************************************************************");
+		// println("* MEMBER2MEMBER setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
+		// + targetMultiplicity + "]" + (targetAE.getType().isOrderedSet() ? " ordered" : ""));
+		// println("* @param " + targetRole + " the " + targetRole + " to set");
+		// println("**********************************************************************/");
+		// println("public void add" + capitalize(targetRole) + "(" + targetClass + " " + targetClass.toLowerCase() + ", " +
+		// associativeClass + " " + associativeClass.toLowerCase() + ")");
+		// println("{");
+		// incIndent();
+		// println(associativeClass.toLowerCase() + ".add(" + targetClass.toLowerCase() + " , this);");
+		// decIndent();
+		// println("}");
+		// println();
+
 		println();
 	}
-	public static MAssociationEnd getOtherMemberAssociation(MAssociationClass associative, MClass member) {
-		for(AssociationInfo sourceAss : AssociationInfo.getAssociationsInfo(member))
-			if(sourceAss.getKind() == AssociationKind.MEMBER2ASSOCIATIVE && sourceAss.getTargetAEClass() == associative)
-				for(AssociationInfo targetAss : AssociationInfo.getAssociationsInfo(associative))
-					if(targetAss.getKind() == AssociationKind.ASSOCIATIVE2MEMBER && targetAss.getSourceAEClass() == associative && targetAss.getTargetAEClass() != member)
+
+	public static MAssociationEnd getOtherMemberAssociation(MAssociationClass associative, MClass member)
+	{
+		for (AssociationInfo sourceAss : AssociationInfo.getAssociationsInfo(member))
+			if (sourceAss.getKind() == AssociationKind.MEMBER2ASSOCIATIVE && sourceAss.getTargetAEClass() == associative)
+				for (AssociationInfo targetAss : AssociationInfo.getAssociationsInfo(associative))
+					if (targetAss.getKind() == AssociationKind.ASSOCIATIVE2MEMBER
+									&& targetAss.getSourceAEClass() == associative && targetAss.getTargetAEClass() != member)
 						return targetAss.getTargetAE();
 		return null;
 	}
@@ -829,7 +841,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 		println("for (" + targetInterfaceType + " x : " + targetInterfaceType + ".allInstances())");
 		incIndent();
-		if(isSubClass(targetAE.cls()))
+		if (isSubClass(targetAE.cls()))
 			println("if (((" + targetAE.cls() + ") x)." + sourceRole + "() == this)");
 		else
 			println("if (x." + sourceRole + "() == this)");
@@ -895,18 +907,21 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println(targetInterfaceType + " result = new " + targetImplementationType + "();");
 		// print("for (" + targetClass + " x : " + targetClass);
 		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
-		if(isSubClass(targetAE.cls()))
+		if (isSubClass(targetAE.cls()))
 			print("for (" + baseAncestor(targetAE.cls()) + " x : " + targetClass);
 		else
 			print("for (" + targetClass + " x : " + targetClass);
 		println(".allInstances())");
-//		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 		incIndent();
-		if(isSubClass(targetAE.cls())){
+		if (isSubClass(targetAE.cls()))
+		{
 			println("if (((" + targetAE.cls() + ") x)." + sourceRole + "()  ==  this)");
 			incIndent();
 			println("result.add((" + targetAE.cls() + ") x);");
-		}else{
+		}
+		else
+		{
 			println("if (x." + sourceRole + "()  ==  this)");
 			incIndent();
 			println("result.add(x);");
@@ -946,7 +961,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
-		
+
 		println("/**********************************************************************");
 		println("* ONE2MANY single remover for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
 						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
@@ -999,18 +1014,22 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetInterfaceType + " result = new " + targetImplementationType + "();");
-		if(isSubClass(targetAE.cls()))
+		if (isSubClass(targetAE.cls()))
 			print("for (" + baseAncestor(targetAE.cls()) + " x : " + targetClass);
 		else
 			print("for (" + targetClass + " x : " + targetClass);
-//		println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
+		// println(targetAE.cls().isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 		println(".allInstances())");
 		incIndent();
-		if(isSubClass(targetAE.cls())){
-			println("if (((" + targetAE.cls() + ") x)." + sourceRole + "() != null && ((" + targetAE.cls() + ") x)." + sourceRole + "().contains(this))");
+		if (isSubClass(targetAE.cls()))
+		{
+			println("if (((" + targetAE.cls() + ") x)." + sourceRole + "() != null && ((" + targetAE.cls() + ") x)."
+							+ sourceRole + "().contains(this))");
 			incIndent();
 			println("result.add((" + targetAE.cls() + ") x);");
-		}else{
+		}
+		else
+		{
 			println("if (x." + sourceRole + "() != null && x." + sourceRole + "().contains(this))");
 			incIndent();
 			println("result.add(x);");
@@ -1050,7 +1069,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
-		
+
 		println("/**********************************************************************");
 		println("* MANY2MANY single setter for " + sourceClass + "[" + sourceMultiplicity + "] <-> " + targetClass + "["
 						+ targetMultiplicity + "]" + (targetAE.getType().isTypeOfOrderedSet() ? " ordered" : ""));
@@ -1094,18 +1113,21 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 
-		if (op.hasResultType() && op.resultType().isInstantiableCollection())
+		// PRE-CONDITIONS
+		for (MPrePostCondition pre : op.preConditions())
 		{
-			String targetInterfaceType = JavaTypes.javaInterfaceType(op.resultType());
-			String targetImplementationType = JavaTypes.javaImplementationType(op.resultType());
-
-			println(targetInterfaceType + " result = new " + targetImplementationType + "();");
+			printlnc("TODO conclude the implementation of this OCL precondition:");
+			printlnc(pre.expression().toString());
+			println("boolean pre_" + pre.name() + " = true;");
 			println();
+			println("assert pre_" + pre.name() + " : \"" + pre.getAnnotationValue(pre.name(), "rationale") + "\";");
+			printlnc("-----------------------------------------------------------------------------");
 		}
+
+		printlnc("TODO conclude the implementation for this SOIL specification:");
 
 		if (op.hasExpression())
 		{
-			printlnc("TODO");
 			printlnc("return " + op.expression().toString());
 		}
 		else
@@ -1118,53 +1140,40 @@ public class JavaBusinessVisitor extends JavaVisitor
 				// for (int i = 0; i < temp.length; i++)
 				// printlnc(temp[i] + ";");
 			}
-			if (op.hasExpression())
-				printlnc("" + op.expression());
+//			if (op.hasExpression())
+//				printlnc("" + op.expression());
 		}
+
+		if (op.hasResultType() && op.resultType().isInstantiableCollection())
+		{
+			String targetInterfaceType = JavaTypes.javaInterfaceType(op.resultType());
+			String targetImplementationType = JavaTypes.javaImplementationType(op.resultType());
+
+			println(targetInterfaceType + " result = new " + targetImplementationType + "();");
+			println();
+		}
+		
+		// POST-CONDITIONS
+		for (MPrePostCondition post : op.postConditions())
+		{
+			printlnc("-----------------------------------------------------------------------------");
+			printlnc("TODO conclude the implementation of this OCL postcondition:");
+			printlnc(post.expression().toString());
+			println("boolean post_" + post.name() + " = true;");
+			println();
+			println("assert post_" + post.name() + " : \"" + post.getAnnotationValue(post.name(), "rationale") + "\";");
+		}
+
 		if (op.hasResultType())
 		{
-			println();
 			if (op.resultType().isInstantiableCollection())
 				println("return result;");
 			else
 				println("return " + JavaTypes.javaDummyValue(op.resultType()) + ";");
 		}
-
 		decIndent();
 		println("}");
 		println();
-
-		if (!op.preConditions().isEmpty())
-		{
-			printlnc("PRE-CONDITIONS (TODO)");
-			println("/*");
-			for (MPrePostCondition pre : op.preConditions())
-			{
-				println("pre " + pre.name());
-				incIndent();
-				println(pre.expression().toString());
-				decIndent();
-				println();
-			}
-			println("*/");
-			println();
-		}
-
-		if (!op.postConditions().isEmpty())
-		{
-			printlnc("POST-CONDITIONS (TODO)");
-			println("/*");
-			for (MPrePostCondition post : op.postConditions())
-			{
-				println("post " + post.name());
-				incIndent();
-				println(post.expression().toString());
-				decIndent();
-				println();
-			}
-			println("*/");
-			println();
-		}
 	}
 
 	/*
@@ -1182,6 +1191,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("/**********************************************************************");
 		println("* Object serializer");
 		println("**********************************************************************/");
+		println("@Override");
 		println("public String toString()");
 		println("{");
 		incIndent();
@@ -1258,17 +1268,74 @@ public class JavaBusinessVisitor extends JavaVisitor
 	{
 		println("/**********************************************************************");
 		println("* @param other " + theClass.name() + " to compare to the current one");
-		println("* @return 0 if the argument is equal to the current " + theClass.name() + ";"); 
+		println("* @return 0 if the argument is equal to the current " + theClass.name() + ";");
 		println("* a value less than 0 if the argument is greater than the current " + theClass.name() + ";");
 		println("* and a value greater than 0 if the argument is less than this " + theClass.name() + ".");
 		println("**********************************************************************/");
+		println("@Override");
 		println("public int compareTo(Object other)");
 		println("{");
 		incIndent();
 		printlnc("TODO: uncomment the option that is best suitable");
-		for (MAttribute attribute: theClass.allAttributes())
-			printlnc("return this." + attribute.name() + ".compareTo((("+  theClass.name() + ") other)." + attribute.name() + ");");
+		for (MAttribute attribute : theClass.allAttributes())
+			printlnc("return this." + attribute.name() + ".compareTo(((" + theClass.name() + ") other)." + attribute.name()
+							+ ");");
 		println("return this.hashCode() - ((" + theClass.name() + ") other).hashCode();");
+		decIndent();
+		println("}");
+		println();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.quasar.juse.api.implementation.IJavaVisitor#printEquals(org.tzi.use.uml.mm.MClass)
+	 */
+	@Override
+	public void printEquals(MClass theClass)
+	{
+		println("/**********************************************************************");
+		println("* @param other " + theClass.name() + " to check equality to the current one");
+		println("* @return true if the argument is equal to the current " + theClass.name() + " and false otherwise");
+		println("**********************************************************************/");
+		println("@Override");
+		println("public boolean equals(Object other)");
+		println("{");
+		incIndent();
+		println("if (this == other)");
+		incIndent();
+		println("return true;");
+		decIndent();
+		println("if (other == null)");
+		incIndent();
+		println("return false;");
+		decIndent();
+		println("if (getClass() != other.getClass())");
+		incIndent();
+		println("return false;");
+		decIndent();
+		println(theClass.name() + " another = (" + theClass.name() + ") other;");
+
+		for (MAttribute attribute : theClass.allAttributes())
+		{
+			println("if (" + attribute.name() + " == null)");
+			println("{");
+			incIndent();
+			println("if (another." + attribute.name() + " != null)");
+			incIndent();
+			println("return false;");
+			decIndent();
+			decIndent();
+			println("}");
+			println("else");
+			incIndent();
+			println("if (!" + attribute.name() + ".equals(another." + attribute.name() + "))");
+			incIndent();
+			println("return false;");
+			decIndent();
+			decIndent();
+		}
+		println("return true;");
 		decIndent();
 		println("}");
 		println();
@@ -1282,26 +1349,27 @@ public class JavaBusinessVisitor extends JavaVisitor
 	@Override
 	public void printInvariants(MClass theClass)
 	{
-		if (!model.classInvariants(theClass).isEmpty())
+		// if (!model.classInvariants(theClass).isEmpty())
 		{
-			printlnc("-------------------------------------------------------------------------------");
-			printlnc("INVARIANTS");
-			printlnc("-------------------------------------------------------------------------------");
+			println("/**********************************************************************");
+			println("* INVARIANT CHECKERS");
+			println("**********************************************************************/");
+			println("public void check()");
+			println("{");
+			incIndent();
+			for (MClassInvariant inv : model.classInvariants(theClass))
+				println("check" + inv.name() + "();");
+			decIndent();
+			println("}");
 			println();
+
 			for (MClassInvariant inv : model.classInvariants(theClass))
 			{
-				println("inv " + inv.name());
-				incIndent();
-				println(inv.bodyExpression().toString());
-				decIndent();
-				
 				println("public void check" + inv.name() + "()");
 				println("{");
 				incIndent();
-				printlnc("TODO: implement Java invariant for this OCL expression:");
-				incIndent();
+				printlnc("TODO conclude the implementation of this OCL invariant:");
 				printlnc(inv.bodyExpression().toString());
-				decIndent();
 				println("boolean invariant = true;");
 				println();
 				println("assert invariant : \"" + inv.getAnnotationValue(inv.name(), "rationale") + "\";");

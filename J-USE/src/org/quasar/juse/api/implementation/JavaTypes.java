@@ -118,12 +118,18 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String javaPrimitiveType(Type oclType)
 	{
+//		if (oclType.isTypeOfInteger())
+//			return "int";
+//		if (oclType.isTypeOfReal())
+//			return "double";
+//		if (oclType.isTypeOfBoolean())
+//			return "boolean";
 		if (oclType.isTypeOfInteger())
-			return "int";
+			return "Integer";
 		if (oclType.isTypeOfReal())
-			return "double";
+			return "Double";
 		if (oclType.isTypeOfBoolean())
-			return "boolean";
+			return "Boolean";
 		if (oclType.isTypeOfString())
 			return "String";
 		if (oclType.isTypeOfEnum())
@@ -150,12 +156,18 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String javaDummyValue(Type oclType)
 	{
+//		if (oclType.isTypeOfInteger())
+//			return "-1";
+//		if (oclType.isTypeOfReal())
+//			return "-1.0";
+//		if (oclType.isTypeOfBoolean())
+//			return "true";
 		if (oclType.isTypeOfInteger())
-			return "-1";
+			return "null";
 		if (oclType.isTypeOfReal())
-			return "-1.0";
+			return "null";
 		if (oclType.isTypeOfBoolean())
-			return "true";
+			return "null";
 		if (oclType.isTypeOfString())
 			return "null";
 		if (oclType.isTypeOfEnum())
