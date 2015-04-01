@@ -1258,11 +1258,16 @@ public class JavaBusinessVisitor extends JavaVisitor
 	{
 		println("/**********************************************************************");
 		println("* @param other " + theClass.name() + " to compare to the current one");
-		println("* @return");
+		println("* @return 0 if the argument is equal to the current " + theClass.name() + ";"); 
+		println("* a value less than 0 if the argument is greater than the current " + theClass.name() + ";");
+		println("* and a value greater than 0 if the argument is less than this " + theClass.name() + ".");
 		println("**********************************************************************/");
 		println("public int compareTo(Object other)");
 		println("{");
 		incIndent();
+		printlnc("TODO: uncomment the option that is best suitable");
+		for (MAttribute attribute: theClass.allAttributes())
+			printlnc("return this." + attribute.name() + ".compareTo((("+  theClass.name() + ") other)." + attribute.name() + ");");
 		println("return this.hashCode() - ((" + theClass.name() + ") other).hashCode();");
 		decIndent();
 		println("}");
@@ -1280,17 +1285,30 @@ public class JavaBusinessVisitor extends JavaVisitor
 		if (!model.classInvariants(theClass).isEmpty())
 		{
 			printlnc("-------------------------------------------------------------------------------");
-			printlnc("INVARIANTS (TODO)");
-			println("/*");
+			printlnc("INVARIANTS");
+			printlnc("-------------------------------------------------------------------------------");
+			println();
 			for (MClassInvariant inv : model.classInvariants(theClass))
 			{
 				println("inv " + inv.name());
 				incIndent();
 				println(inv.bodyExpression().toString());
 				decIndent();
+				
+				println("public void check" + inv.name() + "()");
+				println("{");
+				incIndent();
+				printlnc("TODO: implement Java invariant for this OCL expression:");
+				incIndent();
+				printlnc(inv.bodyExpression().toString());
+				decIndent();
+				println("boolean invariant = true;");
+				println();
+				println("assert invariant : \"" + inv.getAnnotationValue(inv.name(), "rationale") + "\";");
+				decIndent();
+				println("}");
 				println();
 			}
-			println("*/");
 		}
 	}
 
