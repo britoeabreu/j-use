@@ -20,7 +20,7 @@
 package org.quasar.juse.api.implementation;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+// import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ import org.quasar.juse.api.JUSE_PrototypeGeneratorFacade;
 import org.quasar.juse.persistence.Database;
 import org.quasar.toolkit.FileSystemUtilities;
 import org.quasar.toolkit.SourceFileWriter;
-
 import org.tzi.use.uml.mm.MAssociationClass;
 import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
@@ -53,7 +52,7 @@ import org.tzi.use.uml.sys.MObjectState;
  * 
  ***********************************************************/
 public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_PrototypeGeneratorFacade
-{
+{					
 	private Map<Integer, Object>	objectMapper	= null;
 
 	public PrototypeGeneratorFacade()
@@ -79,9 +78,6 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		// ModelUtilities mu = new ModelUtilities(model);
 		// mu.printModelUtilities();
 
-		System.out.println("\nJava plugin for USE version 1.1.7, Copyright (C) 2014-2015 QUASAR Group");
-		System.out.println("\t - generating Java code for " + getSystem().model().name() + "...");
-
 		JavaVisitor visitor = new JavaBusinessVisitor(getSystem().model(), author, basePackageName, businessLayerName,
 						persistenceLayerName, presentationLayerName);
 
@@ -99,8 +95,9 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		FileSystemUtilities.createDirectory(presentationDirectory);
 
 		FileSystemUtilities.createDirectory(persistenceDirectory);
-//		FileSystemUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java", persistenceDirectory
-//						+ "/Database.java");
+		// FileSystemUtilities.copyFile(javaWorkspace + "/J-USE/src/org/quasar/juse/persistence/Database.java",
+		// persistenceDirectory
+		// + "/Database.java");
 		FileSystemUtilities.copyFile("src/org/quasar/juse/persistence/Database.java", persistenceDirectory + "/Database.java");
 
 		FileSystemUtilities.replaceStringInFile(persistenceDirectory + "/Database.java", "org.quasar.juse.persistence",
@@ -145,24 +142,24 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				visitor.printBasicGettersSetters(cls);
 
 				visitor.printNavigators(cls);
-				
+
 				boolean toStringInSOIL = false;
 				for (MOperation op : cls.operations())
 				{
 					visitor.printSoilOperation(op);
-					if (op.name().equals("toString")) 
+					if (op.name().equals("toString"))
 						toStringInSOIL = true;
 				}
 
 				visitor.printInvariants(cls);
 
 				visitor.printCompareTo(cls);
-				
+
 				visitor.printEquals(cls);
-				
+
 				if (!toStringInSOIL)
 					visitor.printToString(cls);
-				
+
 				SourceFileWriter.decIndent();
 				SourceFileWriter.println("}");
 
@@ -207,27 +204,27 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 		objectMapper = new HashMap<Integer, Object>(getSystem().state().numObjects());
 
+		System.out.println();
+		
 		FileSystemUtilities.createDirectory(databasePath);
 
 		Database.open(databasePath, getSystem().model().name(), "db4o");
 
 		Database.cleanUp();
-		
-		System.out.println("\nStoring " + getSystem().model().name() + " snapshot in " + Database.currentDatabase());
+
+		System.out.println("\t Generating Java objects and storing them in " + Database.currentDatabase());
 
 		generateRegularObjects(classPath);
 
 		generateLinkObjects(classPath);
 
 		setObjectsState(classPath);
-		
+
 		generateLinks(classPath);
 
 		saveObjectsInDatabase();
 
 		Database.close();
-
-		System.out.println("\nModel snapshot database store concluded!\n");
 	}
 
 	/***********************************************************
@@ -288,9 +285,9 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	}
 
 	/***********************************************************
-	* @param aClass
-	* @return
-	***********************************************************/
+	 * @param aClass
+	 * @return
+	 ***********************************************************/
 	private boolean isAssociationClassToRegularClasses(MClass aClass)
 	{
 		boolean result = true;
@@ -339,7 +336,6 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 			ac1 = Class.forName(classpath + "." + associationClass.associationEnds().get(0).cls().name());
 			ac2 = Class.forName(classpath + "." + associationClass.associationEnds().get(1).cls().name());
 
-			
 			Constructor<?> javaConstructor = c.getDeclaredConstructor(ac1, ac2);
 
 			for (MObject useObject : getSystem().state().objectsOfClass(aClass))
@@ -391,8 +387,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	}
 
 	/***********************************************************
-	* @param classpath
-	***********************************************************/
+	 * @param classpath
+	 ***********************************************************/
 	private void generateLinks(String classpath)
 	{
 		int totalLinks = 0;
@@ -400,8 +396,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		for (MLink theLink : getSystem().state().allLinks())
 			if (!(theLink instanceof MObject))
 			{
-//				System.out.println("!insert (" + theLink.linkedObjects().get(0).name() + ", "
-//								+ theLink.linkedObjects().get(1).name() + ") into " + theLink.association().name());
+				// System.out.println("!insert (" + theLink.linkedObjects().get(0).name() + ", "
+				// + theLink.linkedObjects().get(1).name() + ") into " + theLink.association().name());
 
 				Object target = objectMapper.get(theLink.linkedObjects().get(0).hashCode());
 				Object argument = objectMapper.get(theLink.linkedObjects().get(1).hashCode());
@@ -414,9 +410,9 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				else
 					methodName = "set" + SourceFileWriter.capitalize(argumentRole);
 
-//				System.out.println(theLink.linkedObjects().get(0).name() + "." + methodName + "("
-//								+ theLink.linkedObjects().get(1) + ": " +theLink.linkedObjects().get(1).type().shortName() +")");
-				
+				// System.out.println(theLink.linkedObjects().get(0).name() + "." + methodName + "("
+				// + theLink.linkedObjects().get(1) + ": " +theLink.linkedObjects().get(1).type().shortName() +")");
+
 				Class<?> c = null;
 				try
 				{
@@ -426,20 +422,20 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				{
 					e.printStackTrace();
 				}
-				
+
 				if (invokeMethod(target, argument, argument.getClass(), methodName, c))
-								totalLinks++;
+					totalLinks++;
 			}
 		System.out.println("\t - stored " + totalLinks + " links (association instances)");
 	}
 
 	/***********************************************************
-	* @param target
-	* @param argument
-	* @param methodName
-	* @param c
-	* @return
-	***********************************************************/
+	 * @param target
+	 * @param argument
+	 * @param methodName
+	 * @param c
+	 * @return
+	 ***********************************************************/
 	private boolean invokeMethod(Object target, Object argument, Class<?> argumentClass, String methodName, Class<?> c)
 	{
 		Method m = null;
@@ -454,7 +450,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 		}
 		catch (NoSuchMethodException e)
 		{
-//			System.out.println("invokeMethod(...): Seeking method " + methodName + " in superclass " + argumentClass.getSuperclass().getSimpleName());
+			// System.out.println("invokeMethod(...): Seeking method " + methodName + " in superclass " +
+			// argumentClass.getSuperclass().getSimpleName());
 			invokeMethod(target, argument, argumentClass.getSuperclass(), methodName, c);
 		}
 		catch (IllegalArgumentException e)
@@ -473,8 +470,8 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	}
 
 	/***********************************************************
-	* @param classpath
-	***********************************************************/
+	 * @param classpath
+	 ***********************************************************/
 	private void setObjectsState(String classpath)
 	{
 		for (MClass aClass : getSystem().model().classes())
@@ -494,7 +491,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 				Object javaObject = objectMapper.get(useObject.hashCode());
 
 				MObjectState useObjectState = useObject.state(getSystem().state());
-				
+
 				for (MAttribute attribute : aClass.allAttributes())
 					setJavaObjectAttribute(classpath, c, javaObject, useObjectState, attribute);
 			}
@@ -512,44 +509,56 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	private void setJavaObjectAttribute(String classpath, Class<?> c, Object javaObject, MObjectState useObjectState,
 					MAttribute attribute)
 	{
-		// System.out.println("\t" + c.getSimpleName() + "." + attribute.name() + " = " +
-		// useObjectState.attributeValue(attribute));
+		// System.out.println("\t" + c.getSimpleName() + "." + attribute.name() + " = " + useObjectState.attributeValue(attribute));
 
 		Method m = null;
 		Object argument = null;
-		
+
 		String methodName = "set" + SourceFileWriter.capitalize(attribute.name());
 		if (useObjectState.attributeValue(attribute).isDefined())
 		{
 			try
 			{
-//				m = c.getDeclaredMethod(methodName, toClass(classpath, attribute.type()));
-				m = c.getMethod(methodName, toClass(classpath, attribute.type()));
+				// m = c.getDeclaredMethod(methodName, toClass(classpath, attribute.type()));
+				// m = c.getMethod(methodName, toClass(classpath, attribute.type()));
+
+				for (Method method : c.getMethods())
+					if (method.getName().equals(methodName))
+						m = method;
+
+				if (m == null)
+					throw new NoSuchMethodException();
 
 				if (attribute.type().isTypeOfBoolean())
 					m.invoke(javaObject, ((BooleanValue) useObjectState.attributeValue(attribute)).value());
-				
+
 				if (attribute.type().isTypeOfInteger())
 					m.invoke(javaObject, ((IntegerValue) useObjectState.attributeValue(attribute)).value());
-				
+
 				if (attribute.type().isTypeOfReal())
-					m.invoke(javaObject, ((RealValue) useObjectState.attributeValue(attribute)).value());
-				
+					if (useObjectState.attributeValue(attribute).type().isTypeOfInteger())
+						m.invoke(javaObject, ((IntegerValue) useObjectState.attributeValue(attribute)).value() * 1.0);
+					else
+						m.invoke(javaObject, ((RealValue) useObjectState.attributeValue(attribute)).value());
+
 				if (attribute.type().isTypeOfString())
 					m.invoke(javaObject, ((StringValue) useObjectState.attributeValue(attribute)).value());
-				
+
 				if (attribute.type().isTypeOfEnum())
 				{
 					String enumValue = ((EnumValue) useObjectState.attributeValue(attribute)).value();
-					Field f = c.getDeclaredField(attribute.name());
 					Class<?> enumClass = Class.forName(classpath + "." + attribute.type().shortName());
 					@SuppressWarnings("unchecked")
 					Enum<?> e = Enum.valueOf(enumClass.asSubclass(Enum.class), enumValue);
-					f.setAccessible(true);
-					f.set(javaObject, e);
+
+//					Field f = c.getDeclaredField(attribute.name());
+//					f.setAccessible(true);
+//					f.set(javaObject, e);
+					
+					m.invoke(javaObject, e);
 				}
-				
-//				if (attribute.type().isObjectType())
+
+				// if (attribute.type().isObjectType())
 				if (attribute.type().isTypeOfClass())
 				{
 					argument = objectMapper.get(useObjectState.attributeValue(attribute).hashCode());
@@ -585,10 +594,10 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 			{
 				e.printStackTrace();
 			}
-			catch (NoSuchFieldException e)
-			{
-				e.printStackTrace();
-			}
+//			catch (NoSuchFieldException e)
+//			{
+//				e.printStackTrace();
+//			}
 		}
 	}
 
@@ -601,30 +610,30 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	private Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
 	{
 		// System.out.println(oclType);
-//		if (oclType.isNumber())
-//			return int.class;
-		
+		// if (oclType.isNumber())
+		// return int.class;
+
 		if (oclType.isTypeOfInteger())
 			return int.class;
-		
+
 		if (oclType.isTypeOfReal())
 			return double.class;
-		
+
 		if (oclType.isTypeOfBoolean())
 			return boolean.class;
-		
+
 		if (oclType.isTypeOfString())
 			return String.class;
-		
+
 		if (oclType.isTypeOfEnum())
 			return Class.forName(classpath + "." + oclType.toString());
 
-//		if (oclType.isObjectType())
+		// if (oclType.isObjectType())
 		if (oclType.isTypeOfClass())
 			return Class.forName(classpath + "." + oclType.toString());
 
-//		if (oclType.isTrueObjectType())
-//			return Class.forName(classpath + "." + oclType.toString());
+		// if (oclType.isTrueObjectType())
+		// return Class.forName(classpath + "." + oclType.toString());
 
 		if (oclType.isTypeOfOclAny())
 			return Object.class;
@@ -667,7 +676,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	***********************************************************/
 	private void saveObjectsInDatabase()
 	{
-		System.out.print("\t - saving " + objectMapper.values().size() + " objects to the database ");
+		System.out.println("\t - saving " + objectMapper.values().size() + " objects to the database ");
 		Database.insert(objectMapper.values());
 	}
 }

@@ -21,6 +21,7 @@ package org.quasar.juse.api.implementation;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +35,7 @@ import org.tzi.use.util.StringUtil;
 
 public class JavaBusinessVisitor extends JavaVisitor
 {
-	private MModel			model;
+	private MModel		model;
 	private String			author;
 	private String			basePackageName;
 	private String			businessLayerName;
@@ -122,18 +123,12 @@ public class JavaBusinessVisitor extends JavaVisitor
 								+ " new " + JavaTypes.javaImplementationType(attribute.getType()) + "();");
 			else
 			{
-				if (isSuperClass(theClass))
-				{
-					if (attribute.getType().isTypeOfEnum())
-						println("protected String " + attribute.getName() + ";");
-					// else if(attribute.getName().equals("ID"))
-					// println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() +
-					// ";");
-					else
-						println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName()
-										+ ";");
-				}
-				else
+//				if (isSuperClass(theClass))
+//				{
+//						println("protected " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName()
+//										+ ";");
+//				}
+//				else
 					println("private " + JavaTypes.javaInterfaceType(attribute.getType()) + " " + attribute.getName() + ";");
 			}
 		println();
@@ -331,11 +326,18 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println(")");
 		println("{");
 		incIndent();
-
+		
+		// Associative class instances are always connected to their member class instances
+		for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
+			if (attribute.getKind() == AssociationKind.ASSOCIATIVE2MEMBER)
+				println("assert " + attribute.getName() + " != null;");
+		println();
+		
 		for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
 			if (attribute.getKind() == AssociationKind.ASSOCIATIVE2MEMBER)
 				println("this." + attribute.getName() + " = " + attribute.getName() + ";");
 
+		println();
 		decIndent();
 		println("}");
 		println();
@@ -385,6 +387,25 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println(")");
 		println("{");
 		incIndent();
+		
+		// asserts to guarantee cardinality constraints
+		boolean assertsRequired = false;
+		AssociationKind toOneKinds[] = new AssociationKind[] {AssociationKind.ONE2ONE, AssociationKind.ONE2MANY, AssociationKind.ASSOCIATIVE2MEMBER};
+		for (AttributeInfo attribute : inheritedAttributes)
+			if (Arrays.asList(toOneKinds).contains(attribute.getKind()) && attribute.getMultiplicity().toString().equals("1"))
+			{
+				println("assert " + attribute.getName() + " != null;");
+				assertsRequired = true;
+			}
+		for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
+			if (Arrays.asList(toOneKinds).contains(attribute.getKind()) && attribute.getMultiplicity().toString().equals("1"))
+			{
+				println("assert " + attribute.getName() + " != null;");
+				assertsRequired = true;
+			}
+		if (assertsRequired) 
+			println();
+		
 		if (inheritedAttributes.size() > 0)
 		{
 			print("super(");
@@ -399,6 +420,14 @@ public class JavaBusinessVisitor extends JavaVisitor
 		for (AttributeInfo attribute : AttributeInfo.getAttributesInfo(theClass))
 			println("this." + attribute.getName() + " = " + attribute.getName() + ";");
 
+		println();
+		println("check();");
+		
+		if (!theClass.isAbstract())
+		{
+			println();
+			println("Database.insert(this);");
+		}
 		decIndent();
 		println("}");
 		println();
@@ -412,7 +441,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 	 * @param tag
 	 *            {"getter" | "setter"}
 	 ***********************************************************/
-	public void printHeaderBasicGettersSetters(MClass theClass, AttributeInfo currentAttribute, String tag)
+	private void printHeaderBasicGettersSetters(MClass theClass, AttributeInfo currentAttribute, String tag)
 	{
 		println("/**********************************************************************");
 		switch (currentAttribute.getKind())
@@ -1120,6 +1149,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 			printlnc(pre.expression().toString());
 			println("boolean pre_" + pre.name() + " = true;");
 			println();
+			if (pre.getAnnotationValue(pre.name(), "rationale").isEmpty())
+				System.err.println("WARNING: Missing rationale in Precondition -> " + op.cls().name() + "." + op.name() + "()::" + pre.name());
 			println("assert pre_" + pre.name() + " : \"" + pre.getAnnotationValue(pre.name(), "rationale") + "\";");
 			printlnc("-----------------------------------------------------------------------------");
 		}
@@ -1161,6 +1192,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 			printlnc(post.expression().toString());
 			println("boolean post_" + post.name() + " = true;");
 			println();
+			if (post.getAnnotationValue(post.name(), "rationale").isEmpty())
+				System.err.println("WARNING: Missing rationale in Postcondition -> " + op.cls().name() + "." + op.name() + "()::" + post.name());
 			println("assert post_" + post.name() + " : \"" + post.getAnnotationValue(post.name(), "rationale") + "\";");
 		}
 
@@ -1276,6 +1309,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public int compareTo(Object other)");
 		println("{");
 		incIndent();
+		println("assert other instanceof " + theClass.name() + ";");
+		println();
 		printlnc("TODO: uncomment the option that is best suitable");
 		for (MAttribute attribute : theClass.allAttributes())
 			printlnc("return this." + attribute.name() + ".compareTo(((" + theClass.name() + ") other)." + attribute.name()
@@ -1314,27 +1349,26 @@ public class JavaBusinessVisitor extends JavaVisitor
 		incIndent();
 		println("return false;");
 		decIndent();
-		println(theClass.name() + " another = (" + theClass.name() + ") other;");
+		println();
 
-		for (MAttribute attribute : theClass.allAttributes())
+		println("final " + theClass.name() + " another = (" + theClass.name() + ") other;");
+
+		if (!isSuperClass(theClass))
 		{
-			println("if (" + attribute.name() + " == null)");
-			println("{");
-			incIndent();
-			println("if (another." + attribute.name() + " != null)");
+			println("if (!super.equals(another))");
 			incIndent();
 			println("return false;");
-			decIndent();
-			decIndent();
-			println("}");
-			println("else");
-			incIndent();
-			println("if (!" + attribute.name() + ".equals(another." + attribute.name() + "))");
-			incIndent();
-			println("return false;");
-			decIndent();
 			decIndent();
 		}
+
+		for (MAttribute attribute : theClass.attributes())
+		{
+			println("if ((this." + attribute.name() + " == null) ? (another." + attribute.name() + " != null) : !this." + attribute.name() + ".equals(another." + attribute.name() + "))");
+			incIndent();
+			println("return false;");
+			decIndent();
+		}
+		println();
 		println("return true;");
 		decIndent();
 		println("}");
@@ -1372,6 +1406,9 @@ public class JavaBusinessVisitor extends JavaVisitor
 				printlnc(inv.bodyExpression().toString());
 				println("boolean invariant = true;");
 				println();
+				
+				if (inv.getAnnotationValue(inv.name(), "rationale").isEmpty())
+					System.err.println("WARNING: Missing rationale in Invariant -> " + theClass.name() + "::" + inv.name());
 				println("assert invariant : \"" + inv.getAnnotationValue(inv.name(), "rationale") + "\";");
 				decIndent();
 				println("}");

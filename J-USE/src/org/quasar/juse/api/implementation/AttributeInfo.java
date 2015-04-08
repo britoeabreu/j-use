@@ -24,22 +24,27 @@ import java.util.List;
 
 import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.mm.MMultiplicity;
 import org.tzi.use.uml.ocl.type.Type;
 
 public class AttributeInfo
 {
 	private AssociationKind kind;
+	private MMultiplicity multiplicity;
 	private String	name;
 	private Type	type;
 
+
 	/***********************************************************
 	* @param kind
-	* @param name
-	* @param type
+	 * @param multiplicity TODO
+	 * @param name
+	 * @param type
 	***********************************************************/
-	public AttributeInfo(AssociationKind kind, String name, Type type)
+	public AttributeInfo(AssociationKind kind, MMultiplicity multiplicity, String name, Type type)
 	{
 		this.kind = kind;
+		this.multiplicity = multiplicity;
 		this.name = name;
 		this.type = type;
 	}
@@ -50,6 +55,14 @@ public class AttributeInfo
 	public AssociationKind getKind()
 	{
 		return kind;
+	}
+	
+	/***********************************************************
+	* @return
+	***********************************************************/
+	public MMultiplicity getMultiplicity()
+	{
+		return multiplicity;
 	}
 	
 	/***********************************************************
@@ -74,7 +87,7 @@ public class AttributeInfo
 	@Override
 	public String toString()
 	{
-		return "AtributeInfo(" + type + ", " + name + ", " + type + ")";
+		return "AtributeInfo(" + type + ", " + multiplicity + ", " + name + ", " + kind + ")";
 	}
 
 	@Override
@@ -103,6 +116,8 @@ public class AttributeInfo
 		{
 			MClass sourceClass = ai.getSourceAE().cls();
 			MClass targetClass = ai.getTargetAE().cls();
+			MMultiplicity sourceMultiplicity = ai.getSourceAE().multiplicity();
+			MMultiplicity targetMultiplicity = ai.getTargetAE().multiplicity();
 			String sourceName = ai.getSourceAE().name();
 			String targetName = ai.getTargetAE().name();		
 			Type sourceType = ai.getSourceAE().getType();
@@ -113,27 +128,27 @@ public class AttributeInfo
 				case ONE2ONE:
 					if (theClass == sourceClass && sourceClass != targetClass 
 									&& theClass == util.lessComplexClass(sourceClass, targetClass))
-						result.add(new AttributeInfo(ai.getKind(), targetName, targetClass));
+						result.add(new AttributeInfo(ai.getKind(), targetMultiplicity, targetName, targetClass));
 					if (theClass == targetClass
 									&& theClass == util.lessComplexClass(sourceClass, targetClass))	
-						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass));
+						result.add(new AttributeInfo(ai.getKind(), sourceMultiplicity, sourceName, sourceClass));
 					break;
 				case ONE2MANY:
 					if (theClass == sourceClass && sourceClass != targetClass && ai.getSourceAE().isCollection())
-						result.add(new AttributeInfo(ai.getKind(), targetName, targetClass));
+						result.add(new AttributeInfo(ai.getKind(), targetMultiplicity, targetName, targetClass));
 					if (theClass == targetClass && ai.getTargetAE().isCollection())					
-						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass));
+						result.add(new AttributeInfo(ai.getKind(), sourceMultiplicity, sourceName, sourceClass));
 					break;
 				case MANY2MANY:
 					if (theClass == sourceClass && sourceClass != targetClass
 									&& theClass == util.lessComplexClass(sourceClass, targetClass))
-						result.add(new AttributeInfo(ai.getKind(), targetName, targetType));
+						result.add(new AttributeInfo(ai.getKind(), targetMultiplicity, targetName, targetType));
 					if (theClass == targetClass
 									&& theClass == util.lessComplexClass(sourceClass, targetClass))
-						result.add(new AttributeInfo(ai.getKind(), sourceName, sourceType));
+						result.add(new AttributeInfo(ai.getKind(), sourceMultiplicity, sourceName, sourceType));
 					break;
 				case ASSOCIATIVE2MEMBER:
-					result.add(new AttributeInfo(ai.getKind(), sourceName, sourceClass));
+					result.add(new AttributeInfo(ai.getKind(), MMultiplicity.ONE, sourceName, sourceClass));
 					break;
 				case MEMBER2ASSOCIATIVE:
 					break;
@@ -145,7 +160,7 @@ public class AttributeInfo
 		}
 		
 		for (MAttribute attribute : theClass.attributes())
-			result.add(new AttributeInfo(AssociationKind.NONE, attribute.name(), attribute.type()));
+			result.add(new AttributeInfo(AssociationKind.NONE, null, attribute.name(), attribute.type()));
 		
 		return result;
 	}

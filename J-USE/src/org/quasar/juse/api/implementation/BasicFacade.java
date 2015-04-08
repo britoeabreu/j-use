@@ -58,7 +58,6 @@ public class BasicFacade implements JUSE_BasicFacade
 
 	public BasicFacade()
 	{
-		System.out.println("\nj-use version 1.0.6, Copyright (C) 2012-2013 QUASAR research group");
 	}
 
 	/***********************************************************
@@ -134,9 +133,9 @@ public class BasicFacade implements JUSE_BasicFacade
 			try
 			{
 				if (verbose)
-					System.out.println("\nCompiling specification " + specificationFilename);
+					System.out.println("\nCompiling model " + specificationFilename);
 
-				Log.verbose("compiling specification " + specificationFilename);
+				Log.verbose("compiling model " + specificationFilename);
 				specStream = new FileInputStream(specificationFilename);
 				model = USECompiler.compileSpecification(specStream, specificationFilename, new PrintWriter(System.err),
 								new ModelFactory());
@@ -205,14 +204,15 @@ public class BasicFacade implements JUSE_BasicFacade
 		boolean result = false;
 		if (system == null || system.model() == null)
 		{
-			System.out.println("Please compile the specification first!");
+			System.out.println("Please compile the model first!");
 			return result;
 		}
-
+		System.out.println("\n\t Generating USE snapshot for the " + system.model().name() + " prototype");
+		
 		String instancesFilename = modelInstancesDirectory + "/" + modelInstancesFilename;
 		
 		if (verbose)
-			System.out.println("\nReading SOIL file " + instancesFilename);
+			System.out.println("\t - started reading SOIL file " + instancesFilename);
 
 		// Unfortunately none of these 2 simple options work :( ...
 		// command("open " + instancesFilename);
@@ -229,21 +229,25 @@ public class BasicFacade implements JUSE_BasicFacade
 			String s = null;
 			try
 			{
+				System.out.print("\t ...");
 				int line = 0;
 				while ((s = br.readLine()) != null)
 				{
 					line++;
 
 					if (verbose)
-						System.out.println(s);
+//						System.out.println(s);
 //					else
-//						if (line % 500 == 0)
-//							System.out.print(".");
-
+					{
+						if (line % 200 == 0)
+							System.out.print(".");
+						if (line % 10000 == 0)
+							System.out.println("\t");
+					}						
 					shell.processLineSafely(s);
 				}
 				if (verbose)
-					System.out.println("\n... finished reading " + line + " lines.\n");
+					System.out.println("\n\t - finished reading " + line + " lines");
 				fr.close();
 				result = true;
 			}
@@ -268,7 +272,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	{
 		if (system == null || system.model() == null)
 		{
-			System.out.println("Please compile the specification first!");
+			System.out.println("Please compile the model first!");
 			return;
 		}
 

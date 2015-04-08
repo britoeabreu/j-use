@@ -60,12 +60,16 @@ public abstract class JavaTypes
 	{
 		if (oclType.isTypeOfOrderedSet())
 			return "SortedSet<" + javaInterfaceType(((OrderedSetType) oclType).elemType()) + ">";
+		
 		if (oclType.isTypeOfSet())
 			return "Set<" + javaInterfaceType(((SetType) oclType).elemType()) + ">";
+		
 		if (oclType.isTypeOfSequence())
 			return "Queue<" + javaInterfaceType(((SequenceType) oclType).elemType()) + ">";
+		
 		if (oclType.isTypeOfBag())
 			return "List<" + javaInterfaceType(((BagType) oclType).elemType()) + ">";
+		
 		if (oclType.isKindOfTupleType(VoidHandling.INCLUDE_VOID))
 			return javaTupleType((TupleType) oclType);
 
@@ -78,14 +82,18 @@ public abstract class JavaTypes
 	 ***********************************************************/
 	public static String javaImplementationType(Type oclType)
 	{
-		if (oclType.isTypeOfSet())
-			return "HashSet<" + javaImplementationType(((SetType) oclType).elemType()) + ">";
 		if (oclType.isTypeOfOrderedSet())
 			return "TreeSet<" + javaImplementationType(((OrderedSetType) oclType).elemType()) + ">";
-		if (oclType.isTypeOfBag())
-			return "ArrayList<" + javaImplementationType(((BagType) oclType).elemType()) + ">";
+
+		if (oclType.isTypeOfSet())
+			return "HashSet<" + javaImplementationType(((SetType) oclType).elemType()) + ">";
+		
 		if (oclType.isTypeOfSequence())
 			return "ArrayDeque<" + javaImplementationType(((SequenceType) oclType).elemType()) + ">";
+		
+		if (oclType.isTypeOfBag())
+			return "ArrayList<" + javaImplementationType(((BagType) oclType).elemType()) + ">";
+		
 		if (oclType.isKindOfTupleType(VoidHandling.INCLUDE_VOID))
 			return javaTupleType((TupleType) oclType);
 
@@ -133,7 +141,7 @@ public abstract class JavaTypes
 		if (oclType.isTypeOfString())
 			return "String";
 		if (oclType.isTypeOfEnum())
-			return oclType.toString();
+			return oclType.shortName();
 		if (oclType.isTypeOfClass())
 			return oclType.toString();
 		// if (oclType.isObjectType())
