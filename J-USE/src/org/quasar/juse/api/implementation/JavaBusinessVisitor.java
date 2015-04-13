@@ -262,7 +262,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("/***********************************************************");
 		println("* @return all instances of class " + theClass.name());
 		println("***********************************************************/");
-		print("public static Set<" + baseAncestor(theClass).name() + "> allInstances()");
+		println("public static Set<" + baseAncestor(theClass).name() + "> allInstances()");
 		println("{");
 		incIndent();
 		println("return Database.allInstances(" + theClass.name() + ".class);");
@@ -653,7 +653,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
-			println("if (x." + sourceRole + "()  ==  this)");
+			println("if (x." + sourceRole + "() == this)");
 			incIndent();
 			println("result.add(x);");
 			decIndent();
@@ -740,7 +740,7 @@ public class JavaBusinessVisitor extends JavaVisitor
 			// println(associationClass.isAbstract() ? ".allInstancesAbstract())" : ".allInstances())");
 			println("for (" + associativeClass + " x : " + associativeClass + ".allInstances())");
 			incIndent();
-			println("if (x." + sourceRole + "()  ==  this  && x. " + targetRole + "() != null)");
+			println("if (x." + sourceRole + "() == this && x." + targetRole + "() != null)");
 			incIndent();
 			println("result.add(x." + targetRole + "());");
 			decIndent();
