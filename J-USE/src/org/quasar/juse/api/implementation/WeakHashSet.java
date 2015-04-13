@@ -103,8 +103,7 @@ public class WeakHashSet<T> implements Set<T>
 		HashableWeakReference<T> currentValue;
 		while ((currentValue = this.values[index]) != null)
 		{
-			T referent;
-			if (obj.equals(referent = currentValue.get()))
+			if (obj.equals(currentValue.get()))
 			{
 				return false;
 			}
@@ -148,6 +147,7 @@ public class WeakHashSet<T> implements Set<T>
 			rehash();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void cleanupGarbageCollectedValues()
 	{
 		HashableWeakReference<T> toBeRemoved;
@@ -180,6 +180,7 @@ public class WeakHashSet<T> implements Set<T>
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean contains(Object obj)
 	{
@@ -228,6 +229,7 @@ public class WeakHashSet<T> implements Set<T>
 	/*
 	 * Removes the object that is in this set and that is equals to the given object. Returns false if the object was not found.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove(Object obj)
 	{
@@ -238,8 +240,7 @@ public class WeakHashSet<T> implements Set<T>
 		HashableWeakReference<T> currentValue;
 		while ((currentValue = this.values[index]) != null)
 		{
-			T referent;
-			if (toRemove.equals(referent = currentValue.get()))
+			if (toRemove.equals(currentValue.get()))
 			{
 				this.elementSize--;
 				this.values[index] = null;
@@ -337,6 +338,7 @@ public class WeakHashSet<T> implements Set<T>
 		return null;
 	}
 
+	@SuppressWarnings("hiding")
 	@Override
 	public <T> T[] toArray(T[] arg0)
 	{

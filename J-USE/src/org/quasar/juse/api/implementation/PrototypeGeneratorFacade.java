@@ -36,7 +36,7 @@ import org.tzi.use.uml.mm.MAttribute;
 import org.tzi.use.uml.mm.MClass;
 import org.tzi.use.uml.mm.MOperation;
 import org.tzi.use.uml.ocl.type.EnumType;
-import org.tzi.use.uml.ocl.type.Type;
+// import org.tzi.use.uml.ocl.type.Type;
 import org.tzi.use.uml.ocl.value.BooleanValue;
 import org.tzi.use.uml.ocl.value.EnumValue;
 import org.tzi.use.uml.ocl.value.IntegerValue;
@@ -607,7 +607,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 	 * @return
 	 * @throws ClassNotFoundException
 	 ***********************************************************/
-	private Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
+/*	private Class<?> toClass(String classpath, Type oclType) throws ClassNotFoundException
 	{
 		// System.out.println(oclType);
 		// if (oclType.isNumber())
@@ -670,6 +670,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements JUSE_Protot
 
 		return null;
 	}
+	*/
 
 	/***********************************************************
 	* 

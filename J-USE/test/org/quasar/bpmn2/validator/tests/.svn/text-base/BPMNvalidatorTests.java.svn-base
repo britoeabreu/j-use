@@ -24,11 +24,11 @@ import org.tzi.use.uml.mm.MClassInvariant;
  * 
  ***********************************************************/
 public class BPMNvalidatorTests {
-	private final static String USE_BASE_DIRECTORY = "C:/Program Files (x86)/use-3.0.6";
+	private final static String USE_BASE_DIRECTORY = "C:/Program Files (x86)/use-3.0.4";
 
-	private final static String MODEL_DIRECTORY = "D:/Dropbox/_SHARED/Anacleto/Metamodels/BPMN2";
+	private final static String MODEL_DIRECTORY = "D:/Dropbox/Anacleto/Metamodels/BPMN2";
 //	private final static String MODEL_DIRECTORY = "D:/tst";
-	private final static String MODEL_FILE = "BPMN2.0n.use";
+	private final static String MODEL_FILE = "BPMN2.0o.use";
 	private final static String SOIL_DIRECTORY = "TestSuiteModels";
 
 	private static JUSE_ProgramingFacade api = new ProgramingFacade();
@@ -165,13 +165,13 @@ public class BPMNvalidatorTests {
 		stack = Thread.currentThread().getStackTrace();
 		methodName = stack[2].getMethodName();
 
-		System.out.println(">>>" +methodName );
+		// System.out.println(">>>" +invariantName );
 
-		//api.readSOIL(SOIL_DIRECTORY + "/PASS/",  methodName + ".cmd", true);
+		api.readSOIL(SOIL_DIRECTORY + "/PASS/",  methodName + ".cmd", true);
 		 assertEquals(0, getFailedInvariants('S').size());
 		assertTrue(!invariantFails(methodName));
 
-		//api.readSOIL(SOIL_DIRECTORY + "/FAIL/", methodName + ".cmd", true);
+		api.readSOIL(SOIL_DIRECTORY + "/FAIL/", methodName + ".cmd", true);
 		assertTrue(getFailedInvariants('S').size() > 0);
 		// System.out.println("DEBUG>" +invariantFails(invariantName));
 		assertTrue(invariantFails(methodName));

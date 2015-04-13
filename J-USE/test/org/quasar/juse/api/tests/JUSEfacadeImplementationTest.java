@@ -1,0 +1,348 @@
+/***********************************************************
+* Filename: JUSEfacadeImplementationTest.java
+* Created:  29/01/2013
+***********************************************************/
+package org.quasar.juse.api.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.quasar.juse.api.JUSE_ProgramingFacade;
+import org.quasar.juse.api.implementation.ProgramingFacade;
+
+import org.tzi.use.config.Options;
+
+/***********************************************************
+ * @author fba
+ * 29/01/2013
+ *
+ ***********************************************************/
+public class JUSEfacadeImplementationTest
+{
+		private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.3";
+		 private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
+//		 private final static String MODEL_FILE = "CopaPaises_20120416.use";
+	
+		 private static JUSE_ProgramingFacade api;
+		 
+	/***********************************************************
+	 * @throws java.lang.Exception
+	 ***********************************************************/
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception
+	{
+
+	}
+
+	/***********************************************************
+	 * @throws java.lang.Exception
+	 ***********************************************************/
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception
+	{
+	}
+
+	/***********************************************************
+	 * @throws java.lang.Exception
+	 ***********************************************************/
+	@Before
+	public void setUp() throws Exception
+	{
+	}
+
+	/***********************************************************
+	 * @throws java.lang.Exception
+	 ***********************************************************/
+	@After
+	public void tearDown() throws Exception
+	{
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#JUSEfacadeImplementation()}.
+	 */
+	@Test
+	public final void testJUSEfacadeImplementation()
+	{
+		assertNull(api);
+		api = new ProgramingFacade();
+		assertNotNull(api);
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#initialize(java.lang.String[], java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public final void testInitialize()
+	{
+		String[] args = {};
+		api.initialize(args, USE_BASE_DIRECTORY, MODEL_DIRECTORY);
+		assertEquals(Options.getLastDirectory(), MODEL_DIRECTORY);
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#compileSpecification(java.lang.String)}.
+	 */
+	@Test
+	public final void testCompileSpecification()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#readSOIL(java.lang.String, boolean)}.
+	 */
+	@Test
+	public final void testReadSOIL()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#dumpState(java.lang.String, java.lang.String, java.lang.String, boolean)}.
+	 */
+	@Test
+	public final void testDumpState()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#command(java.lang.String)}.
+	 */
+	@Test
+	public final void testCommand()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#createShell()}.
+	 */
+	@Test
+	public final void testCreateShell()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#javaGeneration(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public final void testJavaGeneration()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#createObject(java.lang.String, org.tzi.use.uml.mm.MClass)}.
+	 */
+	@Test
+	public final void testCreateObject()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#deleteObject(org.tzi.use.uml.sys.MObject)}.
+	 */
+	@Test
+	public final void testDeleteObject()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#createLinkObject(java.lang.String, org.tzi.use.uml.mm.MAssociationClass, java.util.List)}.
+	 */
+	@Test
+	public final void testCreateLinkObject()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#deleteLinkObject(org.tzi.use.uml.sys.MLinkObject)}.
+	 */
+	@Test
+	public final void testDeleteLinkObject()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#setObjectAttribute(org.tzi.use.uml.sys.MObject, org.tzi.use.uml.mm.MAttribute, org.tzi.use.uml.ocl.value.Value)}.
+	 */
+	@Test
+	public final void testSetObjectAttribute()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#getObjectAttribute(org.tzi.use.uml.sys.MObject, org.tzi.use.uml.mm.MAttribute)}.
+	 */
+	@Test
+	public final void testGetObjectAttribute()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#createLink(org.tzi.use.uml.mm.MAssociation, java.util.List)}.
+	 */
+	@Test
+	public final void testCreateLink()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#deleteLink(org.tzi.use.uml.mm.MAssociation, java.util.List)}.
+	 */
+	@Test
+	public final void testDeleteLink()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#objectByName(java.lang.String)}.
+	 */
+	@Test
+	public final void testObjectByName()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#classByName(java.lang.String)}.
+	 */
+	@Test
+	public final void testClassByName()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#associationClassByName(java.lang.String)}.
+	 */
+	@Test
+	public final void testAssociationClassByName()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#associationByName(java.lang.String)}.
+	 */
+	@Test
+	public final void testAssociationByName()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#attributeByName(org.tzi.use.uml.sys.MObject, java.lang.String)}.
+	 */
+	@Test
+	public final void testAttributeByName()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allInstances(org.tzi.use.uml.mm.MClass)}.
+	 */
+	@Test
+	public final void testAllInstances()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allClasses()}.
+	 */
+	@Test
+	public final void testAllClasses()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allAssociations()}.
+	 */
+	@Test
+	public final void testAllAssociations()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allObjects()}.
+	 */
+	@Test
+	public final void testAllObjects()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allLinks()}.
+	 */
+	@Test
+	public final void testAllLinks()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allInvariants()}.
+	 */
+	@Test
+	public final void testAllInvariants()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allPreConditions()}.
+	 */
+	@Test
+	public final void testAllPreConditions()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#allPostConditions()}.
+	 */
+	@Test
+	public final void testAllPostConditions()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#annotations(org.tzi.use.uml.mm.MModelElement)}.
+	 */
+	@Test
+	public final void testAnnotations()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+	/**
+	 * Test method for {@link org.quasar.juse.api.implementation.JUSEfacadeImplementation#check(org.tzi.use.uml.mm.MClassInvariant)}.
+	 */
+	@Test
+	public final void testCheck()
+	{
+		fail("Not yet implemented"); // TODO
+	}
+
+}
