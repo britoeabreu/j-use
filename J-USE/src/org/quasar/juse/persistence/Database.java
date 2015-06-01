@@ -232,19 +232,27 @@ public abstract class Database
 	{
 		EmbeddedConfiguration configuration = Db4oEmbedded.newConfiguration();
 
-		// configuration.common().objectClass(Receipt.class).objectField("ID").indexed(true);
-		// configuration.common().objectClass(Receipt.class).updateDepth(2);
-		// configuration.common().objectClass(Client.class).objectField("ID").indexed(true);
-		// configuration.common().objectClass(Client.class).updateDepth(2);
-		//
-		// configuration.common().objectClass(Detail.class).updateDepth(2);
-		//
-		// configuration.common().objectClass(Product.class).objectField("ID").indexed(true);
-		// configuration.common().objectClass(Product.class).updateDepth(2);
-		// configuration.common().objectClass(Product_X.class).objectField("ID").indexed(true);
-		// configuration.common().objectClass(Product_X.class).updateDepth(2);
-		// configuration.common().objectClass(Product_Y.class).objectField("ID").indexed(true);
-		// configuration.common().objectClass(Product_Y.class).updateDepth(2);
+		configuration.common().updateDepth(3);
+		configuration.common().activationDepth(3);
+		
+//		configuration.file().generateUUIDs(ConfigScope.GLOBALLY);
+//		configuration.common().objectClass(MyModel.class).cascadeOnDelete(true);
+//		configuration.common().objectClass(MyModel.class).cascadeOnUpdate(true);
+//		configuration.common().objectClass(MyModel.class).cascadeOnActivate(true);
+//
+//		 configuration.common().objectClass(Receipt.class).objectField("ID").indexed(true);
+//		 configuration.common().objectClass(Receipt.class).updateDepth(2);
+//		 configuration.common().objectClass(Client.class).objectField("ID").indexed(true);
+//		 configuration.common().objectClass(Client.class).updateDepth(2);
+//		
+//		 configuration.common().objectClass(Detail.class).updateDepth(2);
+//		
+//		 configuration.common().objectClass(Product.class).objectField("ID").indexed(true);
+//		 configuration.common().objectClass(Product.class).updateDepth(2);
+//		 configuration.common().objectClass(Product_X.class).objectField("ID").indexed(true);
+//		 configuration.common().objectClass(Product_X.class).updateDepth(2);
+//		 configuration.common().objectClass(Product_Y.class).objectField("ID").indexed(true);
+//		 configuration.common().objectClass(Product_Y.class).updateDepth(2);
 
 		return configuration;
 	}

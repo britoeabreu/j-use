@@ -269,6 +269,16 @@ public class JavaBusinessVisitor extends JavaVisitor
 		decIndent();
 		println("}");
 		println();
+		println("/***********************************************************");
+		println("* @return all instances of class " + theClass.name() + " sorted in ascending order");
+		println("***********************************************************/");
+		println("public static SortedSet<" + baseAncestor(theClass).name() + "> allInstancesSorted()");
+		println("{");
+		incIndent();
+		println("return new TreeSet<" + baseAncestor(theClass).name() + ">(allInstances());");
+		decIndent();
+		println("}");
+		println();
 	}
 
 	/*
@@ -504,6 +514,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 			println("{");
 			incIndent();
 			println("this." + currentAttribute.getName() + " = " + currentAttribute.getName() + ";");
+			println();
+			println("Database.update(this);");
 			decIndent();
 			println("}");
 			println();
@@ -521,6 +533,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 				println("{");
 				incIndent();
 				println("this." + currentAttribute.getName() + ".add(" + otherName + ");");
+				println();
+				println("Database.update(this);");
 				decIndent();
 				println("}");
 				println();
@@ -532,6 +546,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 				println("{");
 				incIndent();
 				println("this." + currentAttribute.getName() + ".remove(" + otherName + ");");
+				println();
+				println("Database.update(this);");
 				decIndent();
 				println("}");
 				println();
@@ -1082,6 +1098,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		incIndent();
 		println("x." + sourceRole + "().add(this);");
 		decIndent();
+		println();
+		println("Database.update(this);");
 		decIndent();
 		println("}");
 		println();
@@ -1095,6 +1113,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetClass.toLowerCase() + ".add" + capitalize(sourceRole) + "(this);");
+		println();
+		println("Database.update(this);");
 		decIndent();
 		println("}");
 		println();
@@ -1108,6 +1128,8 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("{");
 		incIndent();
 		println(targetClass.toLowerCase() + ".remove" + capitalize(sourceRole) + "(this);");
+		println();
+		println("Database.update(this);");
 		decIndent();
 		println("}");
 		println();
@@ -1128,8 +1150,10 @@ public class JavaBusinessVisitor extends JavaVisitor
 		for (int i = 0; i < op.paramList().size(); i++)
 			println("* @param " + op.paramList().varDecl(i).name() + " the " + op.paramList().varDecl(i).name() + " to set");
 		println("**********************************************************************/");
-		print("public " + (op.hasResultType() ? JavaTypes.javaInterfaceType(op.resultType()) : "void") + " ");
-		print(op.name() + "(");
+		print("public "); 
+		if (op.getAnnotation("static")!=null)
+			print("static "); 
+		print((op.hasResultType() ? JavaTypes.javaInterfaceType(op.resultType()) : "void") + " " + op.name() + "(");
 		VarDecl decl = null;
 		for (int i = 0; i < op.paramList().size(); i++)
 		{
@@ -1337,29 +1361,25 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("public boolean equals(Object other)");
 		println("{");
 		incIndent();
+		println("assert other instanceof " + theClass.name() + ";");
+		println();
 		println("if (this == other)");
 		incIndent();
 		println("return true;");
-		decIndent();
-		println("if (other == null)");
-		incIndent();
-		println("return false;");
-		decIndent();
-		println("if (getClass() != other.getClass())");
-		incIndent();
-		println("return false;");
 		decIndent();
 		println();
 
 		println("final " + theClass.name() + " another = (" + theClass.name() + ") other;");
 
-		if (!isSuperClass(theClass))
+		if (isSubClass(theClass))
 		{
-			println("if (!super.equals(another))");
+			println();
+			println("if (!super.equals((" + StringUtil.fmtSeq(theClass.parents(), ",") + ") another))");
 			incIndent();
 			println("return false;");
 			decIndent();
 		}
+		println();
 
 		for (MAttribute attribute : theClass.attributes())
 		{
@@ -1524,11 +1544,11 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println();
 		println("boolean over = false;");
 		println();
+		println("Scanner in = new Scanner(System.in);");
+		println();
 		println("do");
 		println("{");
 		incIndent();
-		println("Scanner in = new Scanner(System.in);");
-		println();
 		println("displayMenu();");
 		println();
 		println("int option;");
@@ -1571,11 +1591,11 @@ public class JavaBusinessVisitor extends JavaVisitor
 		println("break;");
 		decIndent();
 		println("}");
-		println("in.close();");
 		decIndent();
 		println("}");
 		println("while (!over);");
 		println();
+		println("in.close();");
 		println("Database.close();");
 		decIndent();
 		println("}");

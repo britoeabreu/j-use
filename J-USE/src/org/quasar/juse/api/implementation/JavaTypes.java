@@ -211,6 +211,10 @@ public abstract class JavaTypes
 		// compulsory because of "allInstances()"
 		result.add("import java.util.Set;");
 
+		// compulsory because of "allInstancesSorted()"
+		result.add("import java.util.SortedSet;");
+		result.add("import java.util.TreeSet;");
+
 		for (Type oclType : oclTypes)
 		{
 			if (oclType != null)
