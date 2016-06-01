@@ -308,7 +308,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	public MClassInvariant invariantByName(String invariantName)
 	{
 		for (MClassInvariant inv : getSystem().model().classInvariants())
-			if (inv.name().equals(invariantName))
+			if (inv.name().toUpperCase().equals(invariantName.toUpperCase()))
 				return inv;
 		return null;
 		// return getSystem().model().getClassInvariant(invariantName);
@@ -488,7 +488,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	{
 		MModel model = getSystem().model();
 
-		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model, true);
+		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateTotalCoverage(model, true);
 		// The 2nd argument, when true, means that operation expressions will also be considered
 		
 		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();
@@ -516,7 +516,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	{
 		MModel model = getSystem().model();
 
-		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateModelCoverage(model, true);
+		Map<MModelElement, CoverageData> data = CoverageAnalyzer.calculateTotalCoverage(model, true);
 		// The 2nd argument, when true, means that operation expressions will also be considered
 		
 		// Map<MAssociation, Integer>coverageAssociation = coverageMap.get(getSystem().model()).getAssociationCoverage();

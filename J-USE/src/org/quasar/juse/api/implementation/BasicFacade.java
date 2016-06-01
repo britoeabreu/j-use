@@ -110,7 +110,7 @@ public class BasicFacade implements JUSE_BasicFacade
 
 		// compile spec if filename given as command line argument
 		if (Options.specFilename != null)
-			compileSpecification(Options.specFilename, true);
+			compileSpecification(Options.specFilename, false);
 
 		return this;
 	}
