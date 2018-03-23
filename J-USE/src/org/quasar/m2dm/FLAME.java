@@ -8,6 +8,8 @@ package org.quasar.m2dm;
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 //import org.quasar.juse.api.implementation.BasicFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
+import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.sys.MObject;
 
 //import org.tzi.use.uml.ocl.value.EnumValue;
 //import org.tzi.use.uml.mm.Annotatable;
@@ -26,13 +28,17 @@ import org.quasar.juse.api.implementation.ProgramingFacade;
  ***********************************************************/
 public final class FLAME
 {
-	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.6";
+	private final static String	USE_BASE_DIRECTORY	= "D:/Google Drive/EclipseWorkspace/use-5.0.0";
+	
+	private final static String	WORKING_DIRECTORY	= "D:\\Google Drive\\TOPICS\\_ModelDrivenEngineering\\OCL&METRICS\\UMLMM_Instantiation";
+	
+//	 private final static String WORKING_DIRECTORY = "D:\\Google Drive\\TOPICS\\_ModelDrivenEngineering\\OCL&METRICS\\MOOD_FLAME";
+	
+	private final static String METAMODEL_FILE = "UML13_v14.use";
 
-	 private final static String WORKING_DIRECTORY = "D:\\Dropbox\\TOPICS\\_ModelDrivenEngineering\\OCL&METRICS\\MOOD_FLAME";
-	 private final static String METAMODEL_FILE = "UML13_v14.use";
-//	 private final static String SOIL_FILE = "euro2012.soil";
+	private final static String SOIL_FILE = "Navio2013.cmd";
 
-
+	private static JUSE_ProgramingFacade api;
 
 	/***********************************************************
 	 * @param args
@@ -49,19 +55,49 @@ public final class FLAME
 	***********************************************************/
 	static void loadFLAME(String[] args)
 	{
-		JUSE_ProgramingFacade api = new ProgramingFacade();
+		api = new ProgramingFacade();
 
 		api.initialize(args, USE_BASE_DIRECTORY, WORKING_DIRECTORY);
 
 		api.compileSpecification(METAMODEL_FILE, true);
 
-		api.command("check");
+//		api.command("check");
 
-		api.command("info vars");
+		api.readSOIL(WORKING_DIRECTORY, SOIL_FILE, false);
+		
+//		api.command("info vars");
 
-		 api.command("info state");
+//		 api.command("info state");
 
 		// api.createShell();
+		 
+	//	 System.out.println(api.oclEvaluator("MMClass.allInstances"));
+		 
+		 System.out.println(api.oclEvaluator("MMClass.allInstances"));
+		 
+		 for (MObject instance: api.allInstances("MMClass"))
+			 outputMetricsLine(instance, "CHIN()", "DESN()", "PARN()", "ASCN()", 
+					 "NAN()", "DAN()", "IAN()", "OAN()", "AAN()", "NON()", "DON()",	"ION()", "OON()", "AON()");	
+		 
+		 System.out.println("________________________________________________________________");
+
+		 System.out.println(api.oclEvaluator("Package.allInstances"));
+		 
+		 for (MObject instance: api.allInstances("Package"))
+			 outputMetricsLine(instance, "AIF()", "OIF()", "IIF()", "AHF()", "OHF()", "AHEF()", "OHEF()");
 	}
+	
+	
+	
+	static void outputMetricsLine(MObject target, String... metrics)
+	{
+		System.out.print(target.toString() + "\t");
+		for (String metric: metrics)
+			System.out.print(api.oclEvaluator(target.toString() + "." + metric) + "\t");
+		System.out.println();
+	}
+	
+	
+	
 	
 }

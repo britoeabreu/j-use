@@ -19,9 +19,6 @@
 
 package org.quasar.juse.api.implementation;
 
-import org.quasar.juse.api.JUSE_BasicFacade;
-import org.quasar.toolkit.SourceFileWriter;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +27,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 
+import org.quasar.juse.api.JUSE_BasicFacade;
+import org.quasar.toolkit.SourceFileWriter;
 import org.tzi.use.config.Options;
 import org.tzi.use.main.Session;
 import org.tzi.use.main.shell.Shell;
@@ -73,6 +72,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#initialize(java.lang.String[], java.lang.String, java.lang.String)
 	 */
+	@Override
 	public JUSE_BasicFacade initialize(String[] args, String useBaseDirectory, String modelDirectory)
 	{
 		// set System.out to the OldUSEWriter to protocol the output.
@@ -120,6 +120,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#compileSpecification(java.lang.String)
 	 */
+	@Override
 	public MSystem compileSpecification(String specificationFilename, boolean verbose)
 	{
 		MModel model = null;
@@ -136,6 +137,10 @@ public class BasicFacade implements JUSE_BasicFacade
 					System.out.println("\nCompiling model " + specificationFilename);
 
 				Log.verbose("compiling model " + specificationFilename);
+				Log.setShowWarnings(verbose);
+				Log.setDebug(verbose);
+				Log.setVerbose(verbose);
+				
 				specStream = new FileInputStream(specificationFilename);
 				model = USECompiler.compileSpecification(specStream, specificationFilename, new PrintWriter(System.err),
 								new ModelFactory());
@@ -199,6 +204,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, boolean)
 	 */
+	@Override
 	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose) throws NullPointerException
 	{
 		boolean result = false;
@@ -207,7 +213,8 @@ public class BasicFacade implements JUSE_BasicFacade
 			System.out.println("Please compile the model first!");
 			return result;
 		}
-		System.out.println("\n\t Generating USE snapshot for the " + system.model().name() + " prototype");
+		if (verbose)	
+			System.out.println("\n\t Generating USE snapshot for the " + system.model().name() + " prototype");
 		
 		String instancesFilename = modelInstancesDirectory + "/" + modelInstancesFilename;
 		
@@ -229,7 +236,7 @@ public class BasicFacade implements JUSE_BasicFacade
 			String s = null;
 			try
 			{
-				System.out.print("\t ...");
+//				System.out.print("\t ...");
 				int line = 0;
 				while ((s = br.readLine()) != null)
 				{
@@ -243,8 +250,10 @@ public class BasicFacade implements JUSE_BasicFacade
 							System.out.print(".");
 						if (line % 10000 == 0)
 							System.out.println("\t");
-					}						
-					shell.processLineSafely(s);
+					}
+					
+					if (!s.contains("info state") && !s.contains("check"))
+						shell.processLineSafely(s);
 				}
 				if (verbose)
 					System.out.println("\n\t - finished reading " + line + " lines");
@@ -268,6 +277,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#dumpState(java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
+	@Override
 	public void dumpState(String author, String javaWorkspace, String cmdFile, boolean verbose)
 	{
 		if (system == null || system.model() == null)
@@ -406,6 +416,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#command(java.lang.String)
 	 */
+	@Override
 	public void command(String commandLine)
 	{
 		shell.processLineSafely(commandLine);
@@ -416,6 +427,7 @@ public class BasicFacade implements JUSE_BasicFacade
 	 * 
 	 * @see org.quasar.juse.api.JUSE_BasicFacade#createShell()
 	 */
+	@Override
 	public void createShell()
 	{
 		Thread t = new Thread(shell);

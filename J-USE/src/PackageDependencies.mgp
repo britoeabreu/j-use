@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="org.quasar.usemodel2java" x="278" y="190">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+    <Package name="org.quasar.bpmn2.validator" x="638" y="190">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+    <Package name="org.quasar.juse.api" x="459" y="64"/>
+    <Package name="org.quasar.juse.api.implementation" x="268" y="330">
+        <DependencyLink destination="org.quasar.juse.persistence"/>
+        <DependencyLink destination="org.quasar.toolkit"/>
+        <DependencyLink destination="org.quasar.juse.api"/>
+    </Package>
+    <Package name="org.quasar.m2dm" x="477" y="212">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+    <Package name="org.quasar.pimeta.loader" x="4" y="132">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+    <Package name="org.quasar.toolkit" x="225" y="408"/>
+    <Package name="org.quasar.bpmn2.validator.tests" x="830" y="213">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+    <Package name="org.quasar.juse.api.tests" x="155" y="164">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+    <Package name="org.quasar.juse.persistence" x="381" y="409"/>
+</PackageAnalysis>

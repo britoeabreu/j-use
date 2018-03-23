@@ -57,6 +57,7 @@ import org.tzi.use.uml.sys.MLinkObject;
 import org.tzi.use.uml.sys.MObject;
 import org.tzi.use.uml.sys.MSystemException;
 import org.tzi.use.uml.sys.MSystemState.DeleteObjectResult;
+import org.tzi.use.util.Log;
 
 /***********************************************************
  * @author fba 25 de Abr de 2012
@@ -74,6 +75,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createObject(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public MObject createObject(String objectId, String theClass)
 	{
 		return createObject(objectId, classByName(theClass));
@@ -84,6 +86,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createObject(java.lang.String, org.tzi.use.uml.mm.MClass)
 	 */
+	@Override
 	public MObject createObject(String objectId, MClass theClass)
 	{
 		assert theClass != null;
@@ -105,6 +108,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#deleteObject(org.tzi.use.uml.sys.MObject)
 	 */
+	@Override
 	public DeleteObjectResult deleteObject(MObject theObject)
 	{
 		assert theObject != null;
@@ -117,6 +121,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createLinkObject(java.lang.String, java.lang.String, java.util.List)
 	 */
+	@Override
 	public MLinkObject createLinkObject(String objectId, String theAssociativeClass, List<MObject> members)
 	{
 		return createLinkObject(objectId, associationClassByName(theAssociativeClass), members);
@@ -128,6 +133,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createLinkObject(java.lang.String, org.tzi.use.uml.mm.MAssociationClass,
 	 * java.util.List)
 	 */
+	@Override
 	public MLinkObject createLinkObject(String objectId, MAssociationClass theAssociativeClass, List<MObject> members)
 	{
 		assert theAssociativeClass != null;
@@ -151,6 +157,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#deleteLinkObject(org.tzi.use.uml.sys.MLinkObject)
 	 */
+	@Override
 	public DeleteObjectResult deleteLinkObject(MLinkObject theLinkObject)
 	{
 		assert theLinkObject != null;
@@ -164,6 +171,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#setObjectAttribute(org.tzi.use.uml.sys.MObject,
 	 * org.tzi.use.uml.mm.MAttribute, org.tzi.use.uml.ocl.value.Value)
 	 */
+	@Override
 	public void setObjectAttribute(MObject theObject, MAttribute theAttribute, Value attributeValue)
 	{
 		assert theObject != null;
@@ -178,6 +186,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#getObjectAttribute(org.tzi.use.uml.sys.MObject,
 	 * org.tzi.use.uml.mm.MAttribute)
 	 */
+	@Override
 	public Value getObjectAttribute(MObject theObject, MAttribute theAttribute)
 	{
 		assert theObject != null;
@@ -197,6 +206,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#createLink(org.tzi.use.uml.mm.MAssociation, java.util.List)
 	 */
+	@Override
 	public MLink createLink(MAssociation theAssociation, List<MObject> members)
 	{
 		assert theAssociation != null;
@@ -220,6 +230,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#deleteLink(org.tzi.use.uml.mm.MAssociation, java.util.List)
 	 */
+	@Override
 	public DeleteObjectResult deleteLink(MAssociation theAssociation, List<MObject> members)
 	{
 		assert theAssociation != null;
@@ -243,6 +254,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#objectByName(java.lang.String)
 	 */
+	@Override
 	public MObject objectByName(String objectId)
 	{
 		return getSystem().state().objectByName(objectId);
@@ -253,6 +265,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#classByName(java.lang.String)
 	 */
+	@Override
 	public MClass classByName(String className)
 	{
 		return getSystem().model().getClass(className);
@@ -263,6 +276,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#enumByName(java.lang.String)
 	 */
+	@Override
 	public EnumType enumByName(String enumName)
 	{
 		return getSystem().model().enumType(enumName);
@@ -273,6 +287,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#associationClassByName(java.lang.String)
 	 */
+	@Override
 	public MAssociationClass associationClassByName(String associationClassName)
 	{
 		return getSystem().model().getAssociationClass(associationClassName);
@@ -283,6 +298,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.use.api.USEfacade#associationByName(java.lang.String)
 	 */
+	@Override
 	public MAssociation associationByName(String associationName)
 	{
 		return getSystem().model().getAssociation(associationName);
@@ -293,6 +309,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#attributeByName(org.tzi.use.uml.sys.MObject, java.lang.String)
 	 */
+	@Override
 	public MAttribute attributeByName(MObject theObject, String attributeName)
 	{
 		assert theObject != null;
@@ -305,6 +322,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#invariantByName(java.lang.String)
 	 */
+	@Override
 	public MClassInvariant invariantByName(String invariantName)
 	{
 		for (MClassInvariant inv : getSystem().model().classInvariants())
@@ -319,6 +337,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allInstances(java.lang.String)
 	 */
+	@Override
 	public Set<MObject> allInstances(String theClass)
 	{
 		return allInstances(classByName(theClass));
@@ -329,6 +348,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allInstances(org.tzi.use.uml.mm.MClass)
 	 */
+	@Override
 	public Set<MObject> allInstances(MClass theClass)
 	{
 		return getSystem().state().objectsOfClass(theClass);
@@ -339,6 +359,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allClasses()
 	 */
+	@Override
 	public Collection<MClass> allClasses()
 	{
 		return getSystem().model().classes();
@@ -350,6 +371,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allAssociations()
 	 */
+	@Override
 	public Collection<MAssociation> allAssociations()
 	{
 		return getSystem().model().associations();
@@ -360,6 +382,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allObjects()
 	 */
+	@Override
 	public Collection<MObject> allObjects()
 	{
 		return getSystem().state().allObjects();
@@ -370,6 +393,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allLinks()
 	 */
+	@Override
 	public Collection<MLink> allLinks()
 	{
 		return getSystem().state().allLinks();
@@ -380,6 +404,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allInvariants()
 	 */
+	@Override
 	public Collection<MClassInvariant> allInvariants()
 	{
 		return getSystem().model().classInvariants();
@@ -390,6 +415,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allPreConditions()
 	 */
+	@Override
 	public Collection<MPrePostCondition> allPreConditions()
 	{
 		Collection<MPrePostCondition> result = new ArrayList<MPrePostCondition>();
@@ -404,6 +430,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#allPostConditions()
 	 */
+	@Override
 	public Collection<MPrePostCondition> allPostConditions()
 	{
 		Collection<MPrePostCondition> result = new ArrayList<MPrePostCondition>();
@@ -418,6 +445,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#annotations(org.tzi.use.uml.mm.MModelElement)
 	 */
+	@Override
 	public Map<String, MElementAnnotation> annotations(MModelElement element)
 	{
 		return element.getAllAnnotations();
@@ -428,6 +456,7 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#check(org.tzi.use.uml.mm.MClassInvariant)
 	 */
+	@Override
 	public boolean check(MClassInvariant anInvariant) throws RuntimeException
 	{
 		EvalContext context = new EvalContext(null, getSystem().state(), getSystem().varBindings(), null, "\t");
@@ -440,10 +469,12 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#checkStructure()
 	 */
+	@Override
 	public boolean checkStructure()
 	{
 		System.setOut(new java.io.PrintStream(new OutputStream()
 		{
+			@Override
 			public void write(int b)
 			{
 			}
@@ -457,10 +488,15 @@ public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFaca
 	 * 
 	 * @see org.quasar.juse.api.JUSE_ProgramingFacade#oclEvaluator(java.lang.String)
 	 */
+	@Override
 	public Value oclEvaluator(String expression)
 	{
 		assert expression.length() > 0;
 
+		Log.setTrace(false);
+		
+		Log.setDebug(false);
+		
 		Expression expr = OCLCompiler.compileExpression(getSystem().model(), getSystem().state(), new ByteArrayInputStream(
 						expression.getBytes()), "<input>", new PrintWriter(System.err), getSystem().varBindings());
 

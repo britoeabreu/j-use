@@ -5,8 +5,12 @@
 package org.quasar.pimeta.loader;
 
 
+import java.util.Set;
+
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
+import org.tzi.use.uml.mm.MClass;
+import org.tzi.use.uml.sys.MObject;
 
 
 /***********************************************************
@@ -15,7 +19,7 @@ import org.quasar.juse.api.implementation.ProgramingFacade;
  ***********************************************************/
 public final class PIMETA_Loader
 {
-	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.4";
+	private final static String	USE_BASE_DIRECTORY	= "D:/Google Drive/EclipseWorkspace/use-5.0.0";
 
 	 private final static String MODEL_DIRECTORY = "metamodels/pimeta";
 	 private final static String MODEL_FILE = "pimeta.use";
@@ -44,13 +48,21 @@ public final class PIMETA_Loader
 
 		api.compileSpecification(MODEL_FILE, true);
 
-		api.command("check");
+//		api.command("check");
 		
 		api.readSOIL(MODEL_DIRECTORY, SOIL_FILE, true);
 
-		api.command("info state");
-
-		api.command("info vars");
+//		api.command("info state");
+//
+//		api.command("info vars");
+		
+//		api.command("? DependencyType.allInstances->size");
+		
+		for (MClass aClass: api.allClasses())
+		{
+			System.out.println(aClass + " -> " + api.allInstances(aClass).size());
+		}
+			
 
 	}
 

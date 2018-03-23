@@ -66,6 +66,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements
 	 * .lang.String, java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String)
 	 */
+	@Override
 	public void javaGeneration(String author, String javaWorkspace,
 			String basePackageName, String businessLayerName,
 			String presentationLayerName, String persistenceLayerName,
@@ -203,6 +204,7 @@ public class PrototypeGeneratorFacade extends BasicFacade implements
 	 * org.quasar.juse.api.JUSE_PrototypeGeneratorFacade#storeState(java.lang
 	 * .String, java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
+	@Override
 	public void storeState(String javaWorkspace, String basePackageName,
 			String businessLayerName, String databaseDirectory) {
 		String classPath = basePackageName + "." + businessLayerName;
