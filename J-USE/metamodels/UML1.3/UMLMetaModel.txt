@@ -1,0 +1,498 @@
+class Attribute 
+
+operations
+--	ACV (c : Class)   : Boolean =
+--		(structuralFeature->exists(
+--			(type = c) or
+--			(feature.visibility = #PUBLIC) or
+--			(feature.visibility = #PROTECTED) and feature.owner.class.Descendants()->includes(c))		)
+
+--	ASV (p : Package) : Real =
+--		(AVN(p) -1) / (p.TC() -1)
+
+
+--	AUN (p : Package) : Integer =
+--		p.AllClasses()->
+--     		select(AllBehavioralFeatures().parameter.type.structuralFeature.attribute ->includes(self))->size()
+
+--	AVN (p : Package) : Integer =
+--		p.AllClasses()->iterate( elem: Class; acc: Integer = 0 | 
+--                                             if self.ACV(elem) then
+--                                                  acc + 1
+--                                              else
+--                                                   acc
+                                              endif)
+end
+
+
+class Operation
+attributes
+operations
+	OCV(c: Class)   : Boolean =
+		(behavioralFeature->exists(
+			(feature.owner = c) or
+			(feature.visibility= #PUBLIC) or
+			(feature.visibility = #PROTECTED) and feature.owner.class.Descendants()->includes(c))
+	OSV(p: Package) : Real =
+		(OVN(p) -1) / (p.TC() -1)
+	OUN(p: Package) : Integer =
+		p.AllClasses()->
+		select(AllBehavioralFeatures().parameter.type.behavioralFeature.operation->includes(self))->size()
+	OVN(p: Package) : Integer =
+		p.AllClasses()->iterate( elem: Class; acc: Integer = 0 | 
+                                       if self.OCV(elem) then
+                                           acc + 1
+                                       else
+                                           acc
+                                       endif)
+end
+
+
+class Class
+attributes
+operations
+--	CC () : Integer =
+--		Children()->size()
+--	DC () : Integer =
+--		Descendants()->size()
+--	PC () : Integer =
+--		Parents()->size()
+--	AC () : Integer =
+--		Ascendants()->size()
+--	ON () : Integer =
+--		NewOperations()->size()
+--	OI () : Integer =
+--		InheritedOperations()->size()
+--	OO () : Integer =
+--		OverridenOperations()->size()
+--	OD () : Integer =
+--		DefinedOperations()->size()
+--	OA () : Integer =
+--		AvailableOperations()->size()
+--	AN () : Integer =
+--		NewAttributes()->size()
+--	AI () : Integer =
+--		InheritedAttributes()->size()
+--	AO () : Integer =
+--		OverridenAttributes()->size()
+--	AD () : Integer =
+--		DefinedAttributes()->size()
+--	AA () : Integer =
+--		AvailableAttributes()->size()
+
+--	IsInternal(p : Package) : Boolean =
+--		(self.classifier.namespace.package = p)
+
+--	IsRoot() : Boolean =
+--		Parents()->isEmpty()
+
+--	IsLeaf() : Boolean =
+--		Children()->isEmpty()
+
+--	Children() : Set (Class) =
+--		Class.allInstances->select(classifier.powertypeRange.parent=self)->collect(specialization)
+
+--	Descendants() : Set (Class) =
+--		Children()->iterate(elem: Class; acc: Set(Class)= Children() | 
+					  acc-> union (elem.Descendants()))
+	
+--	Parents() : Set (Class) = 
+--		Class.allInstances->select(classifier.powertypeRange.child =self)->collect(generalization)
+
+--	Ascendants() : Set (Class) =
+--		Parents()-> iterate( elem: Class; acc: Set(Class) = Parents() |
+					   acc-> union (elem.Ascendants()))
+
+--	CoupledClasses() : Set (Class) =
+--		classifier.generalizableElement.ModelElement.parameter.type->union(
+--                   AllStrucuturalFeatures().type->union(
+--                   AllBehavioralFeatures().parameter.type->union(
+--                   classifier.associationEnd.type)))->asSet()
+
+--	NewOperations() : Set (Operation) =
+--		DefinedOperations() - InheritedOperations()
+
+
+--	InheritedOperations() : Set (Operation) =
+--		Ascendants()->iterate(elem: Class; acc: Set(Operation) = oclEmpty(Set(Operation)) |
+--                 		            acc-> union (elem.AllBehavioralFeatures().operation))
+
+
+--	OverridenOperations() : Set (Operation) =
+--		DefinedOperations()-> intersection (InheritedOperations())
+
+--	DefinedOperations() : Set (Operation) =
+--		AllBehavioralFeatures().operation
+
+--	AvailableOperations() : Set (Operation) =
+--		NewOperations()-> union (InheritedOperations())
+
+--	NewAttributes() : Set (Attribute) =
+--		DefinedAttributes() - InheritedAttributes()
+
+
+--	InheritedAttributes() : Set (Attribute) =
+--		Ascendants()->iterate(elem: Class; acc: Set(Attribute)=oclEmpty(Set(Attribute)) |
+--					    acc-> union (elem.AllStrucuturalFeatures().attribute))
+
+
+--	OverridenAttributes() : Set (Attribute) =
+--		DefinedAttributes()-> intersection ( InheritedAttributes() )
+
+--	DefinedAttributes() : Set (Attribute) =
+--		AllStructuralFeatures().attribute
+
+--	AvailableAttributes() : Set (Attribute) =
+--		NewAttributes()-> union (InheritedAttributes())
+
+--	AllStructuralFeatures() : Set(StructuralFeatures) = 
+--		classifier.feature.structuralFeature->asSet()
+
+--	AllBehavioralFeatures(): Set(BehavioralFeature) =
+--		classifier.feature.behavioralFeature->asSet()
+
+end
+
+
+
+class Package
+attributes
+operations
+--	TC() : Integer =
+--		AllClasses()->size()
+--	TON () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.ON())
+--	TOO () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.OO())
+--	TOD () : Integer = 
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.OD())
+--	TOI () : Integer = 
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.OI())
+--	TOA () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.OA())	
+--	TAN () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.AN())
+--	TAO () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.AO())
+--	TAD () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.AD())
+--	TAI () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.AI())		
+--	TAA () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.AA())	
+--	IL (p: package): Integer =
+--		AllClasses().Parents()-> select( IsInternal(p) )->size()
+--	TIL () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.PC())
+--	CL () : Integer =
+--		self.SupplierClasses(p)->size()
+--	TCL () : Integer =
+--		AllClasses()->iterate(elem: Class; acc: Integer = 0 |
+--                 	acc + elem.CoupledClasses()->size())
+
+--	AllClasses () : Set (Class) =
+--		namespace.classifier.class->asSet()
+
+--	BaseClasses (p: Package) : Set (Class) =
+--		AllClasses().classifier.powertypeRange->select(IsInternal(p))->asSet()
+
+
+--	SupplierClasses (p: Package) : Set (Class)  =
+--		AllClasses()-> iterate( elem: Class; acc: Set(Class)=oclEmpty(Set (Class)) |
+--			acc->union ( elem.CoupledClasses()-> select( IsInternal(p) )))
+
+
+--	RelatedClasses (p: Package) : Set (Class) =
+--		BaseClasses(p)-> union( SupplierClasses(p) )
+
+
+-- MOOD2 Metrics
+--	AIF () : Real =
+--		self.TAI() / self.TAA()
+--	OIF () : Real =
+--		self.TOI() / self.TOA()
+--	IIF () : Real =
+--		self.IL(self) / self.TIL()
+--	AHF () : Real =
+--		AllClasses().AllStructuralFeatures().attribute->iterate(elem:Attribute; acc:Real=0 | acc + 1 - elem.ASV(self)) / self.TAD()
+--	OHF () : Real =
+--		(AllClasses().AllBehavioralFeatures().operation->
+--			iterate(elem: Operation; acc: Real=0 | acc + 1 - elem.OSV(self)))/ self.TOD()
+--	AHEF () : Real =
+--		AllClasses().AllStructuralFeatures().attribute->iterate(elem: Attribute; acc: Integer=0 | acc + elem.AUN(self))
+--                / AllClasses().AllStructuralFeatures().attribute->iterate(elem: Attribute; acc: Integer=0 | acc + elem.AVN(self))
+--	OHEF () : Real =
+--		AllClasses().AllBehavioralFeatures().operation->iterate(elem: Operation; acc: Integer=0 | acc + elem.OUN(self) )
+--    		/ AllClasses().AllBehavioralFeatures().operation->iterate(elem: Operation; acc: Integer=0 | acc + elem.OVN(self) )
+--	BPF () : Real =
+--		TOO() / TOA()
+
+
+
+
+
+
+	TFD () : Integer = 
+		allClasses().allFeatures()->asSet()->size
+	FHF () : Real =
+		(allClasses().allFeatures()->
+			iterate(elem: Feature; acc: Real=0 | acc + 1 - self.FSV(elem)))/ self.TFD()
+	FHEF () : Real =
+		allClasses().allFeatures()->iterate(elem: Feature; acc: Integer=0 | acc + self.FUN(elem))
+                / allClasses().allFeatures()->iterate(elem: Feature; acc: Integer=0 | acc + self.FVN(elem))
+
+--context Package::FHF(): Percentage
+context Package::OHF(): Real
+	pre TC_Pos: 
+		self.TC() > 1
+	pre TFD_Pos: 
+		self.TFD() > 0
+
+--context Package::FHEF(): Percentage
+context Package::FHEF(): Real
+	pre FHEF_pre: 
+		allClasses().allFeatures()->iterate(elem: Feature; acc: Integer=0 | acc + self.FVN(elem)) > 0
+
+
+
+
+
+
+--!!! É possível navegar nessa direção em PPF?
+	PPF () : Real =
+		AllClasses()->select(classifier.parameter->notEmpty())->size()/ TC()
+
+
+
+--	sqrt (x: Real) : Real = x
+--	CCF () : Real =
+--		sqrt( self.CL(self) / ( ( self.TC() * self.TC() ) - self.TC() ) )
+	
+--	ICF () : Real =
+--		self.CL(self) / self.TCL()
+--	EIF (p : Package) : Real =
+--		self.IL(p) / self.TIL()
+--	ECF (p: Package) : Real =
+--		self.CL(p) / self.TCL()
+--	PRF (p : Package) : Real =
+--		RelatedClasses(p).AvailableOperations()->
+--			iterate(elem: Operation; acc: Real = 0 | acc + elem.OSV(self) )
+--			/ (AllClasses().AvailableOperations() -> union 
+--		   	(RelatedClasses(s).AvailableOperations()))->
+--					iterate(elem: Operation; acc: Real = 0 | acc + elem.OSV(self) )
+--	ARF (p : Package) : Real =
+--		RelatedClasses(p).AvailableOperations()->select(OUN(self)>0)->
+--				iterate(elem: Operation; acc: Real=0 | acc + elem.OSV(self)) 
+--          	/ ( AllClasses().AvailableOperations() -> union 
+--           	(RelatedClasses(p).AvailableOperations()))->
+						iterate(elem: Operation; acc: Real=0 | acc + elem.OSV(self))
+--	REF (p : Package) : Real =
+--		self.ARF(p) / self.PRF(p)
+
+--	CL (s : Package) : Integer = -- Devem vir definidas à parte, na dissertação
+--		self.SupplierClasses(s)->size()
+--	TCL () : Integer = -- Devem vir definidas à parte, na dissertação
+--		AllClasses()-> iterate(elem: Class; acc: Integer = 0 |
+--			acc + elem.CoupledClasses()->size())
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+--class UnscopedAttribute
+--attributes
+--	attribute_id : String
+--end
+
+
+-- MGOUL Date não existia no modelo original, mas é necessária para o parser ocl
+--class Date
+--end
+
+
+-- MGOUL Time não existia no modelo original, mas é necessária para o parser ocl
+--class Time
+--end
+
+
+
+-- constraints
+constraints
+
+-- MOOD2 Set OCL package
+
+--context package::AIF(): Percentage
+context package::AIF(): Real
+	pre AIF_pre: 
+		self.TAA() > 0
+
+--context package::OIF(): Percentage
+context package::OIF(): Real
+	pre OIF_TOA_pre: 
+		self.TOA() > 0
+
+--context package::IIF(): Percentage
+context package::IIF(): Real
+	pre IIF_pre: 
+		self.TIL() > 0 
+
+--context package::AHF(): Percentage
+context package::AHF(): Real
+	pre AHF_TC_pos: 
+		self.TC() > 1
+	pre AHF_TAD_pos: 
+		self.TAD() > 0
+
+--context package::OHF(): Percentage
+context package::OHF(): Real
+	pre TC_Pos: 
+		self.TC() > 1
+	pre TOD_Pos: 
+		self.TOD() > 0
+
+--context package::AHEF(): Percentage
+context package::AHEF(): Real
+	pre AHEF_pre: 
+		AllClasses().AllStructuralFeatures().attribute->iterate(elem: Attribute; acc: Integer=0 | acc + elem.AVN(self)) > 0
+
+--context package::OHEF(): Percentage
+context package::OHEF(): Real
+	pre OEHF_Pre: 
+		AllClasses().AllBehavioralFeatures().operation->
+			iterate(elem: Operation; acc: Integer=0 | acc + elem.OVN(self) ) > 0 
+
+--context package::BPF(): Percentage
+context package::BPF(): Real
+	pre BPF_pre: 
+		TOA() > 0
+
+--context package::PPF(): Percentage
+context package::PPF(): Real
+	pre PPF_pre: 
+		self.TC() > 0
+
+--context package::CCF(): Percentage
+context package::CCF(): Real
+	pre CCF_pre: 
+		self.TC() > 1
+
+--context package::ICF(): Percentage
+context package::ICF(): Real
+	pre ICF_pre:
+		self.TCL() > 0
+
+--context package::EIF(p: package): Percentage
+context package::EIF(p: package): Real
+	pre EIF_pre_1: 
+		self.importedElement->includes(p)
+	pre EIF_pre_2: 
+		self.TIL() > 0
+
+--context package::ECF(p: package): Percentage
+context package::ECF(p: package): Real
+	pre ECF_pre_1: 
+		self.importedElement->includes(p)
+	pre ECF_pre_2: 
+		self.TCL() > 0
+
+--context package::PRF(p: package): Percentage
+context package::PRF(p: package): Real
+	pre PRF_pre1: 
+		self.importedElement->includes(p)
+	pre PRF_pre2: 
+		AllClasses().AvailableOperations() -> union (RelatedClasses(s).AvailableOperations())  ->
+			iterate(elem: Operation; acc: Real = 0 | acc + elem.OSV(self) ) > 0
+
+--context package::ARF(p: package): Percentage
+context package::ARF(p: package): Real
+	pre ARF_pre_1: 
+		self.importedElement->includes(p)
+	pre ARF_pre_2: 
+		( AllClasses().AvailableOperations() -> union 
+       (RelatedClasses(p).AvailableOperations()))->
+			iterate(elem: Operation; acc: Real=0 | acc + elem.OSV(self)) > 0
+
+--context package::REF(p: package): Percentage
+context package::REF(p: package): Real
+	pre REF_pre_1: 
+		self.importedElement->includes(p)
+	pre REF_pre_2: 
+		self.PRF(p) > 0
+
+
+
+
+-- Funções OCL da biblioteca MOODLib
+--context Attribute::ASV(p: package): Real
+--	pre ASV_pre: 
+--		p.TC() > 1
+--	-- deve existir pelo menos outra classe além daquela onde o atributo está definido
+--
+--context Operation::OSV(P: package): Real
+--	pre OSV_pre: 
+--	p.TC() > 1
+
+
+
+--Alterações
+
+Contexto do Pacote
+1- Função isInternal foi definida ao nível do pacote e não da classe (era impossível definí-la ao nível de Class ou Classifier)
+2- Criada função allClassesAsClassifiers
+3- baseClasses (p:package) passa a chamar-se baseClassesInPackage
+4- Criada a função baseClasses para o pacote corrente
+5- Criadas AVN, ASV, AUN
+6- Funções AVN, ASV, AUN generalizadas para FVN, FSV, FUN
+
+Contexto do GeneralizableElement
+0- Função parent() está errada, pois 
+
+use> ?Transaction_Class.parent()
+-> Set{@Burning_Class,@Earning_Class} : Set(GeneralizableElementImpl)
+Devido a isso, foi criada parents()
+
+1- Criação da função children()
+2- Criação da função parents()
+3- Criação de isRoot()
+4- Criação de isLeaf()
+5- Criação de descendant()
+6- Criação de ascendant()
+7- Criação de CC, OC, PC, AC
+
+Contexto da Classe
+1- children(), parent(), isRoot(), isLeaf(), descendant(), ascendant() passaram para o contexto de GeneralizableElementImpl
+2- coupledClasses() passou para Classifier.
+3- Criação das funções de contagem de classes, sobre Classifier e GeneralizableElementImpl
+
+Contexto do Classifier
+1- Criação de coupledClasses()
+2- Criação da função definedFeatures()
+3- Função allFeatures não funciona. Ver testes 38, 39, 40 e 41. Para corrigir esse problema foi criada a função inheritedFeatures()
+4- Criação das funções  new{Attributes, Operations, Methods, Features};
+			defined{Attributes, Operations, Methods, Features};
+			inherited{Attributes, Operations, Methods, Features};
+			availablenew{Attributes, Operations, Methods, Features};
+			overridden{Attributes, Operations, Methods, Features}
+5- Criação de ON, OI, OO, OD, OA, AN, AI, OA, AD, AA 
+6- Criação de IL, TIL, CL, TCL, Supplier and Related Classes
+7- Criação de ACV, FCV. FCV é nova e substitui ACV e OCV

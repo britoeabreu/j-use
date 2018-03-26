@@ -1,0 +1,247 @@
+Tests:
+
+1- ?Logical_View_Package.allClasses()
+2- ?Logical_View_Package.isInternal(LoyaltyAccount_Class)
+3- ?Logical_View_Package.isInternal(Burning_Class)
+4- ?Logical_View_Package.isInternal(Double_Class)
+5- ?Logical_View_Package.allClassesAsClassifiers()
+6- ?Logical_View_Package.baseClasses()
+7- ?Logical_View_Package.baseClassesinPackage(Logical_View_Package)
+8- ?Logical_View_Package.TC()
+9- ?Transaction_Class.isRoot()
+10- ?Transaction_Class.children()
+11- ?Transaction_Class.parents()
+12- ?Burning_Class.isRoot()
+13- ?Burning_Class.children()
+14- ?Burning_Class.parents()
+
+OK Ate 14 correto na versao 2!
+
+15- ?Burning_Class.isLeaf()
+16- ?Transaction_Class.isLeaf()
+17- ?Date_Class.isLeaf()
+18- ?Transaction_Class.descendants()
+19- ?Transaction_Class.ascendants()
+20- ?Burning_Class.descendants()
+21- ?Burning_Class.ascendants()
+
+OK ate 21 na versao 3
+
+22- ?Transaction_Class.allAssociations()
+23- ?Transaction_Class.allOppositeAssociationEnds()
+24- ?Transaction_Class.coupledClasses()
+25- ?LoyaltyProgram_Class.coupledClasses()
+26- ?Membership_Class.coupledClasses()
+27- ?Membership_Class.allCurrentFeatures()
+28- ?Membership_Class.allFeatures()
+29- ?Membership_Class.allOperations()
+30- ?Membership_Class.allMethods()
+31- ?Membership_Class.allAttributes()
+32- // Não existe mais! ?Transaction_Class.allCurrentFeatures()
+33- ?Transaction_Class.allFeatures()
+34- ?Transaction_Class.allOperations()
+35- ?Transaction_Class.allMethods()
+36- ?Transaction_Class.allAttributes()
+37- ?Burning_Class.definedFeatures()
+38- ?Burning_Class.allFeatures()
+39- ?Burning_Class.allOperations()
+40- ?Burning_Class.allMethods()
+41- ?Burning_Class.allAttributes()
+42- ?Burning_Class.inheritedFeatures()
+43- ?Burning_Class.definedOperations()
+44- ?Burning_Class.inheritedOperations()
+45- ?Burning_Class.definedMethods()
+46- ?Burning_Class.inheritedMethods()
+47- ?Burning_Class.definedAttributes()
+48- ?Burning_Class.inheritedAttributes()
+
+49- ?Transaction_Class.definedFeatures()
+50- ?Transaction_Class.inheritedFeatures()
+51- ?Transaction_Class.newFeatures()
+52- ?Transaction_Class.availableFeatures()
+53- ?Transaction_Class.overriddenFeatures()
+54- ?Transaction_Class.definedOperations()
+55- ?Transaction_Class.inheritedOperations()
+56- ?Transaction_Class.newOperations()
+57- ?Transaction_Class.availableOperations()
+58- ?Transaction_Class.overriddenOperations()
+59- ?Burning_Class.definedFeatures()
+60- ?Burning_Class.inheritedFeatures()
+61- ?Burning_Class.newFeatures()
+62- ?Burning_Class.availableFeatures()
+63- ?Burning_Class.overriddenFeatures()
+64- ?Burning_Class.definedOperations()
+65- ?Burning_Class.inheritedOperations()
+66- ?Burning_Class.newOperations()
+67- ?Burning_Class.availableOperations()
+68- ?Burning_Class.overriddenOperations()
+
+69- ?Transaction_Class.definedMethods()
+70- ?Transaction_Class.newMethods()
+71- ?Transaction_Class.inheritedMethods()
+72- ?Transaction_Class.availableMethods()
+73- ?Transaction_Class.overriddenMethods()
+74- ?Transaction_Class.availableAttributes()
+75- ?Transaction_Class.newAttributes()
+76- ?Transaction_Class.definedAttributes()
+77- ?Transaction_Class.inheritedAttributes()
+78- ?Transaction_Class.overriddenAttributes()
+79- ?Burning_Class.availableAttributes()
+80- ?Burning_Class.newAttributes()
+81- ?Burning_Class.definedAttributes()
+82- ?Burning_Class.inheritedAttributes()
+83- ?Burning_Class.overriddenAttributes()
+
+Ok até 83 na versão 4!
+
+
+Answers: 
+1- 
+-> Set{ @Burning_Class,
+	@CustomerCard_Class,
+	@Customer_Class,
+	@Date_Class,
+	@Earning_Class,
+	@LoyaltyAccount_Class,
+	@LoyaltyProgram_Class,
+	@Membership_Class,
+	@ProgramPartner_Class,
+	@ServiceLevel_Class,
+	@Service_Class,
+	@Transaction_Class} : Set(MMClass)
+
+2- true
+3- true
+4- false
+5- the same as 1
+6- 
+-> Set{@Transaction_Class} : Set(Classifier)
+
+7-
+-> Set{@Transaction_Class} : Set(Classifier)
+
+8- 12
+9- true
+10- Set{ @Burning_Class,@Earning_Class} : Set(GeneralizableElementImpl)
+11- Set{} : Set(GeneralizableElementImpl)
+12- false
+13- Set{} : Set(GeneralizableElementImpl)
+14- Set{@Transaction_Class} : Set(GeneralizableElementImpl)
+15- true
+16- false
+17- true
+18- Set{ @Burning_Class,@Earning_Class} : Set(GeneralizableElementImpl)
+19- Set{} : Set(GeneralizableElementImpl)
+20- Set{} : Set(GeneralizableElementImpl)
+21- Set{@Transaction_Class} : Set(GeneralizableElementImpl)
+22-
+-> Set{@Transaction_CustomerCard_9_Association,@Transaction_LoyaltyAccount_8_Ass
+ociation,@Transaction_Service_12_Association} : Set(Association)
+
+23-
+-> Set{@Transaction_CustomerCard_9_CustomerCard_AssociationEnd,@Transaction_Loya
+ltyAccount_8_LoyaltyAccount_AssociationEnd,@Transaction_Service_12_Service_Assoc
+iationEnd} : Set(AssociationEnd)
+
+24-
+-> Set{@CustomerCard_Class,@LoyaltyAccount_Class,@Service_Class} : Set(Classifie
+r)
+
+25-
+-> Set{@Customer_Class,@ProgramPartner_Class,@ServiceLevel_Class} : Set(Classifi
+er)
+
+26-
+-> Set{@CustomerCard_Class,@LoyaltyAccount_Class,@ServiceLevel_Class} : Set(Clas
+sifier)
+
+27- -> Set{} : Set(Feature)
+28- -> Set{} : Set(Feature)
+29- -> Set{} : Set(Feature)
+30- -> Set{} : Set(Feature)
+31- -> Set{} : Set(Feature)
+32-
+-> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+
+33-
+-> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+
+34- -> Set{@Transaction_program_Operation} : Set(Operation)
+35- -> Set{} : Set(Method)
+36-
+-> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+
+37- -> Set{} : Set(Feature)
+38- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+
+39- -> Set{@Transaction_program_Operation} : Set(Operation)
+40- -> Set{} : Set(Method)
+41- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+
+42-
+-> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+
+43- -> Set{} : Set(Operation)
+44- -> Set{@Transaction_program_Operation} : Set(Operation)
+45- -> Set{} : Set(Method)
+46- -> Set{} : Set(Method)
+47- -> Set{} : Set(Attribute)
+48- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+
+49- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+50- -> Set{} : Set(Feature)
+51- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+52- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+53- -> Set{} : Set(Feature)
+54- -> Set{@Transaction_program_Operation} : Set(Operation)
+55- -> Set{} : Set(Operation)
+56- -> Set{@Transaction_program_Operation} : Set(Operation)
+57- -> Set{@Transaction_program_Operation} : Set(Operation)
+58- -> Set{} : Set(Operation)
+59- -> Set{} : Set(Feature)
+60- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+61- -> Set{} : Set(Feature)
+62- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute,@Transaction_pr
+ogram_Operation} : Set(Feature)
+63- -> Set{} : Set(Feature)
+64- -> Set{} : Set(Operation)
+65- -> Set{@Transaction_program_Operation} : Set(Operation)
+66- -> Set{} : Set(Operation)
+67- -> Set{@Transaction_program_Operation} : Set(Operation)
+68- -> Set{} : Set(Operation)
+
+69- ->Set{} : Set(Method)
+70- ->Set{} : Set(Method)
+71- ->Set{} : Set(Method)
+72- ->Set{} : Set(Method)
+73- ->Set{} : Set(Method)
+74- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+75- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+76- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+77- -> Set{} : Set(Attribute)
+78- -> Set{} : Set(Attribute)
+79- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+80- -> Set{} : Set(Attribute)
+81- -> Set{} : Set(Attribute)
+82- -> Set{@Transaction_date_Attribute,@Transaction_points_Attribute} : Set(Attribut
+e)
+83- -> Set{} : Set(Attribute)
+
+
+
+

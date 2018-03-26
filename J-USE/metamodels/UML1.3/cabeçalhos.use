@@ -1,0 +1,246 @@
+
+abstract class ModelElementImpl < Element
+operations
+  model_() : Set(Model) = 
+  isTemplate() : Boolean = 
+  isInstantiated() : Boolean = 
+  templateArguments() : Set(ModelElementImpl) = 
+  supplier() : Set(ModelElementImpl) =
+  allSuppliers() : Set(ModelElementImpl) = 
+  client() : Set(ModelElementImpl) =
+  allClients() : Set(ModelElementImpl) = 
+end
+
+abstract class Feature < ModelElementImpl
+operations
+  FUN() : Integer =
+end
+
+abstract class NamespaceImpl < ModelElementImpl
+operations
+  contents() : Set(ModelElementImpl) =
+  allContents() : Set(ModelElementImpl) = 
+  allVisibleElements() : Set(ModelElementImpl) =
+  allSurroundingNamespaces() : Set(NamespaceImpl) =
+end
+
+abstract class GeneralizableElementImpl < ModelElementImpl
+operations
+  parent() : Set(GeneralizableElementImpl) =
+  allParents() : Set(GeneralizableElementImpl) =
+  isRoot() : Boolean =
+  isLeaf() : Boolean =
+  children() : Set(GeneralizableElementImpl) =
+  descendants() : Set (GeneralizableElementImpl) =
+  parents() : Set(GeneralizableElementImpl) =
+  ascendants() : Set (GeneralizableElementImpl) =
+  CC () : Integer =
+  DC () : Integer =
+  PC () : Integer =
+  AC () : Integer =
+
+  CN () : Integer =
+  DN () : Integer =
+  PN () : Integer =
+  AN () : Integer =
+
+end
+
+abstract class Classifier < NamespaceImpl, GeneralizableElementImpl
+operations
+  allOperations() : Set(Operation) =
+  allMethods() : Set(Method) =
+  allAttributes() : Set(Attribute) =
+  associations() : Set(Association) =
+  allAssociations() : Set(Association) =
+  oppositeAssociationEnds() : Set(AssociationEnd) =
+  allOppositeAssociationEnds() : Set (AssociationEnd) =
+  specification() : Set(Classifier) = 
+  allContents() : Set(ModelElementImpl) =
+  allDiscriminators() : Set(String) =
+
+  coupledClasses() : Set (Classifier) =
+
+  definedFeatures() : Set(Feature) =
+  directlyInheritedFeatures() : Set(Feature) =
+  allFeatures() : Set(Feature) =
+  allInheritedFeatures() : Set(Feature) =
+  newFeatures() : Set (Feature) =
+  overriddenFeatures() : Set (Feature) =
+
+  definedOperations() : Set(Operation) =
+  directlyInheritedOperations() : Set(Operation) =
+  allInheritedOperations() : Set(Operation) =
+  inheritedOperations() : Set(Operation) =
+  newOperations() : Set (Operation) =
+  overriddenOperations() : Set (Operation) =
+
+  definedAttributes() : Set(Attribute) =
+  directlyInheritedAttributes() : Set(Attribute) =
+  allInheritedAttributes() : Set(Attribute) =
+  inheritedAttributes() : Set(Attribute) =  allInheritedAttributes()
+  newAttributes() : Set (Attribute) =
+  overriddenAttributes() : Set (Attribute) =
+
+  ON () : Integer =
+  OI () : Integer =
+  OO () : Integer =
+  OD () : Integer =
+  OA () : Integer =
+  AN () : Integer =
+  AI () : Integer =
+  AO () : Integer =
+  AD () : Integer =
+  AA () : Integer =
+
+  ACV (a : Attribute) : Boolean =
+	FCV(a)
+
+  OCV (o : Operation) : Boolean =
+	FCV(o)
+
+  FCV (f : Feature) : Boolean =
+	self.allFeatures()->exists(
+		(f.owner = self) or
+		(f.visibility = #public) or
+		((f.visibility = #protected) and 
+			(self.ascendants().oclAsType(Classifier).allFeatures()-> includes(f))))
+	-- One class without features could access a public feature. If the feature is public, all classes in the package could access it, even empty classes (that, in pratice, do not exist).
+	or ((self.allFeatures() = oclEmpty(Set(Feature))) and (f.visibility = #public))
+
+  NAN (): Integer = AN()
+  DAN (): Integer = AD()
+  IAN (): Integer = AI()
+  OAN (): Integer = AO()
+  AAN (): Integer = AA()
+  NON (): Integer = ON()
+  DON (): Integer = OD()
+  ION (): Integer = OI()
+  OON (): Integer = OO()
+  AON (): Integer = OA()
+
+end
+
+abstract class BehavioralFeature < Feature
+operations
+  hasSameSignature(b : BehavioralFeature) : Boolean =
+  matchesSignature(b : BehavioralFeature) : Boolean =
+end
+
+class Attribute < StructuralFeature
+operations
+   AUN() : Integer =
+end
+
+class Operation < BehavioralFeature
+operations
+   OUN() : Integer =
+end
+
+
+class Association < Relationship, GeneralizableElementImpl
+operations
+  allConnections() : Set(AssociationEnd) =
+end
+
+class AssociationClass < MMClass, Association
+operations
+  allConnections() : Set(AssociationEnd) =
+end
+
+class Package < NamespaceImpl, GeneralizableElementImpl
+operations
+  contents() : Set(ModelElementImpl) = 
+  allImportedElements() : Set(ModelElementImpl) = 
+  allContents() : Set(ModelElementImpl) = 
+
+  isInternal(c : MMClass) : Boolean =
+  allClasses () : Set (MMClass) =
+  baseClasses () :  Set (Classifier) =
+  baseClassesInPackage (p : Package) :  Set (Classifier) =
+  supplierClasses () : Set (Classifier)  =
+  supplierClassesInPackage (p : Package) : Set (Classifier)  =
+  relatedClasses (p : Package) : Set (Classifier) =
+
+  TC() : Integer =
+  CN() : Integer = 
+
+  TON () : Integer =
+  PNON () : Integer =
+
+  TOO () : Integer =
+  POON () : Integer = 
+
+  TOD () : Integer = 
+  PDON () : Integer = 
+
+  TOI () : Integer = 
+  PION () : Integer = 
+
+  TOA () : Integer =
+  PAON () : Integer = 
+
+  TAN () : Integer =
+  PNAN () : Integer = 
+
+  TAO () : Integer =
+  POAN () : Integer = 
+
+  TAD () : Integer =
+  PDAN () : Integer = 
+
+  TAI () : Integer =
+  PIAN () : Integer = 
+
+  TAA () : Integer =
+  PAAN () : Integer = 
+
+  IL (p : Package): Integer =
+  EILN (p: Package) : Integer = 
+
+  TIL () : Integer =
+  IILN () : Integer = 
+
+  CL (p : Package) : Integer =
+  ECLN (p: Package) : Integer = 
+
+  TCL () : Integer =
+  ICLN () : Integer = 
+
+  AVN (a : Attribute) : Integer =
+  APV (a : Attribute) : Real =
+  OVN (o : Operation) : Integer =
+  OPV (o : Operation) : Real =
+  FVN (f : Feature) : Integer =
+  FPV (f : Feature) : Real =
+  FUN (f : Feature) : Integer =
+
+
+-- MOOD2 Metrics
+  AIF () : Real =
+  OIF () : Real =
+  IIF () : Real =
+  AHF () : Real =
+  OHF () : Real =
+  AHEF () : Real =
+  OHEF () : Real =
+  FHEF () : Real =
+  BPF () : Real =
+  sqrt (x: Real) : Real = 
+  CCF () : Real =
+  ICF () : Real =
+  EIF (p : Package) : Real =
+  ECF (p: Package) : Real =
+  PRF (p : Package) : Real =
+  ARF (p : Package) : Real =
+  REF (p : Package) : Real =
+  PPF () : Real =
+end
+
+
+class Subsystem < Classifier, Package
+operations
+  allSpecificationElements() : Set(ModelElementImpl) = 
+  contents() : Set(ModelElementImpl) = 
+end
+

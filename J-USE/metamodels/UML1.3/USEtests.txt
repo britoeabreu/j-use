@@ -1,0 +1,72 @@
+Para calcular métricas sobre o modelo do RoyalLoyal, usando o metamodelo do GOODLY:
+
+1- Iniciar Use nogui
+2- open C:\Documents and Settings\aline\My Documents\Thesis\Metrics and Use\RoyalLoyal\royalloyal.use
+3- open C:\Documents and Settings\aline\My Documents\Thesis\Metrics and use\GOODLY\goodly_ocl.use
+4- read C:\Documents and Settings\aline\My Documents\Thesis\Metrics and use\RoyalLoyal\royalloyal.cmd
+5- obter métricas perguntando:
+   use> ? RoyalLoyal.AllClasses()
+   use> ? RoyalLoyal.TOD()
+   use> ? RoyalLoyal.EIF(RoyalLoyal)
+   etc
+
+-----------------------------------------------------------
+Tests:
+
+Algo estranho aqui:
+// 1- ? LoyaltyProgram_designation.ACV(Transaction)     
+// 2- ? Customer_name.ACV(LoyaltyProgram)
+// 3- ? Customer_name.ACV(CustomerCard)
+// 4- ? Customer_name.ACV(Customer)
+// 5- ? Transaction_points.ACV(Transaction)
+
+6-  ? Transaction_program.OCV(Transaction)
+7-  ? Transaction_program.OCV(Burning)
+8-  ? Transaction.Children()
+9-  ? Transaction.IsInternal(RoyalLoyal)
+10- ? Transaction.IsRoot()
+11- ? Transaction.Descendants()
+12- ? Transaction.Parents()
+13- ? Transaction.Ascendants()
+
+// 14- ? Transaction.CoupledClasses()
+
+15- ? Transaction.NewOperations()
+16- ? Transaction.InheritedOperations()
+17- ? Transaction.OverridenOperations()
+18- ? Transaction.DefinedOperations()
+19- ? Transaction.AvailableOperations()
+20- ? Transaction.NewAttributes()
+21- ? Transaction.InheritedAttributes()
+22- ? Transaction.OverridenAttributes()
+23- ? Transaction.DefinedAttributes()
+24- ? Transaction.AvailableAttributes()
+25-
+
+Results:
+
+1-  false
+2-  false
+3-  false
+4-  false 
+5-  false
+6-  error
+7-  error
+8-  Set{@Burning,@Earning} : Set(Class)
+9-  true
+10- true
+11- Set{@Burning,@Earning} : Set(Class)
+12- Set{} : Set(Class)
+13- Set{} : Set(Class)
+14- Undefined : Set(Class)
+15- Set{@Transaction_program} : Set(Operation)
+16- Set{} : Set(Operation)
+17- Set{} : Set(Operation)
+18- Set{@Transaction_program} : Set(Operation)
+19- Set{@Transaction_program} : Set(Operation)
+20- Set{@Transaction_date, @Transaction_points} : Set(Attributes)
+21- Set{} : Set(Attribute)
+22- Set{} : Set(Attribute)
+23- Set{@Transaction_date, @Transaction_points} : Set(Attributes)
+24- Set{@Transaction_date, @Transaction_points} : Set(Attributes)
+25-

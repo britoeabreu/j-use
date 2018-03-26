@@ -1,0 +1,209 @@
+		Tests				Answers
+1- ?Transaction_Class.CC()			2
+2- ?Transaction_Class.DC()			2
+3- ?Transaction_Class.PC()			0
+4- ?Transaction_Class.AC()			0
+5- ?Transaction_Class.ON()			1
+6- ?Transaction_Class.OI()			0
+7- ?Transaction_Class.OO()			0
+8- ?Transaction_Class.OD()			1
+9- ?Transaction_Class.OA()			1
+10- ?Transaction_Class.AN()			2
+11- ?Transaction_Class.AI()			0
+12- ?Transaction_Class.AO()			0
+13- ?Transaction_Class.AD()			2
+14- ?Transaction_Class.AA()			2
+15- ?Burning_Class.CC()				0 
+16- ?Burning_Class.DC()				0
+17- ?Burning_Class.PC()				1
+18- ?Burning_Class.AC()				1
+19- ?Burning_Class.ON()				0
+20- ?Burning_Class.OI()				1
+21- ?Burning_Class.OO()				0
+22- ?Burning_Class.OD()				0
+23- ?Burning_Class.OA()				1
+24- ?Burning_Class.AN()				0
+25- ?Burning_Class.AI()				2
+26- ?Burning_Class.AO()				0
+27- ?Burning_Class.AD()				0
+28- ?Burning_Class.AA()				2
+29- ?Logical_View_Package.TC()			12
+30- ?Logical_View_Package.TON()			16
+31- ?Logical_View_Package.TOO()			0
+32- ?Logical_View_Package.TOD()			16
+33- ?Logical_View_Package.TOI()			2
+34- ?Logical_View_Package.TOA()			18
+35- ?Logical_View_Package.TAN()			23
+36- ?Logical_View_Package.TAO()			0
+37- ?Logical_View_Package.TAD()			23
+38- ?Logical_View_Package.TAI()			4
+39- ?Logical_View_Package.TAA()			27
+
+OK até aqui na versão 4
+
+40- ?Logical_View_Package.IL(Logical_View_Package)	 2
+Ps.: Se for acrescentado asSet() no final, o resultado passa a ser 1. Neste caso os valores duplicados sao permitidos?
+
+41- ?Logical_View_Package.TIL()				 2
+42- ?Logical_View_Package.supplierClasses(Logical_View_Package)
+->Todas as classes exceto Date, Earning e Burning
+
+------------------------------
+Conferir estas funcoes
+
+43- ?Logical_View_Package.relatedClasses(Logical_View_Package)
+->Todas as classes exceto Date, Earning e Burning
+
+44- ?Logical_View_Package.CL(Logical_View_Package)	 9
+
+    ?Logical_View_Package.CL(Logical_View_Package)	 15 Com a nova função para coupledClasses()
+----------------------------------------------
+
+45- ?Logical_View_Package.TCL()				 24
+    ?Logical_View_Package.TCL()				 59 Com a nova função para coupledClasses()
+
+46- ?Burning_Class.ACV(Transaction_points_Attribute)	 false
+// O attributo é privado
+
+47- ?Transaction_Class.ACV(Transaction_points_Attribute) true
+48- ?Burning_Class.ACV(Transaction_date_Attribute)	 true
+// o atributo foi alterado para protected
+
+49- ?Transaction_Class.ACV(Transaction_date_Attribute)	 true
+50- ?Earning_Class.ACV(Transaction_date_Attribute)	 true
+// o atributo foi alterado para protected
+
+51- ?Earning_Class.ACV(Transaction_date_Attribute)	 false
+// Neste caso o atributo é privado
+
+52- ?Transaction_Class.ACV(Customer_name_Attribute)	 false
+53- ?Logical_View_Package.AVN(Transaction_points_Attribute)	1
+// O atributo é privado
+
+54- ?Logical_View_Package.AVN(Customer_name_Attribute)	 	1
+// O atributo é privado
+
+55- ?Logical_View_Package.AVN(Transaction_date_Attribute)	 1
+// O atributo é privado
+
+56- ?Integer_Class.ACV(Transaction_date_Attribute)	 false
+57- ?Date_Class.ACV(Transaction_date_Attribute)		 false
+
+58- ?Time_Class.ACV(Transaction_date_Attribute)		 false
+59- 
+?Logical_View_Package.AVN(Transaction_points_Attribute)	 3
+// atributo foi alterado para protected	
+
+60- ?Logical_View_Package.AVN(Transaction_date_Attribute) 1
+// atributo private
+
+61- ?Logical_View_Package.AVN(Transaction_date_Attribute) 12
+// atributo alterado para public
+
+62- ?Logical_View_Package.ASV(Transaction_date_Attribute)	12
+// atributo colocado como public
+
+63- ?Logical_View_Package.AVN(Transaction_points_Attribute)	3
+// atributo colocado como protected
+
+64- ?Membership_Class.ACV(Transaction_points_Attribute)		 true
+// Attributo é público e Membership não tem features declarados
+
+65- ?Logical_View_Package.ASV(Transaction_points_Attribute) 	0.18181818182
+// Attributo colocado como protected
+
+66- ?Logical_View_Package.ASV(Transaction_date_Attribute)	0
+//Attributo colocado como private
+
+67- ?Logical_View_Package.ASV(Transaction_date_Attribute)	1
+// Attributo colocado como public
+
+
+
+68- ?Transaction_Class.FCV(Transaction_points_Attribute) true
+// protected
+
+69- ?Burning_Class.FCV(Transaction_date_Attribute)	 true
+// public
+
+70- ?Burning_Class.FCV(Transaction_points_Attribute)	 true
+// protected
+
+71- ?Transaction_Class.FCV(Customer_name_Attribute)	false
+
+72- ?Transaction_Class.FCV(Transaction_program_Operation) true
+73- ?Burning_Class.FCV(Transaction_program_Operation)	  false
+// As operações são privadas
+
+74- testes com FVN, FUN, FSV, FCV ok!
+Ok até aqui na versão 6.
+
+75- ?Logical_View_Package.AIF()				0.14814814814814
+76- ?Logical_View_Package.OIF()				0.11111111111111
+77- ?Logical_View_Package.IIF()				1
+78- ?Logical_View_Package.AHF()				1 // Todos attributos privados
+79- ?Logical_View_Package.OHF()				1 // Todas operações privadas
+80- ?Logical_View_Package.AHEF()			0.0
+81- ?Logical_View_Package.OHEF()			0.0
+82- ?Logical_View_Package.BPF()				0.0
+83- ?Logical_View_Package.CCF()				0.0757575757575
+84- ?Logical_View_Package.ICF()				0.1538461538461
+85- ?Logical_View_Package.EIF(Logical_View_Package)	1			
+86- ?Logical_View_Package.ECF(Logical_View_Package)	0.1538461538461
+87- ?Logical_View_Package.PRF(Logical_View_Package)	undefined
+88- ?Logical_View_Package.ARF(Logical_View_Package)	undefined
+89- ?Logical_View_Package.PPF()				0.0
+
+
+
+
+--------------
+// Conferir implementação do AUN. Está é antiga.
+90- ?Logical_View_Package.AUN(CustomerCard_color_Attribute)				0
+91- ?Logical_View_Package.AUN(CustomerCard_goodThru_Attribute)				0
+92- ?Logical_View_Package.AUN(CustomerCard_printedName_Attribute)			0
+93- ?Logical_View_Package.AUN(CustomerCard_validFrom_Attribute)				0
+94- ?Logical_View_Package.AUN(CustomerCard_valid_Attribute)				0
+95- ?Logical_View_Package.AUN(Customer_title_Attribute)					0
+96- ?Logical_View_Package.AUN(Date_day_Attribute)					0
+97- ?Logical_View_Package.AUN(Date_month_Attribute)					0
+98- ?Logical_View_Package.AUN(Date_now_Attribute)					0
+99- ?Logical_View_Package.AUN(Date_year_Attribute)					0
+100- ?Logical_View_Package.AUN(LoyaltyAccount_points_Attribute)				0
+101- ?Logical_View_Package.AUN(LoyaltyProgram_designation_Attribute)			0
+102- ?Logical_View_Package.AUN(ProgramPartner_numberOfCustomers_Attribute)		0	
+103- ?Logical_View_Package.AUN(ServiceLevel_name_Attribute)				0
+104- ?Logical_View_Package.AUN(Service_condition_Attribute)				0
+105- ?Logical_View_Package.AUN(Service_description_Attribute)				0
+106- ?Logical_View_Package.AUN(Service_pointsBurned_Attribute)				0
+107- ?Logical_View_Package.AUN(Service_pointsEarned_Attribute)				0
+108- ?Logical_View_Package.AUN(Transaction_date_Attribute)				2
+109- ?Logical_View_Package.AUN(Transaction_points_Attribute)				2
+110- ?Logical_View_Package.AUN(Customer_dateOfBirth_Attribute)				0
+111- ?Logical_View_Package.AUN(Customer_isMale_Attribute)				0
+112- ?Logical_View_Package.AUN(Customer_name_Attribute)					0
+
+113- ?Logical_View_Package.AVN(CustomerCard_color_Attribute)				1
+114- ?Logical_View_Package.AVN(CustomerCard_goodThru_Attribute)				1
+115- ?Logical_View_Package.AVN(CustomerCard_printedName_Attribute)			1
+116- ?Logical_View_Package.AVN(CustomerCard_validFrom_Attribute)			1	0
+117- ?Logical_View_Package.AVN(CustomerCard_valid_Attribute)				1
+118- ?Logical_View_Package.AVN(Customer_title_Attribute)				1	0
+119- ?Logical_View_Package.AVN(Date_day_Attribute)					1
+120- ?Logical_View_Package.AVN(Date_month_Attribute)					1
+121- ?Logical_View_Package.AVN(Date_now_Attribute)					1
+122- ?Logical_View_Package.AVN(Date_year_Attribute)					1
+123- ?Logical_View_Package.AVN(LoyaltyAccount_points_Attribute)				1
+124- ?Logical_View_Package.AVN(LoyaltyProgram_designation_Attribute)			1
+125- ?Logical_View_Package.AVN(ProgramPartner_numberOfCustomers_Attribute)		1	
+126- ?Logical_View_Package.AVN(ServiceLevel_name_Attribute)				1
+127- ?Logical_View_Package.AVN(Service_condition_Attribute)				1
+128- ?Logical_View_Package.AVN(Service_description_Attribute)				1
+129- ?Logical_View_Package.AVN(Service_pointsBurned_Attribute)				1
+130- ?Logical_View_Package.AVN(Service_pointsEarned_Attribute)				1
+131- ?Logical_View_Package.AVN(Transaction_date_Attribute)				1
+132- ?Logical_View_Package.AVN(Transaction_points_Attribute)				1
+133- ?Logical_View_Package.AVN(Customer_dateOfBirth_Attribute)				1
+134- ?Logical_View_Package.AVN(Customer_isMale_Attribute)				1
+135- ?Logical_View_Package.AVN(Customer_name_Attribute)	
+--------------
