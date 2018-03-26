@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/db4o-8.0.249.16098-core-java5.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/use-4.0.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/use-5.0.0"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

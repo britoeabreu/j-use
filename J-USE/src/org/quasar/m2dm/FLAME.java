@@ -30,7 +30,7 @@ public final class FLAME
 {
 	private final static String	USE_BASE_DIRECTORY	= "D:/Google Drive/EclipseWorkspace/use-5.0.0";
 	
-	private final static String	WORKING_DIRECTORY	= "D:\\Google Drive\\TOPICS\\_ModelDrivenEngineering\\OCL&METRICS\\UMLMM_Instantiation";
+	private final static String	WORKING_DIRECTORY	= "metamodels\\UML1.3";
 	
 //	 private final static String WORKING_DIRECTORY = "D:\\Google Drive\\TOPICS\\_ModelDrivenEngineering\\OCL&METRICS\\MOOD_FLAME";
 	

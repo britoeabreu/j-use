@@ -1,243 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="org.tzi.use.uml.mm.MAssociationImpl" x="981" y="637">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAssociation"
-            endpointName="subsets" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAssociation"
-            endpointName="redefinedBy" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
-            endpointName="fAssociationEnds" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAssociation"
-            endpointName="redefines" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAssociation"
-            endpointName="subsettedBy" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MAggregationKind" x="86" y="47">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MClassImpl" x="592" y="463">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MNavigableElement"
-            endpointName="fNavigableElements" kind="Simple"/>
-        <Association destinationClassName="org.tzi.use.uml.mm.MModel"
-            endpointName="fModel" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MOperation"
-            endpointName="fOperations" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAttribute"
-            endpointName="fAttributes" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAttribute"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MElementAnnotation" x="354" y="9">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MModelElement" x="520" y="197">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.Annotatable"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MNamedElement" x="307" y="230">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MAssociation" x="1172" y="321">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MNavigableElement" x="774" y="553">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MMPrintVisitor" x="27" y="780">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModel"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClassInvariant"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MElementAnnotation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAttribute"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.Annotatable" x="375" y="135">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MClassifier" x="365" y="302">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MModel" x="869" y="17">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MAssociation"
-            endpointName="fAssociations" kind="Simple"/>
-        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fClasses" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MClassInvariant"
-            endpointName="fClassInvariants" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
-            endpointName="fPrePostConditions" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MGeneralization"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MNavigableElement"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MPrePostCondition" x="943" y="189">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MOperation"
-            endpointName="fOp" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MModelElementImpl.MutableInteger"
-        x="520" y="89">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MMultiplicity" x="1247" y="678">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MMultiplicity.Range"
-            endpointName="mRanges" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMultiplicity.Range"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MOperation" x="742" y="305">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
-            endpointName="fPreConditions" kind="Simple"/>
-        <Association
-            destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
-            endpointName="fPostConditions" kind="Simple"/>
-        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fClass" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-    </Class>
     <Class name="org.tzi.use.uml.mm.MAssociationClassImpl" x="760" y="717">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -254,19 +16,20 @@
             destinationClassName="org.tzi.use.uml.mm.MClassImpl"
             endpointName="fClassImpl" kind="Simple"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationImpl"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationImpl"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClassImpl"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMultiplicity"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MNavigableElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMultiplicity"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassImpl"/>
     </Class>
-    <Class name="org.tzi.use.uml.mm.MMultiplicity.Range" x="1169" y="732">
+    <Class name="org.tzi.use.uml.mm.MAggregationKind" x="209" y="42">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
@@ -281,35 +44,35 @@
             accessors-accepted="false" constructors-accepted="false"/>
         <Extension destinationClassName="org.tzi.use.uml.mm.MNavigableElement"/>
         <Association
-            destinationClassName="org.tzi.use.uml.mm.MMultiplicity"
-            endpointName="fMultiplicity" kind="Simple"/>
-        <Association
             destinationClassName="org.tzi.use.uml.mm.MAssociation"
             endpointName="fAssociation" kind="Simple"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
-            endpointName="redefinedEnds" kind="Simple"/>
+            endpointName="allOtherEnds" kind="Simple"/>
+        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
+            endpointName="fClass" kind="Simple"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
             endpointName="subsettedEnds" kind="Simple"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
-            endpointName="allOtherEnds" kind="Simple"/>
+            endpointName="redefinedEnds" kind="Simple"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
             endpointName="redefiningEnds" kind="Simple"/>
-        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fClass" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MMultiplicity"
+            endpointName="fMultiplicity" kind="Simple"/>
         <Association
             destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
             endpointName="subsettingEnds" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMultiplicity"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MNavigableElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMultiplicity"/>
     </Class>
-    <Class name="org.tzi.use.uml.mm.MMInstanceGenerator" x="169" y="771">
+    <Class name="org.tzi.use.uml.mm.MMultiplicity" x="1247" y="678">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -317,17 +80,13 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MGeneralization"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModel"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MClassInvariant"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MAttribute"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MMultiplicity.Range"
+            endpointName="mRanges" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMultiplicity.Range"/>
     </Class>
-    <Class name="org.tzi.use.uml.mm.MGeneralization" x="429" y="399">
+    <Class name="org.tzi.use.uml.mm.MModelElementImpl.MutableInteger"
+        x="520" y="89">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -335,12 +94,25 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MOperation" x="742" y="305">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
+            endpointName="fPostConditions" kind="Simple"/>
         <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fChild" kind="Simple"/>
-        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fParent" kind="Simple"/>
+            endpointName="fClass" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
+            endpointName="fPreConditions" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
     </Class>
     <Class name="org.tzi.use.uml.mm.MAssociationClass" x="435" y="572">
         <AttributesDisplayFilter public-accepted="true"
@@ -350,9 +122,132 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MClass"/>
         <Extension destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MClass"/>
         <Extension destinationClassName="org.tzi.use.uml.mm.MNavigableElement"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MAssociation" x="1172" y="321">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MModelElement" x="520" y="197">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.Annotatable"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.Annotatable" x="375" y="135">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MMultiplicity.Range" x="1169" y="732">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MClassInvariant" x="684" y="78">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
+            endpointName="fClass" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MPrePostCondition" x="943" y="189">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MOperation"
+            endpointName="fOp" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MAssociationImpl" x="981" y="637">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociation"
+            endpointName="redefines" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociation"
+            endpointName="redefinedBy" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"
+            endpointName="fAssociationEnds" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociation"
+            endpointName="subsettedBy" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociation"
+            endpointName="redefinedByClosure" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociation"
+            endpointName="subsets" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModel"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MGeneralization" x="250" y="395">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MClassifier"
+            endpointName="fChild" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MClassifier"
+            endpointName="fParent" kind="Simple">
+            <Point x="386" y="407"/>
+        </Association>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
     </Class>
     <Class name="org.tzi.use.uml.mm.MMVisitor" x="119" y="630">
         <AttributesDisplayFilter public-accepted="true"
@@ -363,7 +258,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="org.tzi.use.uml.mm.MAttribute" x="237" y="394">
+    <Class name="org.tzi.use.uml.mm.MAttribute" x="338" y="447">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -373,9 +268,161 @@
             accessors-accepted="false" constructors-accepted="false"/>
         <Association destinationClassName="org.tzi.use.uml.mm.MClass"
             endpointName="fOwner" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
         <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
     </Class>
+    <Class name="org.tzi.use.uml.mm.MElementAnnotation" x="354" y="9">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MClassImpl" x="592" y="463">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MClass"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MOperation"
+            endpointName="fOperations" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAttribute"
+            endpointName="fAttributes" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MNavigableElement"
+            endpointName="fNavigableElements" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MOperation"
+            endpointName="fVTableOperations" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAttribute"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MModel" x="869" y="17">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
+            endpointName="fClasses" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MAssociation"
+            endpointName="fAssociations" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"
+            endpointName="fPrePostConditions" kind="Simple"/>
+        <Association
+            destinationClassName="org.tzi.use.uml.mm.MClassInvariant"
+            endpointName="fClassInvariants" kind="Simple"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MGeneralization"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNavigableElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassInvariant"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MMInstanceGenerator" x="169" y="771">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModel"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MGeneralization"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAttribute"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassInvariant"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MNamedElement" x="307" y="230">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MMPrintVisitor" x="27" y="780">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModel"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MOperation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationClass"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAttribute"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClass"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MAssociationEnd"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MClassInvariant"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MElementAnnotation"/>
+        <Communication destinationClassName="org.tzi.use.uml.mm.MPrePostCondition"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MClassifier" x="284" y="296">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MNamedElement"/>
+        <Extension destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MInvalidModelException" x="123" y="283">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
     <Class name="org.tzi.use.uml.mm.ModelFactory" x="83" y="468">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="false"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.tzi.use.uml.mm.MNavigableElement" x="774" y="553">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -393,28 +440,5 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Extension destinationClassName="org.tzi.use.uml.mm.MClassifier"/>
-        <Extension destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MClassInvariant" x="684" y="78">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="false"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Association destinationClassName="org.tzi.use.uml.mm.MClass"
-            endpointName="fClass" kind="Simple"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MMVisitor"/>
-        <Communication destinationClassName="org.tzi.use.uml.mm.MModelElement"/>
-    </Class>
-    <Class name="org.tzi.use.uml.mm.MInvalidModelException" x="71" y="331">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
     </Class>
 </ClassDiagram>
