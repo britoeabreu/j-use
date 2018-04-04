@@ -8,7 +8,6 @@ package org.quasar.m2dm;
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 //import org.quasar.juse.api.implementation.BasicFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
-import org.tzi.use.uml.mm.MClass;
 import org.tzi.use.uml.sys.MObject;
 
 //import org.tzi.use.uml.ocl.value.EnumValue;

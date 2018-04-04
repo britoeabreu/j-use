@@ -5,12 +5,9 @@
 package org.quasar.pimeta.loader;
 
 
-import java.util.Set;
-
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
 import org.tzi.use.uml.mm.MClass;
-import org.tzi.use.uml.sys.MObject;
 
 
 /***********************************************************
