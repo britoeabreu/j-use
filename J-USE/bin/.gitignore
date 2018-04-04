@@ -1,2 +1,5 @@
-/org/
-/.svn/
+/target/
+
+.project
+.settings
+.classpath
