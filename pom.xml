@@ -37,7 +37,7 @@
 			<groupId>org.tzi.use.use</groupId>
 			<artifactId>use</artifactId>
 			<version>5.0.1</version>
-			<systemPath>${basedir}/lib/use.jar</systemPath>
+			<systemPath>${basedir}/lib/use-5.0.1.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
 
@@ -45,7 +45,7 @@
 			<groupId>org.tzi.use.use-runtime</groupId>
 			<artifactId>use-runtime</artifactId>
 			<version>5.0.1</version>
-			<systemPath>${basedir}/lib/use-runtime.jar</systemPath>
+			<systemPath>${basedir}/lib/use-runtime-5.0.1.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
 
