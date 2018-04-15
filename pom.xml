@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.quasarresearchgroup.j-use.feature.group</groupId>
+	<artifactId>J-USE</artifactId>
+	<version>5.0.1</version>
+
+	<name>Java Facade to USE tool</name>
+	<url>https://quasarresearchgroup.github.io/j-use/</url>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>test</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.tzi.use.use</groupId>
+			<artifactId>use</artifactId>
+			<version>5.0.1</version>
+			<systemPath>${basedir}/lib/use.jar</systemPath>
+			<scope>system</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tzi.use.use-runtime</groupId>
+			<artifactId>use-runtime</artifactId>
+			<version>5.0.1</version>
+			<systemPath>${basedir}/lib/use-runtime.jar</systemPath>
+			<scope>system</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>24.1-jre</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>4.7.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.db4o</groupId>
+			<artifactId>com.db4o</artifactId>
+			<version>7.7.67</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>Restlet</id>
+			<name>Maven Restlet</name>
+			<url>http://maven.restlet.com</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+
+	</repositories>
+
+	<organization>
+		<name>QUASAR Research Group</name>
+		<url>https://sites.google.com/site/quasarresearchgroup/</url>
+	</organization>
+	<scm>
+		<url>https://github.com/quasarresearchgroup/j-use</url>
+		<connection>scm:git:git://github.com/quasarresearchgroup/j-use.git</connection>
+		<developerConnection>britoeabreu</developerConnection>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/quasarresearchgroup/j-use/issues</url>
+		<system>GitHub Issue Tracker</system>
+	</issueManagement>
+</project>
