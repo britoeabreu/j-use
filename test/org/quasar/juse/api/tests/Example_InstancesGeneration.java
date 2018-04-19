@@ -31,10 +31,10 @@ import org.tzi.use.uml.sys.MObject;
  ***********************************************************/
 public final class Example_InstancesGeneration
 {
-	private final static String	USE_BASE_DIRECTORY	= "C:/Program Files (x86)/use-3.0.6";
+	private final static String	USE_BASE_DIRECTORY	= "D:\\Google Drive\\EclipseWorkspace\\use-5.0.1";
 
-	 private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/PT_RUTISEO_Futebol_O";
-	 private final static String MODEL_FILE = "CopaPaises_20120416.use";
+	 private final static String MODEL_DIRECTORY = "D:\\Google Drive\\TEACH\\UML\\_MODELS\\PT_RUTISEO_Futebol_O\\CopaPaises";
+	 private final static String MODEL_FILE = "CopaPaises.use";
 //	 private final static String SOIL_FILE = "euro2012.soil";
 
 	// private final static String MODEL_DIRECTORY = "D:/Dropbox/TEACH/UML/Exemplos/UK_ProjectWorld";
