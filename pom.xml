@@ -46,9 +46,9 @@
 	</organization>
 	
 	<scm>
-		<url>https://github.com/quasarresearchgroup/j-use</url>
 		<connection>scm:git:git://github.com/quasarresearchgroup/j-use.git</connection>
-		<developerConnection>britoeabreu</developerConnection>
+		<developerConnection>scm:git:git://github.com/quasarresearchgroup/j-use.git</developerConnection>
+		<url>https://github.com/quasarresearchgroup/j-use.git</url>
 	</scm>
 	
 	<issueManagement>
@@ -63,7 +63,7 @@
 			<name>Maven Restlet</name>
 			<url>http://maven.restlet.com</url>
 			<releases>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</releases>
 			<snapshots>
 				<enabled>true</enabled>
