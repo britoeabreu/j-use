@@ -46,7 +46,8 @@ public abstract class SourceFileWriter
 //			else
 
 //			fOut = new PrintWriter(new FileWriter(file));
-				fOut = new PrintWriter(file, "Cp1252");
+//			fOut = new PrintWriter(file, "Cp1252");
+				fOut = new PrintWriter(file, "windows-1252");
 	}
 		catch (IOException e)
 		{
