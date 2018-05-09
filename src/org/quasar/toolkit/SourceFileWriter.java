@@ -4,6 +4,7 @@ package org.quasar.toolkit;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 //import javax.swing.JFrame;
 //import javax.swing.JOptionPane;
@@ -43,7 +44,9 @@ public abstract class SourceFileWriter
 //					result = false;
 //			}
 //			else
-				fOut = new PrintWriter(new FileWriter(file));
+
+//			fOut = new PrintWriter(new FileWriter(file));
+				fOut = new PrintWriter(file, "Cp1252");
 	}
 		catch (IOException e)
 		{
