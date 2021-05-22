@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="org.quasar.juse.api" x="117" y="94"/>
+    <Package name="org.quasar.juse.api.implementation" x="242" y="208">
+        <DependencyLink destination="org.quasar.toolkit"/>
+        <DependencyLink destination="org.quasar.juse.api"/>
+    </Package>
+    <Package name="org.quasar.toolkit" x="501" y="96"/>
+    <Package name="org.quasar.pimeta.loader" x="66" y="397">
+        <DependencyLink destination="org.quasar.juse.api"/>
+        <DependencyLink destination="org.quasar.juse.api.implementation"/>
+    </Package>
+</PackageAnalysis>
