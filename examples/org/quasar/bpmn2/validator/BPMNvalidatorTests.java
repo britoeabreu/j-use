@@ -22,20 +22,14 @@ import org.junit.Test;
 import org.quasar.juse.api.JUSE_ProgramingFacade;
 import org.quasar.juse.api.implementation.ProgramingFacade;
 import org.quasar.toolkit.FileSystemUtilities;
+
 import org.tzi.use.uml.mm.MClassInvariant;
 
 /***********************************************************
- * @author fba 28 de Jun de 2012
+ * @author fba
  * 
  ***********************************************************/
-/**
- * @author fba
- *
- */
-/**
- * @author fba
- *
- */
+
 public class BPMNvalidatorTests
 {
     private final static String MODEL_DIRECTORY = "metamodels/BPMN2";

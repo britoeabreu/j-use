@@ -75,7 +75,7 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
 	* @param element model element
 	* @return map containing the annotations of the given model element
 	***********************************************************/
-	public Map<String, MElementAnnotation> a (MModelElement element);
+	public Map<String, MElementAnnotation> getAnnotations(MModelElement element);
 
 	
 	/***********************************************************

@@ -2,30 +2,34 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-	<properties>
-		<maven.shade.version>3.2.0</maven.shade.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<use.version>5.0.1</use.version>
-		<junit.version>4.12</junit.version>
-	</properties>
-		
+	
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.quasar.juse</groupId>
+	<groupId>org.quasar</groupId>
 	<artifactId>j-use</artifactId>
-	<version>5.0.1</version>
+	<version>6.0.0</version>
 	<name>Java Facade to USE tool</name>
 	<url>https://quasarresearchgroup.github.io/j-use/</url>
  	<description>
 		J-USE is a programming facade (API) that allows any Java program to interact with the USE tool. 
 		The USE tool was produced and is being maintained by Prof. Martin Gogolla's team at Bremen University in Germany. 
 	</description>
-   
 	<organization>
 		<name>QUASAR Research Group</name>
 		<url>https://sites.google.com/site/quasarresearchgroup/</url>
 	</organization>
-	
+
+	<properties>
+	    <maven.compiler.source>1.9</maven.compiler.source>
+	    <maven.compiler.target>1.9</maven.compiler.target>
+		<maven.shade.version>3.2.0</maven.shade.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<use.version>6.0.0</use.version>
+		<use.dir>G:/O meu disco/_EclipseWorkspace/use-6.0.0</use.dir>		
+		<junit.version>5.4.0</junit.version>
+		<guava.version>30.1-jre</guava.version>
+		<antlr.version>3.5.2</antlr.version>
+	</properties>
+		
 	<scm>
 		<connection>scm:git:git://github.com/quasarresearchgroup/j-use.git</connection>
 		<developerConnection>scm:git:git://github.com/quasarresearchgroup/j-use.git</developerConnection>
@@ -62,21 +66,38 @@
 			<groupId>org.tzi</groupId>
 			<artifactId>use</artifactId>
 			<version>${use.version}</version>
-			<scope>runtime</scope>
+			<scope>system</scope>
+			<systemPath>${use.dir}/lib/use.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>org.tzi</groupId>
 			<artifactId>use-runtime</artifactId>
 			<version>${use.version}</version>
-			<scope>runtime</scope>		
+			<scope>system</scope>
+			<systemPath>${use.dir}/lib/use-runtime.jar</systemPath>	
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>runtime</scope>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.antlr/antlr -->
+		<dependency>
+		    <groupId>org.antlr</groupId>
+		    <artifactId>antlr</artifactId>
+		    <version>${antlr.version}</version>
+		</dependency>
+	
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-api</artifactId>
+		    <version>5.7.0</version>
+		    <scope>test</scope>
 		</dependency>
 
 	</dependencies>
