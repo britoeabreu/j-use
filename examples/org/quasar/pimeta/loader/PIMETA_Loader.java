@@ -26,7 +26,7 @@ public final class PIMETA_Loader
 	 * @param args
 	 * @throws InterruptedException
 	 ***********************************************************/
-	public static void main(String[] args) throws InterruptedException
+	public static void main(String[] args)
 	{
 		loadPIMETA(args);
 	}

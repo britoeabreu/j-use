@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ JUSE_BasicFacadeTest.class, JUSE_ProgramingFacadeTest.class })
+@SuiteClasses({ JUSE_BasicFacadeTest.class, JUSE_ProgramingFacadeTest.class, JUSE_ProgramingByContractFacadeTest.class })
 public class AllTests
 {
 	

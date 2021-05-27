@@ -24,7 +24,7 @@
 		<maven.shade.version>3.2.0</maven.shade.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<use.version>6.0.0</use.version>
-		<use.dir>G:\O meu disco\_EclipseWorkspace\use-6.0.0</use.dir>
+		<use.dir>G:/O meu disco/_EclipseWorkspace/use-6.0.0</use.dir>		
 		<junit.version>5.4.0</junit.version>
 		<guava.version>30.1-jre</guava.version>
 		<antlr.version>3.5.2</antlr.version>
@@ -63,18 +63,26 @@
 	<dependencies>
 	
 		<dependency>
-		    <groupId>org.tzi</groupId>
-		    <artifactId>use</artifactId>
-		    <version>6.0.0</version>
-		    <scope>system</scope>
-		    <systemPath>${use.dir}/lib/use.jar</systemPath>
+			<groupId>org.tzi</groupId>
+			<artifactId>use</artifactId>
+			<version>${use.version}</version>
+			<scope>system</scope>
+			<systemPath>${use.dir}/lib/use.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tzi</groupId>
+			<artifactId>use-runtime</artifactId>
+			<version>${use.version}</version>
+			<scope>system</scope>
+			<systemPath>${use.dir}/lib/use-runtime.jar</systemPath>	
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.antlr/antlr -->
@@ -82,7 +90,6 @@
 		    <groupId>org.antlr</groupId>
 		    <artifactId>antlr</artifactId>
 		    <version>${antlr.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 	
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
@@ -96,6 +103,7 @@
 	</dependencies>
 	
 	<build>
+	 		
 		<plugins>
 		   <plugin>
 		     <groupId>org.apache.maven.plugins</groupId>
@@ -117,9 +125,10 @@
 				</goals>
 		       </execution>
 		     </executions>
-		     
-		   </plugin>   
+		   </plugin>
+	      
 	    </plugins>
+	   		
 	</build>
 	
 </project>

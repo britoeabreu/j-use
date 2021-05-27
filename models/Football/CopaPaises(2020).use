@@ -1,0 +1,845 @@
+
+---------------------------------------------------------------------------------
+model CopaPaises
+---------------------------------------------------------------------------------
+
+enum TipoCampeonato {Europeu, Mundial}
+enum FaseCampeonato {Grupos, OitavosFinal, QuartosFinal, MeiasFinais, Final}
+enum TipoCartao {Amarelo, Vermelho}
+enum PosicaoJogador {GuardaRedes, Defesa, Medio, Avancado}
+
+--------------------------------------------------------------
+-- Domain types
+--------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+class Continente
+	attributes
+		nome: String
+
+	operations
+		inicializa(nome_: String)
+			begin
+				self.nome:= nome_		
+			end
+		
+		@precondition(rationale="O nome do continente deve estar preenchido!")		
+		pre Continente_NomeNaoVazio: nome_.size()>0
+			
+		@precondition(rationale="O nome do continente deve ser único!")
+		pre Continente_NomeUnico: Continente.allInstances.nome->excludes(nome_)
+		
+		criaPais(nome: String, populacao: Integer, area: Integer)
+			begin
+				declare
+					temp: Pais;
+				temp:= new Pais(nome);
+				temp.inicializa(nome, populacao, area, self)
+			end
+			
+end --Continente
+
+---------------------------------------------------------------------------------
+@header(
+		description = "As instâncias desta classe representam os países envolvidos na realização dos campeonatos descritos neste sistema de informação",
+		author = "Fernando Brito e Abreu",
+		date = "2019/03/17"
+)
+---------------------------------------------------------------------------------
+class Pais
+	attributes
+		@prompt(pt="Designação", uk="Designation")
+		nome: String
+		
+		@prompt(pt="População", uk="Population")
+		populacao: Integer
+
+		@prompt(pt="Área (Km quadrados)", uk="Area (square Kms)")
+		area: Integer
+		
+		
+	operations
+	
+		@parameters(
+			nome_ = "O nome do país",
+			populacao_ = "Número de habitantes do país",
+			area_ = "Área do país em Km quadrados",
+			continente_ = "Continente em que o país se situa"
+		)
+		inicializa(nome_: String, populacao_: Integer, area_: Integer, continente_: Continente)
+			begin
+				self.nome:= nome_;
+				self.populacao:= populacao_;
+				self.area:= area_;
+				insert (continente_, self) into Continente_Pais
+			end
+			
+		@precondition(rationale="O nome do país deve estar preenchido!")
+		pre Pais_NomeNaoVazio: nome_.size() > 0
+		
+		@precondition(rationale="O nome do país deve ser único!")
+		pre Pais_NomeUnico: Pais.allInstances.nome->excludes(nome_)
+		
+		@precondition(rationale="A população do país deve ser maior ou igual que a população das suas cidades!")
+		pre Pais_Populacao: populacao_ >= self.cidades.populacao->sum
+		
+		@precondition(rationale="A área do país não pode ser nula!")
+		pre Pais_AreaNaoNula: area_ > 0
+		
+		@precondition(rationale="O continente em que se situa o país deve ser conhecido!")
+		pre Pais_Continente: continente_.isDefined()
+		
+			
+end --Pais
+---------------------------------------------------------------------------------
+class Cidade
+	attributes
+		nome: String
+		populacao: Integer
+		capital: Boolean 
+			derive: self.pais.cidades->select(populacao = self.pais.cidades.populacao->max())->includes(self)
+		
+	operations
+		inicializa(nome_: String, populacao_: Integer, capital_: Boolean, pais_: Pais)
+			begin
+				self.nome:= nome_;
+				self.populacao:= populacao_;
+				self.capital:= capital_;
+				insert (pais_,self) into Pais_Cidade
+			end
+			
+		@postcondition(rationale="Não pode haver outra cidade com o mesmo nome no mesmo país!")	
+		post Cidade_NomeUnico: self.pais.cidades->one(nome=nome_)	
+		
+		@postcondition(rationale="Não pode haver outra capital no país!")
+		post Cidade_CapitalUnica: capital_ implies self.pais.cidades->one(capital)
+		
+end --Cidade
+---------------------------------------------------------------------------------
+class Estadio
+	attributes
+		nome: String
+		inauguracao: Integer -- ano de inauguração
+		lotacao: Integer
+		
+	operations
+		inicializa(nome: String, inauguracao: Integer, lotacao: Integer, cidade: Cidade)
+			begin
+				self.nome:= nome;
+				self.inauguracao:= inauguracao;
+				self.lotacao:= lotacao;
+				insert (cidade,self) into Cidade_Estadio
+			end	
+		
+	constraints
+		@invariant(rationale="O nome do estádio deve ser único!")
+		inv NomeUnico: Estadio.allInstances->isUnique(nome)
+		
+end --Estadio
+---------------------------------------------------------------------------------
+class Campeonato
+	attributes
+		nome: String
+		genero: TipoCampeonato
+		data_inicio: CalendarDate
+		data_fim: CalendarDate
+		
+	operations
+		inicializa(nome: String, genero: TipoCampeonato, abertura: String, fecho: String, paises: OrderedSet(Pais), grupos: Set(String))
+			begin
+				declare
+					dummy: CalendarDate,
+					participacao: Participacao,
+					treinador: Treinador;
+				
+				self.nome:= nome;		
+				self.genero:= genero;
+				
+				dummy:= new CalendarDate;
+				self.data_inicio:= dummy.stringToDate(abertura);
+				self.data_fim:= dummy.stringToDate(fecho);
+				destroy dummy;
+				
+				for p in paises do
+					participacao:= new Participacao(p.nome+'_'+self.nome) between (p, self);
+					participacao.classificacao:= paises->indexOf(p);
+					treinador:= new Treinador('Treinador_' + p.nome + '_' + self.nome);
+					insert (treinador, participacao) into Treinador_Participacao
+				end;
+				for g in grupos do
+					insert (self, new Grupo(g)) into Campeonato_Grupo
+				end
+			end
+			
+		criaMembrosEquipas()
+			begin
+				for eq in self.grupos.jogos.equipa->asSet() do
+					eq.criaFichaJogoFalsa()
+				end
+			end
+	
+	constraints
+		@invariant(rationale="O nome do campeonato deve ser único!")
+		inv NomeUnico: Campeonato.allInstances->isUnique(nome)
+
+		@invariant(rationale="A data final do campeonato deve ocorrer depois do seu início!")
+		inv DatasCorretas: data_inicio.isBefore(data_fim)
+		
+		@invariant(rationale="Todos os participantes devem ter pelo menos 16 anos quando o campeonato começa!")
+		inv IdadeMinimaParticipantes: self.participante.nacionais->forAll(self.data_inicio.yearsSince(data_nascimento) >= 16)
+		
+end --Campeonato
+
+---------------------------------------------------------------------------------
+associationclass Participacao
+	between
+		Pais [2..*] role participante
+		Campeonato [0..*] role participado
+		
+	attributes
+		organizador: Boolean init = false
+		classificacao: Integer init = 0
+		
+	operations
+		organiza()
+			begin
+				self.organizador:= true
+			end
+			
+		adicionaJogador(nome: String, data_nasce: String, posicao: PosicaoJogador, nacionalidade: Pais, joga_clube: String, joga_pais: Pais)
+			begin
+				declare
+					jogador: Jogador,
+					dummy: CalendarDate,
+					data_nascimento: CalendarDate,
+					clube: Clube;
+					
+				jogador:= new Jogador;
+				dummy:= new CalendarDate;
+				data_nascimento:= dummy.stringToDate(data_nasce);
+				destroy dummy;
+
+				clube:= Clube.allInstances->select(c|c.nome=joga_clube)->asSequence()->first();
+				if clube.isUndefined() then
+					clube:= new Clube;
+					clube.inicializa(joga_clube, joga_pais)
+				end;
+				
+				insert (jogador, self) into Jogador_Participacao;
+				jogador.inicializaJogador(nome, data_nascimento, posicao, nacionalidade, clube)
+			end
+				
+	constraints
+		@invariant(rationale="Não há classificações negativas!")
+		inv ClassificacaoNaoNegativa: self.classificacao >= 0
+	
+end --Participacao
+
+---------------------------------------------------------------------------------
+class Grupo
+	attributes
+		designacao: String
+		fase: FaseCampeonato
+		
+	operations
+		inicializa(designacao: String, fase: FaseCampeonato, paises: Set(Pais))
+			begin
+				self.designacao:= designacao;
+				self.fase:= fase;
+				for p in paises do
+					insert (self, p) into Grupo_Pais
+				end
+			end	
+			
+	constraints
+	
+end --Grupo
+
+---------------------------------------------------------------------------------
+class Jogo
+	attributes
+		dia: CalendarDate
+		hora: String
+		
+	operations
+		inicializa(data: String, hora: String, visitado: Pais, visitante: Pais, estadio: Estadio, grupo: Grupo)
+			begin
+				declare
+					dummy: CalendarDate,
+					duracao_minutos: Integer;
+					
+				dummy:= new CalendarDate;
+				self.dia:= dummy.stringToDate(data);
+				destroy dummy;
+				self.hora:= hora;
+				duracao_minutos:= 90;
+				if visitado.isDefined() then
+					new Equipa between (visitado, self)
+				end;
+				if visitante.isDefined() then
+					new Equipa between (visitante, self)
+				end;
+				insert (estadio, self) into Estadio_Jogo;
+				insert (grupo, self) into Grupo_Jogo
+			end	
+
+	constraints
+		@invariant(rationale="O jogo deve decorrer na data de abertura do campeonato ou após a mesma!")
+		inv DataJogoInicio: self.dia.isEqual(self.grupo.campeonato.data_inicio) or self.dia.isAfter(self.grupo.campeonato.data_inicio) 
+		
+		@invariant(rationale="O jogo deve decorrer na data de encerramento do campeonato ou antes desta a mesma!")
+		inv DataJogoFim: self.dia.isBefore(self.grupo.campeonato.data_fim) or self.dia.isEqual(self.grupo.campeonato.data_fim) 
+		
+end --Jogo
+
+---------------------------------------------------------------------------------
+associationclass Equipa
+	between
+		Pais [2] role seleccao ordered
+		Jogo [0..*] role jogo
+
+	operations
+		adicionaJogador(jogador: Jogador, minuto_entra: Integer, minuto_sai: Integer): Membro
+			begin
+				result:= new Membro between (jogador, self);
+				result.minuto_entrada:= minuto_entra;
+				result.minuto_saida:= minuto_sai;
+			end
+	
+		criaFichaJogoFalsa()
+			begin
+				declare
+					jogadores: Set(Jogador),
+					membro: Membro,
+					cartaoA: Cartao,
+					cartaoV: Cartao,
+					golo: Golo,
+					guardaredes: Integer,
+					defesas: Integer,
+					medios: Integer,
+					avancados: Integer;
+				
+				guardaredes:= 0;
+				defesas:=	0;
+				medios:=	0;
+				avancados:=	0;
+				
+				jogadores:= self.seleccao.participacao->select(p| p.participado=self.jogo.grupo.campeonato).plantel->asSet();
+				for j in jogadores do
+					if (guardaredes < 1 and j.posicao= #GuardaRedes or defesas < 4 and j.posicao= #Defesa or 
+						medios < 3 and j.posicao=#Medio or	avancados < 3 and j.posicao=#Avancado) then
+						
+						membro:= self.adicionaJogador(j, 0, 90);
+						
+						if j.data_nascimento.isLeap() and (j.data_nascimento.month = 3 or j.data_nascimento.month = 9) then
+							cartaoA:= new Cartao;
+							cartaoA.inicializa(membro, TipoCartao::Amarelo, j.data_nascimento.day+j.data_nascimento.month)
+						end;
+						
+						if j.data_nascimento.isLeap() and j.data_nascimento.month = 3 and j.data_nascimento.day > 15 then
+							cartaoV:= new Cartao;
+							cartaoV.inicializa(membro, TipoCartao::Vermelho, j.data_nascimento.day*2+j.data_nascimento.month);
+							membro.minuto_saida:=cartaoV.minuto
+						end;
+						
+						if j.data_nascimento.month > 7 and j.data_nascimento.day < 15 and j.posicao=PosicaoJogador::Avancado then
+							golo:= new Golo;
+							golo.inicializa(membro, if j.data_nascimento.isLeap() then j.data_nascimento.month*7 else j.data_nascimento.day endif)
+						end;
+						
+						if j.posicao= #GuardaRedes then	guardaredes:=guardaredes+1 end;
+						if (j.posicao= #Defesa) then defesas:=defesas+1 end; 
+						if (j.posicao= #Medio) then medios:=medios+1 end;
+						if (j.posicao=#Avancado) then avancados:=avancados+1 end;
+					end
+					
+				end
+				
+			end
+			
+	constraints
+
+end --Equipa
+
+---------------------------------------------------------------------------------
+class Clube
+	attributes
+		nome: String
+		
+	operations
+		inicializa(nome: String, pais: Pais)
+			begin
+				self.nome:= nome;
+				insert (pais, self) into Pais_Clube
+			end	
+			
+	constraints
+	
+		@invariant(rationale="O nome do clube deve ser único!")
+		inv NomeUnico: Clube.allInstances->isUnique(nome)
+end --Clube
+
+---------------------------------------------------------------------------------
+abstract class Participante
+	attributes
+		nome: String
+		data_nascimento: CalendarDate
+
+	operations
+		inicializa(nome_: String, data_nasce_: String, nacionalidade_: Pais)
+			begin
+				declare
+					dummy: CalendarDate;
+
+				self.nome:= nome_;
+				dummy:= new CalendarDate;
+				self.data_nascimento:= dummy.stringToDate(data_nasce_);
+				destroy dummy;
+				insert(nacionalidade_, self) into Pais_Participante
+			end
+			
+		@precondition(rationale="O nome do participante deve estar preenchido!")
+		pre Participante_NomeNaoVazio: nome_.size() > 0
+		
+	constraints
+		
+		
+	statemachines
+	
+		psm Situacao
+		 
+			states
+				SELECIONADO:initial
+
+				DISPONIVEL
+				
+				TREINO
+				
+				JOGO		
+			 
+				BANCO		
+						
+				LESIONADO			 
+
+				IMPEDIDO
+							 
+			 	DISPENSADO: final
+						
+			transitions
+			
+				SELECIONADO -> DISPONIVEL	{inicializa()}
+				
+				DISPONIVEL  -> LESIONADO	{inicializa()}
+				DISPONIVEL 	-> BANCO		{inicializa()}
+				DISPONIVEL	-> JOGO			{inicializa()}
+				
+				BANCO 		-> JOGO			{inicializa()}
+				
+				TREINO  	-> LESIONADO	{inicializa()}
+				TREINO 		-> DISPONIVEL	{inicializa()}
+
+				JOGO  	-> LESIONADO		{inicializa()}
+				JOGO  	-> BANCO			{inicializa()}
+				JOGO  	-> IMPEDIDO			{inicializa()}
+				
+				IMPEDIDO -> DISPONIVEL		{inicializa()}
+				
+				DISPONIVEL -> DISPENSADO	{inicializa()}
+				LESIONADO -> DISPENSADO		{inicializa()}
+				IMPEDIDO -> DISPENSADO		{inicializa()}
+							
+		end
+	
+end --Participante
+
+---------------------------------------------------------------------------------
+class Jogador < Participante
+	attributes
+		posicao: PosicaoJogador
+		
+	operations
+		inicializaJogador(nome: String, data_nascimento: CalendarDate, posicao: PosicaoJogador, nacionalidade: Pais, clube: Clube)
+			begin
+				self.nome:= nome;
+				self.data_nascimento:= data_nascimento;
+				self.posicao:= posicao;
+				insert(nacionalidade, self) into Pais_Participante;
+				insert(clube, self) into Clube_Jogador
+			end
+			
+	constraints
+		
+		
+end --Jogador
+
+---------------------------------------------------------------------------------
+class Treinador < Participante 
+
+end --Treinador
+
+---------------------------------------------------------------------------------
+associationclass Membro
+
+	between
+		Jogador [11..*] role jogador
+		Equipa [0..*] role equipa
+			
+	attributes
+		minuto_entrada: Integer
+		minuto_saida: Integer
+		
+	constraints
+		@invariant(rationale="Só pode ser exibido um cartão vermelho!")
+		inv VermelhoSoPodeSerUm: self.cartoes->select(tipo=TipoCartao::Vermelho)->size<2
+		
+end --Membro
+
+---------------------------------------------------------------------------------
+class Golo
+	attributes
+		minuto: Integer
+		
+	operations
+		inicializa(marcador: Membro, minuto: Integer)
+			begin
+				insert (marcador, self) into Membro_Golo;
+				self.minuto:= minuto		
+			end			
+		
+	constraints
+		@invariant(rationale="O jogador que marcou o golo tem de estar em campo quando o mesmo ocorreu!")
+		inv MinutoCorreto: self.minuto >= marcador.minuto_entrada and self.minuto <= marcador.minuto_saida
+		
+end --Golo
+
+---------------------------------------------------------------------------------
+class Cartao
+	attributes
+		tipo: TipoCartao
+		minuto: Integer
+		
+	operations
+		inicializa(recetor: Membro, tipo: TipoCartao, minuto: Integer)
+			begin
+				insert (recetor, self) into Membro_Cartao;
+				self.tipo:= tipo;
+				self.minuto:= minuto		
+			end			
+		
+	constraints
+		@invariant(rationale="Se o cartão for vermelho, então o minuto de saída do jogador deve ser o minuto em que foi exibido o cartão!")
+		inv CartaoVermelhoDaExpulsao: self.tipo=TipoCartao::Vermelho implies self.membro.minuto_saida = self.minuto
+
+		@invariant(rationale="Ao 2º cartão amarelo, então o minuto de saída do jogador deve ser o minuto em que foi exibido o cartão!")
+		inv SegundoCartaoAmareloDaExpulsao: self.tipo=TipoCartao::Amarelo and self.membro.cartoes->one(minuto<self.minuto) implies self.membro.minuto_saida = self.minuto
+
+end --Golo
+
+--------------------------------------------------------------
+-- Associations
+--------------------------------------------------------------
+
+composition Campeonato_Grupo between 
+	Campeonato [1] role campeonato
+	Grupo [*] role grupos
+end
+
+aggregation Grupo_Pais between 
+	Grupo [*] role grupo
+	Pais [*] role paises
+end
+
+association Jogador_Participacao between 
+	Jogador [*] role plantel
+	Participacao [*] role participacoes
+end
+
+association Clube_Jogador between 
+	Clube [1] role clube
+	Jogador [*] role jogadores
+end
+
+association Pais_Clube between 
+	Pais [1] role pais
+	Clube [*] role clubes
+end
+
+association Pais_Participante between 
+	Pais [1] role nacionalidade
+	Participante [*] role nacionais
+end
+
+association Treinador_Participacao between 
+	Treinador [1] role treinador
+	Participacao [*] role participacoes
+end
+
+composition Grupo_Jogo between 
+	Grupo [1] role grupo
+	Jogo [*] role jogos
+end
+
+association Estadio_Jogo between 
+	Estadio [1] role estadio
+	Jogo [*] role jogos
+end
+
+association Cidade_Estadio between 
+	Cidade [1] role cidade
+	Estadio [*] role estadios
+end
+
+association Pais_Cidade between 
+	Pais [1] role pais
+	Cidade [*] role cidades
+end
+
+association Continente_Pais between 
+	Continente [1] role continente
+	Pais [*] role paises
+end
+
+association Membro_Golo between 
+	Membro [1] role marcador
+	Golo [*] role golos
+end
+
+association Membro_Cartao between 
+	Membro [1] role membro
+	Cartao [0..2] role cartoes
+end
+
+--------------------------------------------------------------
+-- Library types
+--------------------------------------------------------------
+
+class CalendarDate
+
+	attributes
+
+		day: Integer init = 1
+		month: Integer init = 1
+		year: Integer init = 1
+		
+		@static() NOW: CalendarDate init = 
+			let dates = CalendarDate.allInstances.NOW in
+				dates->iterate(d; last: CalendarDate= dates->any(isDefined()) |
+					if d.isDefined() and d.isAfter(last) then d else last endif)
+
+	operations
+
+		@static() today():CalendarDate = self.NOW
+
+		updateToday(day: Integer, month: Integer, year: Integer)
+			begin
+				if CalendarDate.allInstances.NOW->exists(isDefined()) then
+					self.NOW:= CalendarDate.allInstances.NOW->any(isDefined())
+				else
+					self.NOW:= new CalendarDate('NOW')
+				end;						
+				for d in CalendarDate.allInstances() do
+					if d.NOW.isUndefined() then
+						d.NOW:= self.NOW
+					end;
+					d.NOW.init(day, month, year)
+				end
+			end
+		
+		copy(other: CalendarDate)
+			begin
+				self.init(other.day, other.month, other.year)
+			end
+		
+		init(day: Integer, month: Integer, year: Integer)
+			begin
+				self.day:= day;
+				self.month:= month;
+				self.year:= year
+			end
+			
+		-- date format: yyyy-mm-dd
+		initS(date: String)
+			begin
+				self.year:= date.substring(1,4).toInteger();
+				self.month:= date.substring(6,7).toInteger();
+				self.day:= date.substring(9,10).toInteger()
+			end
+
+		stringToDate(date: String): CalendarDate
+			begin
+			  declare 
+					date_year : String,
+					date_month : String,
+					date_day : String;
+					
+				date_year:= date.substring(1,4);
+				date_month:= date.substring(6,7);
+				date_day:= date.substring(9,10);
+				result:= CalendarDate.allInstances-> any(cd |
+					cd.year=date_year.toInteger() and
+					cd.month=date_month.toInteger() and 
+					cd.day=date_day.toInteger());
+				if result.isUndefined() then
+					result:= new CalendarDate('D'+date_year+date_month+date_day);
+				  result.initS(date)
+				end
+			end
+			
+		isBefore(other: CalendarDate):Boolean = 
+			if self.year = other.year then
+				if self.month = other.month then
+				self.day < other.day
+				 else
+				self.month < other.month
+				 endif
+			else 
+				self.year < other.year
+			endif
+
+		isAfter(other: CalendarDate):Boolean =
+			if self.year = other.year then
+				if self.month = other.month then
+					self.day > other.day
+				 else
+					self.month > other.month
+				endif
+			else 
+				self.year > other.year
+			endif
+
+		isEqual(other: CalendarDate):Boolean =
+			self.year  = other.year and
+			self.month = other.month and
+			self.day   = other.day
+
+		isBeforeOrEqual(other: CalendarDate):Boolean = isBefore(other) or isEqual(other)
+		
+		isAfterOrEqual(other: CalendarDate):Boolean = isAfter(other) or isEqual(other)
+
+		yearsAhead(years: Integer): CalendarDate
+			begin
+				result:= new CalendarDate();
+				result.copy(self);
+				result.year := result.year + years
+			end
+
+		yearsSince(initial: CalendarDate):Integer =
+			if self.month < initial.month or
+			   self.month = initial.month and initial.day < initial.day then
+					self.year - initial.year -1
+			else
+				self.year - initial.year
+			endif
+
+		isDivisible(x: Integer, y: Integer): Boolean = x div y * y = x
+		
+		isLeap(): Boolean =
+			if isDivisible(self.year, 400) or isDivisible(self.year, 4) then
+				true
+			else
+				if isDivisible(self.year, 100) then
+					 false
+				else
+					if isDivisible(self.year, 4) then
+						true
+					else
+						false
+					endif
+				endif
+			endif
+			
+		valid(): Boolean =
+				self.month>=1 and self.month<=12 and self.day>=1 and
+				if self.isLeap() then
+					self.day<=Sequence{31,29,31,30,31,30,31,31,30,31,30,31}->at(self.month)
+				else 
+					self.day<=Sequence{31,28,31,30,31,30,31,31,30,31,30,31}->at(self.month)
+				endif
+				
+		toString(): String = year.toString + '-' + month.toString + '-' + day.toString
+
+	constraints
+		@NoRepeatedDates(rationale="There are not more than one object for each date")
+		inv NoRepeatedDates:
+			CalendarDate.allInstances->isUnique(year * 10000 + month * 100 + day)
+		
+		@DateIsValid(rationale="The current date must be a valid one")
+		inv DateIsValid: self.valid()
+					
+end --CalendarDate
+
+-------------------------------------------------------------------------------------------------	
+class Instant
+
+	attributes	
+		hours: Integer
+		minutes: Integer
+		seconds: Integer
+		
+	operations
+		-- calendar date initialization
+		init(hours: Integer, minutes: Integer, seconds: Integer)
+			begin
+				self.hours:= hours;
+				self.minutes:= minutes;
+				self.seconds:= seconds
+			end		
+			
+		-- returns true if the current object has the same state as the one in the argument
+		isEqual(i: Instant):Boolean =
+			self.hours   = i.hours and
+			self.minutes = i.minutes and
+			self.seconds = i.seconds
+
+		-- returns true if the current object contains a valid date		
+		valid(): Boolean =
+			Set{0..23}->includes(hours) and
+			Set{0..59}->includes(minutes) and
+			Set{0..59}->includes(seconds)
+			
+		-- format: hh:mm:ss
+		toString(): String = hours.toString()+':'+minutes.toString()+':'+seconds.toString()
+			
+end
+
+-------------------------------------------------------------------------------------------------
+class Random
+
+	attributes
+		-- Linear congruential values for x(i+1) = (a * x(i) + b) % m.
+		a: Integer init = 25173
+		b: Integer init = 13849
+		m: Integer init = 32768
+		x: Integer
+
+	operations
+		-- initializes this pseudo random number generator with the given seed	
+		init(seed: Integer)
+			begin
+				self.x:= seed
+			end
+
+		-- pseudo random real number in the [0, 1] interval
+		nextReal(): Real
+			begin
+				-- Calculate next value in sequence.
+				self.x := (self.a * self.x + self.b).mod(self.m);
+
+			-- Return its 0-to-1 value
+				result:= self.x / self.m
+			end
+
+		-- pseudo random integer number in the [initial, last] interval;
+		-- the last value should be greater than the initial one
+		nextInteger(initial: Integer, last: Integer): Integer
+			begin
+				declare 
+					next: Real;
+					
+				next:= self.nextReal();		
+				result:= initial + (next * (last - initial)).round()
+			end
+			
+		pre LastGreaterThanInitial: last > initial
+			
+end

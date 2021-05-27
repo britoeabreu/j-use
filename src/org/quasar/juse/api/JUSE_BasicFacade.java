@@ -1,6 +1,6 @@
 /*
  * J-USE - Java prototyping for the UML based specification environment (USE)
- * Copyright (C) 2012 Fernando Brito e Abrey, QUASAR research group
+ * Copyright (C) 2021 Fernando Brito e Abreu, QUASAR research group
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,65 +22,62 @@ package org.quasar.juse.api;
 import org.tzi.use.uml.sys.MSystem;
 
 /***********************************************************
-* @author fba
-*
-***********************************************************/
+ * @author fba
+ *
+ ***********************************************************/
 public interface JUSE_BasicFacade
 {
-	
-	public MSystem getSystem();
-	
-	/***********************************************************
-	 * @param args
-	 *            Arguments passed either at command line or in Eclipse "Run As/Run Configurations/Arguments"
-	 * @param modelDirectory
-	 *            Directory where the model to be compiled is
-	 ************************** ********************************/
-	public JUSE_BasicFacade initialize(String[] args, String modelDirectory);
 
-	/**********************************************************
-	 * @param specificationFilename
-	 *            The specification filename (*.use file)
-	 * @param verbose
-	 *            If true sends compilation info to console
-	 * @return system the model and its state
-	 ***********************************************************/
-	public MSystem compileSpecification(String specificationFilename, boolean verbose);
+    /***********************************************************
+     * @return the current system
+     ********************************/
+    public MSystem getSystem();
 
-	/***********************************************************
-	 * Processes a SOIL file
-	 * @param modelInstancesDirectory
-	 *           Directory where the SOIL file resides
-	 * @param modelInstancesFilename
-	 *            The model instances filename (*.soil file)
-	 * @param verbose
-	 *            If true sends commands to console as well
-	 * @return
-	 * 				True if it was able to read the file correctly
-	 ***********************************************************/
-	public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose) throws NullPointerException;
+    /***********************************************************
+     * @param args           Arguments passed either at command line or in Eclipse
+     *                       "Run As/Run Configurations/Arguments"
+     * @param modelDirectory Directory where the model to be compiled is
+     ********************************/
+    public JUSE_BasicFacade initialize(String[] args, String modelDirectory);
 
-	/***********************************************************
-	 * Generates a CMD file containg objects, their setup and links among them
-	 * @param author
-	 *            The author of the specification
-	 * @param javaWorkspace
-	 *            Workspace directory where the generated commands file is to be created
-	 * @param cmdFile
-	 *            Name of the commands file
-	 * @param verbose
-	 *            If true sends commands to console as well
-	 ***********************************************************/
-	public void dumpState(String author, String javaWorkspace, String cmdFile, boolean verbose);
-	
-	/***********************************************************
-	 * @param commandLine
-	 *            Command line to be processed by shell
-	 ***********************************************************/
-	public void command(String commandLine);
+    /**********************************************************
+     * @param specificationFilename The specification filename (*.use file)
+     * @param verbose               If true sends compilation info to console
+     * @return the system containing the model
+     ***********************************************************/
+    public MSystem compileSpecification(String specificationFilename, boolean verbose);
 
-	/***********************************************************
-	 * Run USE shell; thread gets hung until the shell exits This should be the last call in the program.
-	 ***********************************************************/
-	public void createShell();
+    /***********************************************************
+     * Processes a SOIL file
+     * 
+     * @param modelInstancesDirectory Directory where the SOIL file resides
+     * @param modelInstancesFilename  The model instances filename (*.soil file)
+     * @param verbose                 If true sends commands to console as well
+     * @return True if it was able to read the file correctly
+     ***********************************************************/
+    public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose)
+	    throws NullPointerException;
+
+    /***********************************************************
+     * Generates a CMD file containg objects, their setup and links among them
+     * 
+     * @param author        The author of the specification
+     * @param javaWorkspace Workspace directory where the generated commands file is
+     *                      to be created
+     * @param cmdFile       Name of the commands file
+     * @param verbose       If true sends commands to console as well
+     * @return TODO
+     ***********************************************************/
+    public boolean dumpState(String author, String javaWorkspace, String cmdFile, boolean verbose);
+
+    /***********************************************************
+     * @param commandLine Command line to be processed by shell
+     ***********************************************************/
+    public void command(String commandLine);
+
+    /***********************************************************
+     * Run USE shell; thread gets hung until the shell exits This should be the last
+     * call in the program.
+     ***********************************************************/
+    public void createShell();
 }
