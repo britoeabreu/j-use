@@ -89,6 +89,9 @@ import org.tzi.use.util.Log;
 public class ProgramingFacade extends BasicFacade implements JUSE_ProgramingFacade
 {
 
+    /**
+     * Basic constructor of ProgramingFacade
+     */
     public ProgramingFacade()
     {
 	super();

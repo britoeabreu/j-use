@@ -16,6 +16,14 @@ import java.util.Scanner;
 
 import org.quasar.toolkit.DiffMatchPatch.Diff;
 
+/**
+ * @author fba
+ * Set of functions to manipulate files and directories
+ */
+/**
+ * @author fba
+ *
+ */
 public class FileSystemUtilities
 {
     /***********************************************************
@@ -41,6 +49,7 @@ public class FileSystemUtilities
 
     /***********************************************************
      * @param filename The name of the file whose name (without extension) we want
+     * @return name of the given file without extension
      ***********************************************************/
     public static String fileName(String filename)
     {
@@ -58,6 +67,7 @@ public class FileSystemUtilities
 
     /***********************************************************
      * @param filename The name of the file whose extension we want
+     * @return extension of the given file
      ***********************************************************/
     public static String fileExtension(String filename)
     {
@@ -104,7 +114,7 @@ public class FileSystemUtilities
     }
 
     /***********************************************************
-     * @param filename
+     * @param filename the name of the file to create
      ***********************************************************/
     public static void createFile(String filename)
     {
@@ -119,9 +129,8 @@ public class FileSystemUtilities
     }
 
     /***********************************************************
-     * @param sourceFilename
-     * @param destFilename
-     * @throws IOException
+     * @param sourceFilename the name of the file to copy
+     * @param destFilename the name of the destination copy
      ***********************************************************/
     @SuppressWarnings("resource")
     public static void copyFile(String sourceFilename, String destFilename)
@@ -169,9 +178,9 @@ public class FileSystemUtilities
     }
 
     /***********************************************************
-     * @param filename
-     * @param oldString
-     * @param newString
+     * @param filename the name of a given file
+     * @param oldString the string to be replaced
+     * @param newString the string to replace the former one
      ***********************************************************/
     public static void replaceStringInFile(String filename, String oldString, String newString)
     {
@@ -198,8 +207,8 @@ public class FileSystemUtilities
     }
 
     /**
-     * @param filename
-     * @return
+     * @param filename name of a given file
+     * @return <code>true</code> if the given file exists or <code>false</code> otherwise
      */
     public static boolean fileExists(String filename)
     {
@@ -208,8 +217,8 @@ public class FileSystemUtilities
     }
 
     /**
-     * @param path
-     * @return
+     * @param path a base path in the directory structure
+     * @return the list of files under the given path
      */
     public static List<File> recursiveListFiles(String path)
     {
@@ -224,9 +233,10 @@ public class FileSystemUtilities
     }
 
     /**
-     * @param theFile
-     * @param theString
-     * @return
+     * @param theFile a given file
+     * @param theString a given string
+     * @param ignoreCase if <code>true</code>, then the case of the given string is ignored
+     * @return <code>true</code> if the given file contains the given string or <code>false</code> otherwise
      */
     public static boolean fileHasString(File theFile, String theString, boolean ignoreCase)
     {
@@ -256,6 +266,11 @@ public class FileSystemUtilities
 	return false;
     }
 
+    /**
+     * @param file a given file
+     * @param clean a flag to decide if comments are to be included
+     * @return a string with the given file contents
+     */
     public static String file2String(File file, boolean clean)
     {
 	StringBuilder sb = new StringBuilder();
@@ -283,7 +298,13 @@ public class FileSystemUtilities
 	return clean ? cleanCode : sb.toString();
     }
 
-    public static double distance(File file1, File file2, boolean details)
+    /**
+     * @param file1 a given file
+     * @param file2 another file to compare to the first one
+     * @param verbose if <code>true</code> produces verbose output
+     * @return a number representing the distance between the two given files
+     */
+    public static double distance(File file1, File file2, boolean verbose)
     {
 	String text1 = file2String(file1, true);
 	String text2 = file2String(file2, true);
@@ -308,7 +329,7 @@ public class FileSystemUtilities
 		System.out.println("ERROR: " + diff.getOperation());
 		break;
 	    }
-	if (details)
+	if (verbose)
 	    System.out.println("File1: " + file1.getName() + " <-> " + file2.getName() + "\tDISTANCE: "
 		    + (insertLength + deleteLength) / (double) equalLength + "\t[EQUAL:" + equalLength + "\tINSERT:"
 		    + insertLength + "\tDELETE:" + deleteLength + "]");
@@ -316,7 +337,13 @@ public class FileSystemUtilities
 	return (insertLength + deleteLength) / (double) equalLength;
     }
 
-    public static double distance2(File file1, File file2, boolean details)
+    /**
+     * @param file1 a given file
+     * @param file2 another file to compare to the first one
+     * @param verbose if <code>true</code> produces verbose output
+     * @return a number representing the distance between the two given files
+     */
+    public static double distance2(File file1, File file2, boolean verbose)
     {
 	String text1 = file2String(file1, true);
 	String text2 = file2String(file2, true);
@@ -344,7 +371,7 @@ public class FileSystemUtilities
 
 	double result = 2.0 * equalLength / (text1.length() + text2.length());
 
-	if (details)
+	if (verbose)
 	    System.out.println("File1: " + file1.getName() + " <-> " + file2.getName() + "\tDISTANCE: "
 		    + String.format("%.5f", result) + "\t[EQUAL:" + equalLength + "\tINSERT:" + insertLength
 		    + "\tDELETE:" + deleteLength + "]");

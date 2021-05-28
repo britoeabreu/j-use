@@ -45,7 +45,7 @@ import org.tzi.use.util.Log;
 import org.tzi.use.util.USEWriter;
 
 /***********************************************************
- * @author fba
+ * @author Fernando Brito e Abreu
  * @version 19 April 2012 - Original version
  * @version October 2018 - Extended and commented version
  ***********************************************************/
@@ -55,13 +55,18 @@ public class BasicFacade implements JUSE_BasicFacade
     private MSystem system = null;
     private Shell shell = null;
 
+    /***********************************************************
+     * Basic facade constructor
+     ***********************************************************/
     public BasicFacade()
     {
     }
 
-    /***********************************************************
-     * @return the system
-     ***********************************************************/
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.quasar.juse.api.JUSE_BasicFacade#getSystem()
+     */
     public MSystem getSystem()
     {
 	return system;
@@ -73,7 +78,6 @@ public class BasicFacade implements JUSE_BasicFacade
      * @see org.quasar.juse.api.JUSE_BasicFacade#initialize(java.lang.String[],
      * java.lang.String, java.lang.String)
      */
-//	public JUSE_BasicFacade initialize(String[] args, String useBaseDirectory, String modelDirectory)
     public JUSE_BasicFacade initialize(String[] args, String modelDirectory)
     {
 	// set System.out to the OldUSEWriter to protocol the output.
@@ -130,7 +134,7 @@ public class BasicFacade implements JUSE_BasicFacade
      * (non-Javadoc)
      * 
      * @see
-     * org.quasar.juse.api.JUSE_BasicFacade#compileSpecification(java.lang.String)
+     * org.quasar.juse.api.JUSE_BasicFacade#compileSpecification(java.lang.String, boolean)
      */
     public MSystem compileSpecification(String specificationFilename, boolean verbose)
     {
@@ -208,10 +212,9 @@ public class BasicFacade implements JUSE_BasicFacade
     /*
      * (non-Javadoc)
      * 
-     * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, boolean)
+     * @see org.quasar.juse.api.JUSE_BasicFacade#readSOIL(java.lang.String, java.lang.String, boolean)
      */
     public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose)
-	    throws NullPointerException
     {
 	boolean result = false;
 	if (system == null || system.model() == null)
@@ -279,8 +282,7 @@ public class BasicFacade implements JUSE_BasicFacade
     /*
      * (non-Javadoc)
      * 
-     * @see org.quasar.juse.api.JUSE_BasicFacade#dumpState(java.lang.String,
-     * java.lang.String, java.lang.String, boolean)
+     * @see org.quasar.juse.api.JUSE_BasicFacade#dumpState(java.lang.String, java.lang.String, java.lang.String, boolean)
      */
     public boolean dumpState(String author, String javaWorkspace, String cmdFile, boolean verbose)
     {

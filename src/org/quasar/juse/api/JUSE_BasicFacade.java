@@ -37,7 +37,8 @@ public interface JUSE_BasicFacade
      * @param args           Arguments passed either at command line or in Eclipse
      *                       "Run As/Run Configurations/Arguments"
      * @param modelDirectory Directory where the model to be compiled is
-     ********************************/
+     * @return the initialized Basic Facade
+     ***********************************************************/
     public JUSE_BasicFacade initialize(String[] args, String modelDirectory);
 
     /**********************************************************
@@ -53,20 +54,19 @@ public interface JUSE_BasicFacade
      * @param modelInstancesDirectory Directory where the SOIL file resides
      * @param modelInstancesFilename  The model instances filename (*.soil file)
      * @param verbose                 If true sends commands to console as well
-     * @return True if it was able to read the file correctly
+     * @return <code>true</code> if it was able to read the file correctly or <code>false</code> otherwise
      ***********************************************************/
-    public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose)
-	    throws NullPointerException;
+    public boolean readSOIL(String modelInstancesDirectory, String modelInstancesFilename, boolean verbose);
 
     /***********************************************************
-     * Generates a CMD file containg objects, their setup and links among them
+     * Generates a CMD file containing objects, their setup and links among them
      * 
      * @param author        The author of the specification
      * @param javaWorkspace Workspace directory where the generated commands file is
      *                      to be created
      * @param cmdFile       Name of the commands file
      * @param verbose       If true sends commands to console as well
-     * @return TODO
+     * @return <code>true</code> if the model was previously compiled (and therefore was able to dump the state), or <code>false</code> otherwise
      ***********************************************************/
     public boolean dumpState(String author, String javaWorkspace, String cmdFile, boolean verbose);
 

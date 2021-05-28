@@ -33,36 +33,25 @@ public class JUSE_BasicFacadeTest
 
     static JUSE_BasicFacade api;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception
+    public static void setUpBeforeClass()
     {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @AfterClass
-    public static void tearDownAfterClass() throws Exception
+    public static void tearDownAfterClass()
     {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
 	api = new BasicFacade();
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
+
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
 	if (api.getSystem() != null)
 	    api.getSystem().reset();

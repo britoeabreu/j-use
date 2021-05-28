@@ -176,13 +176,13 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     public Collection<MObject> allObjects();
 
     /***********************************************************
-     * @param className
+     * @param className the name of a class
      * @return existing objects for the class whose name is given
      ***********************************************************/
     public Collection<MObject> allObjects(String className);
 
     /***********************************************************
-     * @param theClass
+     * @param theClass a given class
      * @return existing objects for the given class
      ***********************************************************/
     public Collection<MObject> allObjects(MClass theClass);
@@ -233,9 +233,16 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     /***********************************************************
      * @param theObject     target object
      * @param attributeName attribute name
-     * @return attribute with the given name, or null if it does not exist
+     * @return attribute with the given name, or null if it does not exist in the target object
      ***********************************************************/
     public MAttribute getAttributeByName(MObject theObject, String attributeName);
+   
+    /***********************************************************
+     * @param theClass     target class
+     * @param attributeName attribute name
+     * @return attribute with the given name, or null if it does not exist in the target class
+     ***********************************************************/
+    public MAttribute getAttributeByName(MClass theClass, String attributeName);
 
     /***********************************************************
      * @param theObject object to delete
@@ -272,13 +279,13 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     public Collection<MLinkObject> allLinkObjects();
 
     /***********************************************************
-     * @param associationClassName
+     * @param associationClassName name of the association class
      * @return existing link objects for the association class whose name is given
      ***********************************************************/
     public Collection<MLinkObject> allLinkObjects(String associationClassName);
 
     /***********************************************************
-     * @param theAssociationClass
+     * @param theAssociationClass name of the association class
      * @return existing link objects for the given association class
      ***********************************************************/
     public Collection<MLinkObject> allLinkObjects(MAssociationClass theAssociationClass);
@@ -364,13 +371,13 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     public Collection<MLink> allLinks();
 
     /***********************************************************
-     * @param theAssociation
+     * @param associationName name of an association
      * @return existing links for the association with the given name
      ***********************************************************/
     public Collection<MLink> allLinks(String associationName);
 
     /***********************************************************
-     * @param theAssociation
+     * @param theAssociation an association object
      * @return existing links for the given association
      ***********************************************************/
     public Collection<MLink> allLinks(MAssociation theAssociation);
@@ -387,31 +394,31 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     public void deleteLink(MAssociation theAssociation, List<MObject> members);
 
     /***********************************************************
-     * @param theAssociation
-     * @param members
+     * @param theAssociation a given association
+     * @param members a list of two objects
      * @return the link if there is a link (instance of the given association) connecting the given list of objects, otherwise null
      *         is returned.
      ***********************************************************/
     public MLink getLink(MAssociation theAssociation, List<MObject> members);
 
     /***********************************************************
-     * @param theAssociation
-     * @param members
+     * @param theAssociation the name of a given association
+     * @param members a list of the names of two objects
      * @return the link if there is a link (instance of the given association) connecting the given list of objects, otherwise null
      *         is returned.
      ***********************************************************/
     public MLink getLink(String theAssociation, List<String> members);
 
     /***********************************************************
-     * @param theLink
-     * @return
+     * @param theLink a given link
+     * @return the source object of the given link
      ***********************************************************/
     public MObject getSourceObject(MLink theLink);
 
     /***********************************************************
-     * @param theLink
-     * @return
-     ***********************************************************/
+     * @param theLink a given link
+     * @return the target object of the given link
+     * ***********************************************************/
     public MObject getTargetObject(MLink theLink);
 
 
@@ -424,6 +431,7 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     public Map<String, MElementAnnotation> getAnnotations(MModelElement element);
 
     /***********************************************************
+     * @param prompt a prompt to print before the annotations themselves
      * @param element model element
      ***********************************************************/
     public void printAnnotations(String prompt, MModelElement element);
@@ -438,7 +446,7 @@ public interface JUSE_ProgramingFacade extends JUSE_BasicFacade
     public String statistics(boolean verbose);
     
     /***********************************************************
-     * @param element model element
+     *
      ***********************************************************/
     public void printModel();
 

@@ -38,67 +38,52 @@ public class JUSE_ProgramingByContractFacadeTest
 
     static JUSE_ProgramingByContractFacade api = new ProgramingByContractFacade();
 
-    /**
-     * @throws java.lang.Exception
-     */
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception
+    public static void setUpBeforeClass()
     {
 	api.initialize(null, MODEL_DIRECTORY);
 	api.compileSpecification(MODEL_FILE, true);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @AfterClass
-    public static void tearDownAfterClass() throws Exception
+    public static void tearDownAfterClass()
     {
 	api.reset();
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
     }
 
     // ===================================================================================
 
-    
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allInvariants()}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allInvariants()}.
      */
     @Test
     public final void testAllInvariants()
     {
 	assertEquals(14, api.allInvariants().size());
     }
-    
+
     /**
      * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allInvariants(org.tzi.use.uml.mm.MClassInvariant)}.
+     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allInvariants(org.tzi.use.uml.mm.MClass)}.
      */
     @Test
-    public final void testAllInvariantsMClass()
+    public final void testAllInvariantsMClassInvariant()
     {
 	assertEquals(3, api.allInvariants(api.getClassByName("Campeonato")).size());
     }
 
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPreConditions()}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPreConditions()}.
      */
     @Test
     public final void testAllPreConditions()
@@ -107,33 +92,30 @@ public class JUSE_ProgramingByContractFacadeTest
     }
 
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPreConditions(org.tzi.use.uml.mm.MOperation)}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPreConditions(org.tzi.use.uml.mm.MOperation)}.
      */
     @Test
     public final void testAllPreConditionsMOperation()
     {
-	assertEquals(5, api.allPreConditions(api.getOperationByName("Pais",  "inicializa")).size());
+	assertEquals(5, api.allPreConditions(api.getOperationByName("Pais", "inicializa")).size());
     }
-    
+
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPostConditions()}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPostConditions()}.
      */
     @Test
     public final void testAllPostConditions()
     {
 	assertEquals(2, api.allPostConditions().size());
     }
-    
+
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPostConditions(org.tzi.use.uml.mm.MOperation)}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#allPostConditions(org.tzi.use.uml.mm.MOperation)}.
      */
     @Test
     public final void testAllPostConditionsMOperation()
     {
-	assertEquals(2, api.allPostConditions(api.getOperationByName("Cidade",  "inicializa")).size());
+	assertEquals(2, api.allPostConditions(api.getOperationByName("Cidade", "inicializa")).size());
     }
 
     /**
@@ -155,12 +137,12 @@ public class JUSE_ProgramingByContractFacadeTest
     public final void testGetPreConditionByName()
     {
 	MPrePostCondition preCondition = api.getPreConditionByName("Pais", "inicializa", "Pais_NomeNaoVazio");
-	
+
 	assertEquals("Pais", preCondition.cls().name());
 	assertEquals("inicializa", preCondition.operation().name());
 	assertEquals("Pais_NomeNaoVazio", preCondition.name());
     }
-    
+
     /**
      * Test method for
      * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#getPostConditionByName(java.lang.String, java.lang.String, java.lang.String)}.
@@ -169,75 +151,68 @@ public class JUSE_ProgramingByContractFacadeTest
     public final void testGetPostConditionByName()
     {
 	MPrePostCondition postCondition = api.getPostConditionByName("Cidade", "inicializa", "Cidade_NomeUnico");
-	
+
 	assertEquals("Cidade", postCondition.cls().name());
 	assertEquals("inicializa", postCondition.operation().name());
 	assertEquals("Cidade_NomeUnico", postCondition.name());
     }
-    
-    /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#associationCoverage()}.
-     */
-	@Test
-	public final void testAssociationCoverage()
-	{
-		assertEquals(0.41176, api.associationCoverage(), 0.001);
-	}
 
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#associationEndCoverage()}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#associationCoverage()}.
      */
-	@Test
-	public final void testAssociationEndCoverage()
-	{
-		assertEquals(0.2647, api.associationEndCoverage(), 0.001);
-	}
-
+    @Test
+    public final void testAssociationCoverage()
+    {
+	assertEquals(0.41176, api.associationCoverage(), 0.001);
+    }
 
     /**
-     * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#checkStructure()}.
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#associationEndCoverage()}.
      */
-	@Test
-	public final void testCheckStructure()
-	{
-		assertTrue(api.checkStructure());
-	}
-    
-	
-	    /**
-	     * Test method for
-	     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#checkInvariants()}.
-	     */
-		@Test
-		public final void testCheckInvariants()
-		{
-			assertTrue(api.checkInvariants());
-		}
-		
-		/**
-	     * Test method for
-	     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#checkInvariant(org.tzi.use.uml.mm.MClassInvariant)}.
-	     */
-	    @Test
-	    public final void testCheckInvariant()
-	    {
-		for (MClassInvariant invariant : api.allInvariants())
-		    assertTrue(api.checkInvariant(invariant));
+    @Test
+    public final void testAssociationEndCoverage()
+    {
+	assertEquals(0.2647, api.associationEndCoverage(), 0.001);
+    }
 
-		int falseInvariants = 0;
-		for (MClassInvariant invariant : api.allInvariants())
-		    if (!api.checkInvariant(invariant))
-			falseInvariants++;
+    /**
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#checkStructure()}.
+     */
+    @Test
+    public final void testCheckStructure()
+    {
+	assertTrue(api.checkStructure());
+    }
 
-		assertEquals(0, falseInvariants);
-	    }
+    /**
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#checkInvariants()}.
+     */
+    @Test
+    public final void testCheckInvariants()
+    {
+	assertTrue(api.checkInvariants());
+    }
+
+    /**
+     * Test method for {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#checkInvariant(org.tzi.use.uml.mm.MClassInvariant)}.
+     */
+    @Test
+    public final void testCheckInvariant()
+    {
+	for (MClassInvariant invariant : api.allInvariants())
+	    assertTrue(api.checkInvariant(invariant));
+
+	int falseInvariants = 0;
+	for (MClassInvariant invariant : api.allInvariants())
+	    if (!api.checkInvariant(invariant))
+		falseInvariants++;
+
+	assertEquals(0, falseInvariants);
+    }
 
 //	    /**
 //	     * Test method for
-//	     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#checkPreCondition(org.tzi.use.uml.mm.MPrePostCondition)}.
+//	     * {@link org.quasar.juse.api.JUSE_ProgramingByContractFacade#checkPreCondition(org.tzi.use.uml.mm.MPrePostCondition)}.
 //	     */
 //	    @Test
 //	    public final void testCheckPreCondition()
@@ -273,5 +248,5 @@ public class JUSE_ProgramingByContractFacadeTest
 //		
 //		assertTrue(api.checkPostCondition(postCondition));		
 //	    }	    
-	 
+
 }

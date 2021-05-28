@@ -23,8 +23,7 @@ public final class PIMETA_Loader
 	
 
 	/***********************************************************
-	 * @param args
-	 * @throws InterruptedException
+	 * @param args command line arguments
 	 ***********************************************************/
 	public static void main(String[] args)
 	{

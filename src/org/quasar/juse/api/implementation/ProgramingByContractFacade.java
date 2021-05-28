@@ -82,6 +82,9 @@ import org.tzi.use.util.Log;
 public class ProgramingByContractFacade extends ProgramingFacade implements JUSE_ProgramingByContractFacade
 {
 
+    /**
+     * Basic constructor of Programming By Contract Facade objects
+     */
     public ProgramingByContractFacade()
     {
 	super();

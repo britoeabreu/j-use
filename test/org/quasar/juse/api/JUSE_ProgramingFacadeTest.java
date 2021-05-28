@@ -44,38 +44,26 @@ public class JUSE_ProgramingFacadeTest
 
     static JUSE_ProgramingFacade api = new ProgramingFacade();
 
-    /**
-     * @throws java.lang.Exception
-     */
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception
+    public static void setUpBeforeClass()
     {
 	api.initialize(null, MODEL_DIRECTORY);
 	api.compileSpecification(MODEL_FILE, true);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @AfterClass
-    public static void tearDownAfterClass() throws Exception
+    public static void tearDownAfterClass()
     {
 
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
 	api.reset();
     }
@@ -168,8 +156,7 @@ public class JUSE_ProgramingFacadeTest
     }
 
     /**
-     * Test method for @see org.quasar.juse.api.JUSE_ProgramingFacade#getStateMachineByName(java.lang.String) /** Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#getStateMachineByName()}.
+     * Test method for @see org.quasar.juse.api.JUSE_ProgramingFacade#getStateMachineByName(java.lang.String)
      */
     @Test
     public final void testGetStateMachineByName()
@@ -634,7 +621,7 @@ public class JUSE_ProgramingFacadeTest
 
     /**
      * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#getLinkObjectAttribute(org.tzi.use.uml.sys.MObject, java.lang.String)}.
+     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#getLinkObjectAttribute(org.tzi.use.uml.sys.MLinkObject, java.lang.String)}.
      */
     @Test
     public final void testGetLinkObjectAttributeMLinkObjectString()
@@ -667,12 +654,12 @@ public class JUSE_ProgramingFacadeTest
 
     /**
      * Test method for
-     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#getLinkObjectAttribute(org.tzi.use.uml.sys.MObject, org.tzi.use.uml.mm.MAttribute)}.
+     * {@link org.quasar.juse.api.JUSE_ProgramingFacade#getLinkObjectAttribute(org.tzi.use.uml.sys.MLinkObject, org.tzi.use.uml.mm.MAttribute)}.
      */
     @Test
     public final void testGetLinkObjectAttributeMLinkObjectMAttribute()
     {
-	testSetLinkObjectAttributeMLinkObjectMAttributeValue();
+	this.testSetLinkObjectAttributeMLinkObjectMAttributeValue();
 
 	MLinkObject euro2012_spain = api.getLinkObjectByName("euro2012_spain");
 
